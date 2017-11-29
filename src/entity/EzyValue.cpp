@@ -12,7 +12,7 @@ namespace entity {
 	
 EzyValue::EzyValue() {
 	// TODO Auto-generated constructor stub
-	valueType = EzyValueType::TypeNULL;
+	mValueType = EzyValueType::TypeNULL;
 }
 
 EzyValue::~EzyValue() {

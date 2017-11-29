@@ -10,7 +10,7 @@ namespace entity {
 
 class EzyRef {
 protected:
-	int retainCount;
+	int mRetainCount;
 	std::mutex mMutex;
 public:
 	EzyRef();

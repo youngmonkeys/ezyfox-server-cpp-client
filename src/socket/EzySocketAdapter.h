@@ -18,9 +18,9 @@ class EzySocketPool {
     
 protected:
     
-    std::mutex poolMutex;
-	std::condition_variable poolCondition;
-    std::queue<EzySocketData*>* socketDataQueue;
+    std::mutex mPoolMutex;
+	std::condition_variable mPoolCondition;
+    std::queue<EzySocketData*>* mDataQueue;
     
 public:
     
@@ -37,9 +37,9 @@ class EzySocketAdapter : public entity::EzyRef {
     
 protected:
     
-	bool running;
-	std::mutex mutex;
-	EzySocketPool* socketPool;
+	bool mRunning;
+	std::mutex mMutex;
+	EzySocketPool* mSocketPool;
     
 	virtual void update();
     
@@ -62,7 +62,7 @@ public:
 
 class EzySocketWriter : public EzySocketAdapter {
 protected:
-    codec::EzyDataEncoder* encoder;
+    codec::EzyDataEncoder* mEncoder;
 	void toBufferData(EzySocketData* data);
 public:
 	EzySocketWriter();
@@ -72,16 +72,16 @@ public:
 class EzySocketReader : public EzySocketAdapter, public codec::EzyDataDecoderDelegate {
 protected:
 #ifdef USE_MESSAGE_HEADER
-	std::vector<char> byteBuffer;
-	int dataSize;
-	bool recvHeader;
+	std::vector<char> mByteBuffer;
+	int mDataSize;
+	bool mRecvHeader;
 
 	virtual void onRecvData();
 	virtual void onUpdateDataHeader();
 	virtual void onUpdateData();
 #endif
 
-    codec::EzyDataDecoder* decoder;
+    codec::EzyDataDecoder* mDecoder;
 	virtual void recvData(const char* data, int size);
     virtual void onRecvMessage(entity::EzyValue* value);
 public:
@@ -94,19 +94,19 @@ public:
 /**/
 class EzySocketClient : public entity::EzyRef {
 protected:
-    pool::EzyReleasePool* releasePool;
+    std::string mHost;
+    int mPort;
+	long long mConnectTime;
 
-	long long connectTime;
-	std::string host;
-	int port;
+	std::mutex mClientMutex;
 
-	std::mutex clientMutex;
+    EzySocketWriter* mSocketWriter;
+    EzySocketReader* mSocketReader;
+	EzySocketClientStatus mClientStatus;
+    
+    pool::EzyReleasePool* mReleasePool;
 
-	EzySocketClientStatus clientStatus;
-	EzySocketWriter* socketWriter;
-	EzySocketReader* socketReader;
-
-	std::vector<EzySocketStatusData> statusBuffer;
+	std::vector<EzySocketStatusData> mStatusBuffer;
 
 	virtual void processEvent();
 	virtual void processRecvMessage();
@@ -119,8 +119,8 @@ protected:
 	virtual bool connectThread();
 	virtual void processSocketError();
 public:
-	EzyReceiverCallback recvCallback;
-	EzySocketStatusCallback statusCallback;
+	EzyReceiverCallback mRecvCallback;
+	EzySocketStatusCallback mStatusCallback;
 public:
 	EzySocketClient();
 	virtual ~EzySocketClient();

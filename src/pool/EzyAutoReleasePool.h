@@ -8,8 +8,8 @@ EZY_NAMESPACE_START
 namespace pool {
 
 class EzyAutoReleasePool {
-    std::mutex poolMutex;
-    std::map<size_t, EzyReleasePool*> pools;
+    std::mutex mPoolMutex;
+    std::map<size_t, EzyReleasePool*> mPools;
 public:
     EzyAutoReleasePool();
     virtual ~EzyAutoReleasePool();

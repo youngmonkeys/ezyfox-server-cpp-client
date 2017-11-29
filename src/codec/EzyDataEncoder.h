@@ -25,7 +25,7 @@ class EzyDataEncoder {
 	void write_native_float(float f);
 	void write_native_double(double d);
 
-	std::vector<char> buffer;
+	std::vector<char> mBuffer;
 public:
 	EzyDataEncoder();
 	virtual ~EzyDataEncoder();

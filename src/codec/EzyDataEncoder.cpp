@@ -12,7 +12,7 @@ namespace codec {
 	
 EzyDataEncoder::EzyDataEncoder() {
 	// TODO Auto-generated constructor stub
-	buffer.reserve(102400); // 100KB Buffer
+	mBuffer.reserve(102400); // 100KB Buffer
 }
 
 EzyDataEncoder::~EzyDataEncoder() {
@@ -20,11 +20,11 @@ EzyDataEncoder::~EzyDataEncoder() {
 }
 
 const std::vector<char>& EzyDataEncoder::getBuffer() {
-	return buffer;
+	return mBuffer;
 }
 
 void EzyDataEncoder::clear() {
-	buffer.clear();
+	mBuffer.clear();
 }
 
 inline void __writer_swap_bytes(char* bytes, int size){
@@ -36,7 +36,7 @@ inline void __writer_swap_bytes(char* bytes, int size){
 }
 
 void EzyDataEncoder::write_native_Bytes(const char* bytes, int32_t size){
-	buffer.insert(buffer.end(), bytes, bytes + size);
+	mBuffer.insert(mBuffer.end(), bytes, bytes + size);
 }
 
 void EzyDataEncoder::write_native_Int8(int8_t value){
@@ -230,11 +230,11 @@ void EzyDataEncoder::writeMap(uint32_t size){
 }
 
 uint32_t EzyDataEncoder::getSize(){
-	return buffer.size();
+	return mBuffer.size();
 }
 
 void EzyDataEncoder::insertHeader(const char* bytes, int size){
-	buffer.insert(buffer.begin(), bytes, bytes + size);
+	mBuffer.insert(mBuffer.begin(), bytes, bytes + size);
 }
 
 }

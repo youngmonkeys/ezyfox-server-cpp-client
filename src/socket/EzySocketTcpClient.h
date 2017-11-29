@@ -13,7 +13,7 @@ namespace socket {
 
 class EzySocketTcpWriter : public EzySocketWriter {
 public:
-	EzyTcpSocket socketClient;
+	EzyTcpSocket mSocket;
 protected:
 	virtual void update();
 public:
@@ -24,15 +24,15 @@ public:
 class EzySocketTcpReader : public EzySocketReader {
 	virtual void update();
 public:
-	EzyTcpSocket socketClient;
+	EzyTcpSocket mSocket;
 public:
 	EzySocketTcpReader();
 	virtual ~EzySocketTcpReader();
 };
 
 class EzySocketTcpClient : public EzySocketClient {
-	EzyTcpSocket socketClient;
-	std::mutex socketMutex;
+	EzyTcpSocket mSocket;
+	std::mutex mSocketMutex;
 
 	virtual void resetSocket();
 	virtual void createAdapter();

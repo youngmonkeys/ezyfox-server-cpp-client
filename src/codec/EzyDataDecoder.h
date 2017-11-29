@@ -11,9 +11,9 @@ namespace codec {
     
 class EzyArrayBuffer {
 private:
-	int type;
-	int size;
-	std::vector<entity::EzyValue*> array;
+	int mType;
+	int mSize;
+	std::vector<entity::EzyValue*> mArray;
 public:
 	EzyArrayBuffer(int type, int size);
 	virtual ~EzyArrayBuffer();

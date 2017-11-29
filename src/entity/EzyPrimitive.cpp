@@ -36,7 +36,7 @@ EzyPrimitive::~EzyPrimitive() {
 }
 
 void EzyPrimitive::writeToBuffer(codec::EzyDataEncoder* encoder) {
-	switch (valueType){
+	switch (mValueType){
 		case EzyValueType::TypeBool: {
 			encoder->writeBool(data.boolValue);
 			break;
@@ -62,7 +62,7 @@ void EzyPrimitive::writeToBuffer(codec::EzyDataEncoder* encoder) {
 
 #ifdef EZY_DEBUG
 void EzyPrimitive::printToOutStream(std::ostringstream& stream, int padding) {
-	switch (valueType)
+	switch (mValueType)
 	{
 	case EzyValueType::TypeBool: {
 		stream << "[Bool] " << data.boolValue;
@@ -92,7 +92,7 @@ void EzyPrimitive::printToOutStream(std::ostringstream& stream, int padding) {
 #endif
 
 void EzyPrimitive::toValue(rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator) {
-	switch (valueType)
+	switch (mValueType)
 	{
 	case EzyValueType::TypeBool: {
 		value.SetBool(data.boolValue);
@@ -121,27 +121,27 @@ void EzyPrimitive::toValue(rapidjson::Value& value, rapidjson::Document::Allocat
 }
 
 void EzyPrimitive::setBool(bool b) {
-	valueType = EzyValueType::TypeBool;
+	mValueType = EzyValueType::TypeBool;
 	data.boolValue = b;
 }
 
 void EzyPrimitive::setFloat(float f) {
-	valueType = EzyValueType::TypeFloat;
+	mValueType = EzyValueType::TypeFloat;
 	data.floatValue = f;
 }
 
 void EzyPrimitive::setDouble(double d) {
-	valueType = EzyValueType::TypeDouble;
+	mValueType = EzyValueType::TypeDouble;
 	data.doubleValue = d;
 }
 
 void EzyPrimitive::setInt(int64_t i64) {
-	valueType = EzyValueType::TypeInt;
+	mValueType = EzyValueType::TypeInt;
 	data.i64Value = i64;
 }
 
 void EzyPrimitive::setUInt(uint64_t ui64) {
-	valueType = EzyValueType::TypeUInt;
+	mValueType = EzyValueType::TypeUInt;
 	data.ui64Value = ui64;
 }
 

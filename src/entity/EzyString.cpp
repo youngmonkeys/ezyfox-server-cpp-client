@@ -4,8 +4,8 @@ EZY_NAMESPACE_START
 namespace entity {
 
 EzyString::EzyString() {
-    valueType = EzyValueType::TypeString;
-    data = "";
+    mData = "";
+    mValueType = EzyValueType::TypeString;
 }
 
 EzyString::~EzyString(){
@@ -13,31 +13,31 @@ EzyString::~EzyString(){
 }
 
 void EzyString::writeToBuffer(codec::EzyDataEncoder* encoder) {
-    encoder->writeString(data);
+    encoder->writeString(mData);
 }
 #ifdef EZY_DEBUG
 void EzyString::printToOutStream(std::ostringstream& stream, int padding) {
-    stream << "[String] " << data;
+    stream << "[String] " << mData;
 }
 #endif
 
 void EzyString::toValue(rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator) {
-    value.SetString(data, allocator);
+    value.SetString(mData, allocator);
 }
 
 void EzyString::setString(const std::string& str) {
-    data = str;
+    mData = str;
 }
 
 void EzyString::setData(const char* buffer, int size) {
     //data = std::string(buffer, size);
     if (size > 0){
-        data.assign(buffer, buffer + size);
+        mData.assign(buffer, buffer + size);
     }
 }
 
 const std::string& EzyString::getString() {
-    return data;
+    return mData;
 }
 
 }

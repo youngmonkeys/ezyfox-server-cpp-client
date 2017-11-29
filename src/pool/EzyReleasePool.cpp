@@ -1,11 +1,3 @@
-//
-//  EzyReleasePool.cpp
-//  ezyfox-server-cpp-client
-//
-//  Created by Dung Ta Van on 11/28/17.
-//  Copyright © 2017 Young Monkeys. All rights reserved.
-//
-
 #include "EzyReleasePool.h"
 
 EZY_NAMESPACE_START
@@ -19,16 +11,16 @@ EzyReleasePool::~EzyReleasePool() {
     this->releaseAll();
 }
     
-void EzyReleasePool::addObject(entity::EzyRef* obj) {
-    objects.push_back(obj);
-    obj->retain();
+void EzyReleasePool::addObject(entity::EzyRef* object) {
+    mObjects.push_back(object);
+    object->retain();
 }
     
 void EzyReleasePool::releaseAll(){
-    for (int i = 0; i < objects.size(); i++) {
-        objects[i]->release();
+    for (int i = 0; i < mObjects.size(); i++) {
+        mObjects[i]->release();
     }
-    objects.clear();
+    mObjects.clear();
 }
     
 }

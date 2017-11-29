@@ -14,7 +14,7 @@ EZY_NAMESPACE_START
 namespace entity {
 
 EzyObject::EzyObject() {
-	valueType = EzyValueType::TypeDict;
+	mValueType = EzyValueType::TypeDict;
 }
 
 EzyObject::~EzyObject() {
@@ -28,9 +28,9 @@ EzyObject* EzyObject::create(){
 }
 
 void EzyObject::writeToBuffer(codec::EzyDataEncoder* encoder){
-	encoder->writeMap(data.size());
-	if (data.size() > 0){
-		for (auto it = data.begin(); it != data.end(); it++){
+	encoder->writeMap(mData.size());
+	if (mData.size() > 0){
+		for (auto it = mData.begin(); it != mData.end(); it++){
 			encoder->writeString(it->first);
 			it->second->writeToBuffer(encoder);
 		}
@@ -39,12 +39,12 @@ void EzyObject::writeToBuffer(codec::EzyDataEncoder* encoder){
 
 #ifdef EZY_DEBUG
 void EzyObject::printToOutStream(std::ostringstream& outStream, int padding){
-	outStream << "[Object](" << data.size() << ")" << std::endl;
+	outStream << "[Object](" << mData.size() << ")" << std::endl;
 	refreshLogBuffer(outStream);
 
 	this->printPadding(outStream, padding);
 	outStream << "{" << std::endl;
-	for (auto it = data.begin(); it != data.end(); it++){
+	for (auto it = mData.begin(); it != mData.end(); it++){
 		this->printPadding(outStream, padding + 1);
 		outStream << it->first << ":";
 		it->second->printToOutStream(outStream, padding + 1);
@@ -58,7 +58,7 @@ void EzyObject::printToOutStream(std::ostringstream& outStream, int padding){
 
 void EzyObject::toValue(rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator){
 	value.SetObject();
-	for (auto it = data.begin(); it != data.end(); it++){
+	for (auto it = mData.begin(); it != mData.end(); it++){
 		rapidjson::Value key(it->first, allocator);
 
 		rapidjson::Value obj;
@@ -69,41 +69,41 @@ void EzyObject::toValue(rapidjson::Value& value, rapidjson::Document::AllocatorT
 }
 
 void EzyObject::addItem(const std::string& key, EzyValue* item){
-	auto it = data.find(key);
-	if (it != data.end()){
+	auto it = mData.find(key);
+	if (it != mData.end()){
 		it->second->release();
-		data.erase(it);
+		mData.erase(it);
 	}
 
-	data.insert(std::make_pair(key, item));
+	mData.insert(std::make_pair(key, item));
 	item->retain();
 }
 
 EzyValue* EzyObject::getItem(const std::string& key){
-	auto it = data.find(key);
-	if (it != data.end()){
+	auto it = mData.find(key);
+	if (it != mData.end()){
 		return it->second;
 	}
 	return 0;
 }
 
 bool EzyObject::isExistKey(const std::string& key){
-	auto it = data.find(key);
-	if (it != data.end()){
+	auto it = mData.find(key);
+	if (it != mData.end()){
 		return true;
 	}
 	return false;
 }
 
 void EzyObject::clear(){
-	for (auto it = data.begin(); it != data.end(); it++){
+	for (auto it = mData.begin(); it != mData.end(); it++){
 		it->second->release();
 	}
-	data.clear();
+	mData.clear();
 }
 
 int EzyObject::size(){
-	return data.size();
+	return mData.size();
 }
 
 

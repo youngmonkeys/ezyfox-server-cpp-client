@@ -11,67 +11,67 @@ EZY_NAMESPACE_START
 namespace socket {
 
 EzySocketPool::EzySocketPool(){
-	socketDataQueue = new std::queue<EzySocketData*>();
+	mDataQueue = new std::queue<EzySocketData*>();
 }
 
 EzySocketPool::~EzySocketPool(){
-	if (socketDataQueue){
-		while (!socketDataQueue->empty()) {
-			EzySocketData* data = socketDataQueue->front();
+	if (mDataQueue){
+		while (!mDataQueue->empty()) {
+			EzySocketData* data = mDataQueue->front();
 			if (data){
 				//delete data;
 				data->release();
 			}
-			socketDataQueue->pop();
+			mDataQueue->pop();
 		}
 
-		delete socketDataQueue;
-		socketDataQueue = 0;
+		delete mDataQueue;
+		mDataQueue = 0;
 	}
 
 }
 
 void EzySocketPool::push(EzySocketData* data){
-	std::unique_lock<std::mutex> lk(poolMutex);
-	if (socketDataQueue){
+	std::unique_lock<std::mutex> lk(mPoolMutex);
+	if (mDataQueue){
 		data->retain();
-		socketDataQueue->push(data);
+		mDataQueue->push(data);
 	}
 
-	poolCondition.notify_one();
+	mPoolCondition.notify_one();
 }
 
 void EzySocketPool::clear(){
-	std::unique_lock<std::mutex> lk(poolMutex);
-	if (socketDataQueue){
-		while (!socketDataQueue->empty()) {
-			EzySocketData* data = socketDataQueue->front();
+	std::unique_lock<std::mutex> lk(mPoolMutex);
+	if (mDataQueue){
+		while (!mDataQueue->empty()) {
+			EzySocketData* data = mDataQueue->front();
 			//delete data;
 			data->release();
-			socketDataQueue->pop();
+			mDataQueue->pop();
 		}
 	}
 
-	poolCondition.notify_all();
+	mPoolCondition.notify_all();
 }
 
 EzySocketData* EzySocketPool::take(){
-	std::unique_lock<std::mutex> lk(poolMutex);
-	if (socketDataQueue){
-		if (!socketDataQueue->empty()){
-			EzySocketData* data = socketDataQueue->front();
-			socketDataQueue->pop();
+	std::unique_lock<std::mutex> lk(mPoolMutex);
+	if (mDataQueue){
+		if (!mDataQueue->empty()){
+			EzySocketData* data = mDataQueue->front();
+			mDataQueue->pop();
 
 			//data->retain();
 			data->autorelease();
 			return data;
 		}
 
-		poolCondition.wait(lk);
+		mPoolCondition.wait(lk);
 
-		if (socketDataQueue && !socketDataQueue->empty()){
-			EzySocketData* data = socketDataQueue->front();
-			socketDataQueue->pop();
+		if (mDataQueue && !mDataQueue->empty()){
+			EzySocketData* data = mDataQueue->front();
+			mDataQueue->pop();
 
 			//data->retain();
 			data->autorelease();
@@ -86,10 +86,10 @@ EzySocketData* EzySocketPool::take(){
 }
 
 EzySocketData* EzySocketPool::pop() {
-	std::unique_lock<std::mutex> lk(poolMutex);
-	if (socketDataQueue && !socketDataQueue->empty()){
-		auto data = socketDataQueue->front();
-		socketDataQueue->pop();
+	std::unique_lock<std::mutex> lk(mPoolMutex);
+	if (mDataQueue && !mDataQueue->empty()){
+		auto data = mDataQueue->front();
+		mDataQueue->pop();
 
 		//data->retain();
 		data->autorelease();
@@ -100,12 +100,12 @@ EzySocketData* EzySocketPool::pop() {
 
 /****/
 EzySocketAdapter::EzySocketAdapter() {
-	running = false;
-	socketPool = 0;
+	mRunning = false;
+	mSocketPool = 0;
 }
 
 EzySocketAdapter::~EzySocketAdapter() {
-	EZY_DELETE_0(socketPool)
+	EZY_DELETE_0(mSocketPool)
 }
 
 void EzySocketAdapter::updateThread(){
@@ -116,12 +116,12 @@ void EzySocketAdapter::updateThread(){
 
 bool EzySocketAdapter::isRunning() {
 	std::unique_lock<std::mutex> lk(mMutex);
-	return running;
+	return mRunning;
 }
 
 void EzySocketAdapter::setRunning(bool running) {
 	std::unique_lock<std::mutex> lk(mMutex);
-	this->running = running;
+	this->mRunning = running;
 }
 
 void EzySocketAdapter::start() {
@@ -137,32 +137,32 @@ void EzySocketAdapter::start() {
 
 void EzySocketAdapter::stop(){
 	this->setRunning(false);
-	socketPool->clear();
+	mSocketPool->clear();
 }
 
 void EzySocketAdapter::update(){
 }
 
 void EzySocketAdapter::pushMessage(EzySocketData* data){
-	socketPool->push(data);
+	mSocketPool->push(data);
 }
 
 EzySocketData* EzySocketAdapter::popMessage(){
-	return socketPool->pop();
+	return mSocketPool->pop();
 }
 
 EzySocketWriter::EzySocketWriter(){
-	socketPool = new EzySocketPool();
-    encoder = new codec::EzyDataEncoder();
+	mSocketPool = new EzySocketPool();
+    mEncoder = new codec::EzyDataEncoder();
 }
 
 EzySocketWriter::~EzySocketWriter(){
-	delete encoder;
+	delete mEncoder;
 }
 
 void EzySocketWriter::toBufferData(EzySocketData* data){
-	encoder->clear();
-	data->writeToBuffer(encoder);
+	mEncoder->clear();
+	data->writeToBuffer(mEncoder);
 
 #ifdef USE_MESSAGE_HEADER
 	uint32_t dataSize = writer->getSize();
@@ -181,13 +181,13 @@ void EzySocketWriter::toBufferData(EzySocketData* data){
 
 /****/
 EzySocketReader::EzySocketReader(){
-	socketPool = new EzySocketPool();
-    decoder = new codec::EzyDataDecoder();
-	decoder->setDelegate(this);
+	mSocketPool = new EzySocketPool();
+    mDecoder = new codec::EzyDataDecoder();
+	mDecoder->setDelegate(this);
 }
 
 EzySocketReader::~EzySocketReader(){
-	EZY_DELETE_0(decoder)
+	EZY_DELETE_0(mDecoder)
 }
 
 void EzySocketReader::updateThread(){
@@ -207,7 +207,7 @@ void EzySocketReader::recvData(const char* data, int size){
 	byteBuffer.insert(byteBuffer.end(), data, data + size);
 	this->onRecvData();
 #else
-	decoder->addData(data, size);
+	mDecoder->addData(data, size);
 #endif
 }
 
@@ -266,14 +266,14 @@ void EzySocketReader::onRecvMessage(entity::EzyValue* value){
 
 /**/
 EzySocketClient::EzySocketClient() {
-    port = 0;
-    host = "";
-	connectTime = 0;
-	socketReader = 0;
-	socketWriter = 0;
-	recvCallback = nullptr;
-    statusCallback = nullptr;
-	releasePool = 0;
+    mPort = 0;
+    mHost = "";
+	mConnectTime = 0;
+	mSocketReader = 0;
+	mSocketWriter = 0;
+	mRecvCallback = nullptr;
+    mStatusCallback = nullptr;
+	mReleasePool = 0;
 }
 
 EzySocketClient::~EzySocketClient() {
@@ -298,10 +298,10 @@ void EzySocketClient::connectTo(const std::string& host, int port){
 	createAdapter();
 	closeSocket();
 
-	clientStatus.clear();
+	mClientStatus.clear();
 	this->setStatus(EzySocketStatusType::Connecting);
-	this->host = host;
-	this->port = port;
+	this->mHost = host;
+	this->mPort = port;
 
 	this->retain();
 	std::thread newThread(&EzySocketClient::updateConnection, this);
@@ -310,13 +310,13 @@ void EzySocketClient::connectTo(const std::string& host, int port){
 
 void EzySocketClient::updateConnection(){
 	auto currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-	auto dt = currentTime - connectTime;
+	auto dt = currentTime - mConnectTime;
 	if (dt < 2000){ //delay 2000ms
 		std::this_thread::sleep_for(std::chrono::milliseconds(2000 - dt));
 	}
 
 	bool b = this->connectThread();
-	connectTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+	mConnectTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
 	if (b){
 		this->startAdapter();
@@ -338,66 +338,66 @@ void EzySocketClient::startAdapter(){
 }
 
 void EzySocketClient::closeClient(){
-	if (socketWriter) {
-		socketWriter->stop();
+	if (mSocketWriter) {
+		mSocketWriter->stop();
 	}
-    if(socketReader) {
-        socketReader->stop();
+    if(mSocketReader) {
+        mSocketReader->stop();
     }
 
-	clientStatus.clear();
+	mClientStatus.clear();
 	this->setStatus(EzySocketStatusType::Closed);
 	closeSocket();
 }
 
 EzySocketStatusType EzySocketClient::getStatus(){
-	return clientStatus.get();
+	return mClientStatus.get();
 }
 
 void EzySocketClient::setStatus(EzySocketStatusType status, bool isEvent){
-	clientStatus.set(status, isEvent);
+	mClientStatus.set(status, isEvent);
 }
 
 void EzySocketClient::sendMessage(EzySocketData* data){
-	if (socketWriter){
-		socketWriter->pushMessage(data);
+	if (mSocketWriter){
+		mSocketWriter->pushMessage(data);
 	}
 }
 
 void EzySocketClient::processEvent(){
-	if (statusCallback){
-		clientStatus.popAllStatus(statusBuffer);
-		for (int i = 0; i < statusBuffer.size(); i++){
-			statusCallback(statusBuffer[i]);
+	if (mStatusCallback){
+		mClientStatus.popAllStatus(mStatusBuffer);
+		for (int i = 0; i < mStatusBuffer.size(); i++){
+			mStatusCallback(mStatusBuffer[i]);
 		}
-		statusBuffer.clear();
+		mStatusBuffer.clear();
 	}
 }
 
 void EzySocketClient::processRecvMessage(){
-	if (recvCallback){
-		auto data = socketReader->popMessage();
+	if (mRecvCallback){
+		auto data = mSocketReader->popMessage();
 		while (data){
 			if (this->getStatus() != EzySocketStatusType::Connected){
 				break;
 			}
-			recvCallback(data);
-			data = socketReader->popMessage();
+			mRecvCallback(data);
+			data = mSocketReader->popMessage();
 		}
 	}
 }
 
 void EzySocketClient::clearAdapter(){
-	std::unique_lock<std::mutex> lk(clientMutex);
-	if (socketReader){
-		socketReader->stop();
-		socketReader->release();
-		socketReader = 0;
+	std::unique_lock<std::mutex> lk(mClientMutex);
+	if (mSocketReader){
+		mSocketReader->stop();
+		mSocketReader->release();
+		mSocketReader = 0;
 	}
-	if (socketWriter){
-		socketWriter->stop();
-		socketWriter->release();
-		socketWriter = 0;
+	if (mSocketWriter){
+		mSocketWriter->stop();
+		mSocketWriter->release();
+		mSocketWriter = 0;
 	}
 }
 
@@ -413,9 +413,9 @@ void EzySocketClient::processSocketError(){
 
 void EzySocketClient::processMessage(){
 	if (this->getStatus() == EzySocketStatusType::Connected){
-		if (socketReader && socketWriter){
+		if (mSocketReader && mSocketWriter){
 			processRecvMessage();
-			if (!socketReader->isRunning()){
+			if (!mSocketReader->isRunning()){
 				if (this->getStatus() == EzySocketStatusType::Connected){
 					this->processSocketError();
 					this->closeSocket();
@@ -427,10 +427,10 @@ void EzySocketClient::processMessage(){
 
 	processEvent();
 
-	if (!releasePool){
-        releasePool = pool::EzyAutoReleasePool::getInstance()->getPool();
+	if (!mReleasePool){
+        mReleasePool = pool::EzyAutoReleasePool::getInstance()->getPool();
 	}
-	releasePool->releaseAll();
+	mReleasePool->releaseAll();
 }
 
 }

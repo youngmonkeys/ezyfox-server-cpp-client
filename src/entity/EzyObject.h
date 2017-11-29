@@ -8,7 +8,7 @@ namespace entity {
 
 class EzyObject : public EzyValue {
 protected:
-	std::map<std::string, EzyValue*> data;
+	std::map<std::string, EzyValue*> mData;
 #ifdef EZY_DEBUG
 	virtual void printToOutStream(std::ostringstream& stream, int padding);
 #endif

@@ -15,44 +15,44 @@ EZY_NAMESPACE_START
 namespace codec {
 
 EzyArrayBuffer::EzyArrayBuffer(int type, int size){
-	this->size = size;
-    this->type = type;
-	array.reserve(size);
+	this->mSize = size;
+    this->mType = type;
+	mArray.reserve(size);
 }
 
 EzyArrayBuffer::~EzyArrayBuffer(){
-	for (int i = 0; i < array.size(); i++){
-		array[i]->release();
+	for (int i = 0; i < mArray.size(); i++){
+		mArray[i]->release();
 	}
-	array.clear();
+	mArray.clear();
 }
     
 void EzyArrayBuffer::pushValue(entity::EzyValue* value){
-    array.push_back(value);
+    mArray.push_back(value);
     value->retain();
 }
 
 bool EzyArrayBuffer::validate(){
-    return (array.size() >= size);
+    return (mArray.size() >= mSize);
 }
 
 entity::EzyValue* EzyArrayBuffer::toValue(){
     if(!validate()){
         return 0;
     }
-    if(type == entity::EzyValueType::TypeArray){
+    if(mType == entity::EzyValueType::TypeArray){
         auto newValue = new entity::EzyArray();
-        for (int i = 0; i < array.size(); i++){
-            newValue->addItem(array[i]);
+        for (int i = 0; i < mArray.size(); i++){
+            newValue->addItem(mArray[i]);
         }
         newValue->autorelease();
         return newValue;
     }
-    else if(type == entity::EzyValueType::TypeDict){
+    else if(mType == entity::EzyValueType::TypeDict){
         auto newValue = new entity::EzyObject();
-        for (int i = 0; i < array.size(); i += 2){
-            auto key = array[i];
-            auto value = array[i + 1];
+        for (int i = 0; i < mArray.size(); i += 2){
+            auto key = mArray[i];
+            auto value = mArray[i + 1];
             newValue->addItem(((entity::EzyString*)key)->getString(), value);
         }
         newValue->autorelease();

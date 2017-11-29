@@ -8,7 +8,7 @@ namespace entity {
 
 class EzyArray : public EzyValue {
 protected:
-	std::vector<EzyValue*> data;
+	std::vector<EzyValue*> mData;
 #ifdef EZY_DEBUG
 	virtual void printToOutStream(std::ostringstream& stream, int padding);
 #endif
