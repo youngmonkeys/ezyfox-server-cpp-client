@@ -1,6 +1,6 @@
 #pragma once
 
-#include "EzySocketAdapter.h"
+#include "EzySocketClient.h"
 
 EZY_NAMESPACE_START
 namespace socket {

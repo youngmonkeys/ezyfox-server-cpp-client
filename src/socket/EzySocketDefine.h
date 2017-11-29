@@ -87,3 +87,5 @@
 #include <cstdlib>
 #include <cstring>
 
+#define USE_MESSAGE_HEADER 1
+

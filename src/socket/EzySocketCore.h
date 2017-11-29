@@ -31,7 +31,7 @@ public:
 	EzySocketClientStatus();
 	~EzySocketClientStatus();
 
-	void set(EzySocketStatusType status, bool isEvent);
+	void set(EzySocketStatusType status, bool event);
 	EzySocketStatusType get();
 
 	void popAllStatus(std::vector<EzySocketStatusData> &buffer);

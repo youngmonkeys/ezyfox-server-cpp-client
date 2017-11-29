@@ -23,7 +23,6 @@ const char* SocketStatusName(int status){
 
 /****/
 EzySocketClientStatus::EzySocketClientStatus(){
-	//	mStatusCallback = nullptr;
 	mClientStatus = EzySocketStatusType::NotConnection;
 }
 
@@ -31,21 +30,17 @@ EzySocketClientStatus::~EzySocketClientStatus(){
 
 }
 
-void EzySocketClientStatus::set(EzySocketStatusType status, bool isEvent){
+void EzySocketClientStatus::set(EzySocketStatusType status, bool event){
 	std::unique_lock<std::mutex> lk(mStatusMutex);
-	//statusMutex.lock();
-
 	if (mClientStatus != status){
-		if (isEvent){
+		if (event){
 			EzySocketStatusData mEvent;
 			mEvent.preStatus = mClientStatus;
 			mEvent.status = status;
 			mStatusEvent.push_back(mEvent);
 		}
-
 		mClientStatus = status;
 	}
-	//statusMutex.unlock();
 }
 
 EzySocketStatusType EzySocketClientStatus::get() {
