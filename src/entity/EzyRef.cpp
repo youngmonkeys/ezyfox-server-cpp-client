@@ -12,7 +12,7 @@ EZY_NAMESPACE_START
 namespace entity {
 
 EzyRef::EzyRef(){
-	retainCount = 1;
+	mRetainCount = 1;
 }
 
 EzyRef::~EzyRef(){
@@ -20,14 +20,14 @@ EzyRef::~EzyRef(){
 
 void EzyRef::retain(){
 	mMutex.lock();
-	retainCount++;
+	mRetainCount++;
 	mMutex.unlock();
 }
 
 void EzyRef::release(){
 	mMutex.lock();
-	retainCount--;
-	if (retainCount <= 0){
+	mRetainCount--;
+	if (mRetainCount <= 0){
 		mMutex.unlock();
 		delete this;
 		return;

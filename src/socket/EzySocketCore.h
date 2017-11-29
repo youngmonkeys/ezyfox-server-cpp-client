@@ -24,9 +24,9 @@ struct EzySocketStatusData {
 };
 
 class EzySocketClientStatus {
-	EzySocketStatusType clientStatus;
-	std::mutex statusMutex;
-	std::vector<EzySocketStatusData> statusEvent;
+	EzySocketStatusType mClientStatus;
+	std::mutex mStatusMutex;
+	std::vector<EzySocketStatusData> mStatusEvent;
 public:
 	EzySocketClientStatus();
 	~EzySocketClientStatus();

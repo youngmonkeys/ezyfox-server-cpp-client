@@ -7,11 +7,11 @@ EZY_NAMESPACE_START
 namespace entity {
 
 class EzyJson : public EzyValue {
-	std::string jsonStr;
-	EzyValue* value;
+    EzyValue* mValue;
+	std::string mString;
 
-	void initWithJson(const std::string& json);
-	void initWithValue(EzyValue* value);
+    void initWithValue(EzyValue* value);
+	void initWithString(const std::string& json);
 public:
 	EzyJson();
 	virtual ~EzyJson();

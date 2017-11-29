@@ -1,11 +1,3 @@
-//
-//  EzyAutoReleasePool.cpp
-//  ezyfox-server-cpp-client
-//
-//  Created by Dung Ta Van on 11/28/17.
-//  Copyright © 2017 Young Monkeys. All rights reserved.
-//
-
 #include <thread>
 #include "EzyAutoReleasePool.h"
 
@@ -20,36 +12,36 @@ EzyAutoReleasePool::~EzyAutoReleasePool() {
 }
 
 EzyReleasePool* EzyAutoReleasePool::getPool() {
-    std::unique_lock<std::mutex> lk(poolMutex);
+    std::unique_lock<std::mutex> lk(mPoolMutex);
     
     size_t threadId = std::hash<std::thread::id>()(std::this_thread::get_id());
     //quyetnd::log("thread: %d", threadId);
-    auto it = pools.find(threadId);
+    auto it = mPools.find(threadId);
     EzyReleasePool* pret = 0;
-    if (it != pools.end()) {
+    if (it != mPools.end()) {
         pret = it->second;
     }
     else{
         pret = new EzyReleasePool();
-        pools.insert(std::make_pair(threadId, pret));
+        mPools.insert(std::make_pair(threadId, pret));
     }
     
     return pret;
 }
 
 void EzyAutoReleasePool::removePool() {
-    std::unique_lock<std::mutex> lk(poolMutex);
+    std::unique_lock<std::mutex> lk(mPoolMutex);
     size_t threadId = std::hash<std::thread::id>()(std::this_thread::get_id());
-    auto it = pools.find(threadId);
-    if (it != pools.end()){
+    auto it = mPools.find(threadId);
+    if (it != mPools.end()){
         delete it->second;
-        pools.erase(it);
+        mPools.erase(it);
     }
 }
 
-static EzyAutoReleasePool instance;
+static EzyAutoReleasePool sInstance;
 EzyAutoReleasePool* EzyAutoReleasePool::getInstance() {
-    return &instance;
+    return &sInstance;
 }
     
 }

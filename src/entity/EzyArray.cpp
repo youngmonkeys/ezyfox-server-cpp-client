@@ -9,14 +9,14 @@ namespace entity {
 
 EzyArray::EzyArray() {
 	// TODO Auto-generated constructor stub
-	valueType = EzyValueType::TypeArray;
+	mValueType = EzyValueType::TypeArray;
 }
 
 void EzyArray::writeToBuffer(codec::EzyDataEncoder* encoder){
-	encoder->writeArray(data.size());
-	if (data.size() > 0) {
-		for (int i = 0; i < data.size(); i++){
-			data[i]->writeToBuffer(encoder);
+	encoder->writeArray(mData.size());
+	if (mData.size() > 0) {
+		for (int i = 0; i < mData.size(); i++){
+			mData[i]->writeToBuffer(encoder);
 		}
 	}	
 }
@@ -33,14 +33,14 @@ EzyArray* EzyArray::create(){
 }
 #ifdef EZY_DEBUG
 void EzyArray::printToOutStream(std::ostringstream& outStream, int padding){
-	outStream << "[Array](" << data.size() << ")" << std::endl;
+	outStream << "[Array](" << mData.size() << ")" << std::endl;
 	refreshLogBuffer(outStream);
 
 	this->printPadding(outStream, padding);
 	outStream << "{" << std::endl;
-	for (int i=0; i < data.size(); i++){
+	for (int i=0; i < mData.size(); i++){
 		this->printPadding(outStream, padding + 1);
-		data[i]->printToOutStream(outStream, padding + 1);
+		mData[i]->printToOutStream(outStream, padding + 1);
 		outStream << std::endl;
 		refreshLogBuffer(outStream);
 	}
@@ -50,31 +50,31 @@ void EzyArray::printToOutStream(std::ostringstream& outStream, int padding){
 #endif
 void EzyArray::toValue(rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator){
 	value.SetArray();
-	for (int i = 0; i < data.size(); i++){
+	for (int i = 0; i < mData.size(); i++){
 		rapidjson::Value obj;
-		data[i]->toValue(obj, allocator);
+		mData[i]->toValue(obj, allocator);
 		value.PushBack(obj, allocator);
 	}
 }
 
 void EzyArray::addItem(EzyValue* item){
-	data.push_back(item);
+	mData.push_back(item);
 	item->retain();
 }
 
 EzyValue* EzyArray::getItem(int index){
-	return data[index];
+	return mData[index];
 }
 
 int EzyArray::size(){
-	return data.size();
+	return mData.size();
 }
 
 void EzyArray::clear(){
-	for (int i = 0; i < data.size(); i++){
-		data[i]->release();
+	for (int i = 0; i < mData.size(); i++){
+		mData[i]->release();
 	}
-	data.clear();
+	mData.clear();
 }
 
 void EzyArray::addBool(bool value){

@@ -114,35 +114,32 @@ inline EzyValue* __createArrayFromJson(const rapidjson::Value& value){
 /****/
 
 EzyJson::EzyJson(){
-    valueType = EzyValueType::TypeJSON;
-	jsonStr = "";
-	value = 0;
+    mValue = 0;
+    mString = "";
+    mValueType = EzyValueType::TypeJSON;
 }
 
 EzyJson::~EzyJson(){
-	EZY_DELETE_0(value)
+	EZY_DELETE_0(mValue)
 }
 
 void EzyJson::writeToBuffer(codec::EzyDataEncoder* encoder) {
 	rapidjson::Document doc;
-	if (doc.Parse<0>(jsonStr.c_str()).HasParseError()){
+	if (doc.Parse<0>(mString.c_str()).HasParseError()){
 		//error parse json
 	}
 	else{
-		if (value){
-			value->release();
-			value = 0;
-		}
-		value = __createValueFromJson(doc);
-        value->retain();
-		value->writeToBuffer(encoder);
+		EZY_DELETE_0(mValue)
+		mValue = __createValueFromJson(doc);
+        mValue->retain();
+		mValue->writeToBuffer(encoder);
 	}
 }
 
 #ifdef EZY_DEBUG
 void EzyJson::printDebug(){
-	if (value){
-		value->printDebug();
+	if (mValue){
+		mValue->printDebug();
 	}
 	else{
 		EzyValue::printDebug();
@@ -151,32 +148,29 @@ void EzyJson::printDebug(){
 #endif
 
 const std::string& EzyJson::toString(){
-	return jsonStr;
+	return mString;
 }
 
 EzyObject* EzyJson::getValue(){
-	return (EzyObject*)value;
+	return (EzyObject*)mValue;
 }
 
-void EzyJson::initWithJson(const std::string& json){
-	this->jsonStr = json;
+void EzyJson::initWithString(const std::string& json){
+	this->mString = json;
 }
 
-void EzyJson::initWithValue(EzyValue* v){
-	if (value){
-		value->release();
-		value = 0;
-	}
-	value = v;
-	value->retain();
-	jsonStr = value->toJson();
+void EzyJson::initWithValue(EzyValue* value){
+    EZY_DELETE_0(mValue);
+	mValue = value;
+	mValue->retain();
+	mString = mValue->toJson();
 }
 
 EzyJson* EzyJson::create(const std::string& json){
-	auto* value = new EzyJson();
-	value->initWithJson(json);
-	value->autorelease();
-	return value;
+	auto* pret = new EzyJson();
+	pret->initWithString(json);
+	pret->autorelease();
+	return pret;
 }
 
 EzyJson* EzyJson::create(entity::EzyValue* value){

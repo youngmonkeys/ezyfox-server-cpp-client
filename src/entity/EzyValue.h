@@ -43,7 +43,7 @@ protected:
 #endif
 	virtual void toValue(rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator);
 public:
-	int valueType;
+	int mValueType;
 public:
 	EzyValue();
 	virtual ~EzyValue();

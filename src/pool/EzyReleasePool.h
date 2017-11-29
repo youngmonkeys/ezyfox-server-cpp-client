@@ -7,11 +7,11 @@ EZY_NAMESPACE_START
 namespace pool {
 
 class EzyReleasePool {
-    std::vector<entity::EzyRef*> objects;
+    std::vector<entity::EzyRef*> mObjects;
 public:
     EzyReleasePool();
     virtual ~EzyReleasePool();
-    virtual void addObject(entity::EzyRef* obj);
+    virtual void addObject(entity::EzyRef* object);
     virtual void releaseAll();
 };
 

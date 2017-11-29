@@ -15,44 +15,44 @@ EZY_NAMESPACE_START
 namespace codec {
 
 EzyArrayBuffer::EzyArrayBuffer(int type, int size){
-	this->size = size;
-    this->type = type;
-	array.reserve(size);
+	this->mSize = size;
+    this->mType = type;
+	mArray.reserve(size);
 }
 
 EzyArrayBuffer::~EzyArrayBuffer(){
-	for (int i = 0; i < array.size(); i++){
-		array[i]->release();
+	for (int i = 0; i < mArray.size(); i++){
+		mArray[i]->release();
 	}
-	array.clear();
+	mArray.clear();
 }
     
 void EzyArrayBuffer::pushValue(entity::EzyValue* value){
-    array.push_back(value);
+    mArray.push_back(value);
     value->retain();
 }
 
 bool EzyArrayBuffer::validate(){
-    return (array.size() >= size);
+    return (mArray.size() >= mSize);
 }
 
 entity::EzyValue* EzyArrayBuffer::toValue(){
     if(!validate()){
         return 0;
     }
-    if(type == entity::EzyValueType::TypeArray){
+    if(mType == entity::EzyValueType::TypeArray){
         auto newValue = new entity::EzyArray();
-        for (int i = 0; i < array.size(); i++){
-            newValue->addItem(array[i]);
+        for (int i = 0; i < mArray.size(); i++){
+            newValue->addItem(mArray[i]);
         }
         newValue->autorelease();
         return newValue;
     }
-    else if(type == entity::EzyValueType::TypeDict){
+    else if(mType == entity::EzyValueType::TypeDict){
         auto newValue = new entity::EzyObject();
-        for (int i = 0; i < array.size(); i += 2){
-            auto key = array[i];
-            auto value = array[i + 1];
+        for (int i = 0; i < mArray.size(); i += 2){
+            auto key = mArray[i];
+            auto value = mArray[i + 1];
             newValue->addItem(((entity::EzyString*)key)->getString(), value);
         }
         newValue->autorelease();
@@ -65,8 +65,8 @@ entity::EzyValue* EzyArrayBuffer::toValue(){
 
 EzyDataDecoder::EzyDataDecoder() {
 	// TODO Auto-generated constructor stub
-	dataBuffer.reserve(16 * 1024); //16KB buffer
-	_delegate = 0;
+	mDataBuffer.reserve(16 * 1024); //16KB buffer
+	mDelegate = 0;
 }
 
 EzyDataDecoder::~EzyDataDecoder() {
@@ -78,15 +78,15 @@ EzyDataDecoder::~EzyDataDecoder() {
 	}
 }
 
-void EzyDataDecoder::setDelegate(EzyDataDecoderDelegate* mDelegate){
-	_delegate = mDelegate;
+void EzyDataDecoder::setDelegate(EzyDataDecoderDelegate* delegate){
+	mDelegate = delegate;
 }
 
 void EzyDataDecoder::addData(const char* data, int size){
-	dataBuffer.insert(dataBuffer.end(), data, data + size);
+	mDataBuffer.insert(mDataBuffer.end(), data, data + size);
 
-	auto buffer = dataBuffer.data();
-	int dataSize = dataBuffer.size();
+	auto buffer = mDataBuffer.data();
+	int dataSize = mDataBuffer.size();
 	while (true){
 		auto n = processData(buffer, dataSize);
 		if (n <= 0){
@@ -98,8 +98,8 @@ void EzyDataDecoder::addData(const char* data, int size){
 	}
 	
 
-	int lastIndex = dataBuffer.size() - dataSize;
-	dataBuffer.erase(dataBuffer.begin(), dataBuffer.begin() + lastIndex);
+	int lastIndex = mDataBuffer.size() - dataSize;
+	mDataBuffer.erase(mDataBuffer.begin(), mDataBuffer.begin() + lastIndex);
 }
 
 void EzyDataDecoder::addData(const std::vector<char> data){
@@ -115,64 +115,64 @@ inline void __swap_bytes(char* bytes, int size){
 	}
 }
 
-uint8_t	EzyDataDecoder::read_ui8(const char* p){
+uint8_t	EzyDataDecoder::readUInt8(const char* p){
 	return (uint8_t)p[0];
 }
 
-uint16_t EzyDataDecoder::read_ui16(const char* p){
+uint16_t EzyDataDecoder::readUInt16(const char* p){
 	uint16_t pret;
 	memcpy(&pret, p, 2);
 	__swap_bytes((char*)&pret, 2);
 	return pret;
 }
 
-uint32_t EzyDataDecoder::read_ui32(const char* p){
+uint32_t EzyDataDecoder::readUInt32(const char* p){
 	uint32_t pret;
 	memcpy(&pret, p, 4);
 	__swap_bytes((char*)&pret, 4);
 	return pret;
 }
 
-uint64_t EzyDataDecoder::read_ui64(const char* p){
+uint64_t EzyDataDecoder::readUInt64(const char* p){
 	uint64_t pret;
 	memcpy(&pret, p, 8);
 	__swap_bytes((char*)&pret, 8);
 	return pret;
 }
 
-int8_t	EzyDataDecoder::read_i8(const char* p){
+int8_t	EzyDataDecoder::readInt8(const char* p){
 	return (int8_t)p[0];
 }
 
-int16_t	EzyDataDecoder::read_i16(const char* p){
+int16_t	EzyDataDecoder::readInt16(const char* p){
 	int16_t pret;
 	memcpy(&pret, p, 2);
 	__swap_bytes((char*)&pret, 2);
 	return pret;
 }
 
-int32_t	EzyDataDecoder::read_i32(const char* p){
+int32_t	EzyDataDecoder::readInt32(const char* p){
 	int32_t pret;
 	memcpy(&pret, p, 4);
 	__swap_bytes((char*)&pret, 4);
 	return pret;
 }
 
-int64_t	EzyDataDecoder::read_i64(const char* p){
+int64_t	EzyDataDecoder::readInt64(const char* p){
 	int64_t pret;
 	memcpy(&pret, p, 8);
 	__swap_bytes((char*)&pret, 8);
 	return pret;
 }
 
-float	EzyDataDecoder::read_float(const char* p){
+float	EzyDataDecoder::readFloat(const char* p){
 	float pret;
 	memcpy(&pret, p, 4);
 	__swap_bytes((char*)&pret, 4);
 	return pret;
 }
 
-double	EzyDataDecoder::read_double(const char* p){
+double	EzyDataDecoder::readDouble(const char* p){
 	double pret;
 	memcpy(&pret, p, 8);
 	__swap_bytes((char*)&pret, 8);
@@ -230,7 +230,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 	else if (type == 0xd9){
 		//str 8
 		if (dataSize >= 2){
-			uint8_t n = read_ui8(buffer + 1);
+			uint8_t n = readUInt8(buffer + 1);
 			if (dataSize >= n + 2){
 				this->onReadString(buffer + 2, n);
 				return (n + 2);
@@ -241,7 +241,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 	else if (type == 0xda){
 		//str 16
 		if (dataSize >= 3){
-			uint16_t n = read_ui16(buffer + 1);
+			uint16_t n = readUInt16(buffer + 1);
 			if (dataSize >= n + 3){
 				this->onReadString(buffer + 3, n);
 				return (n + 3);
@@ -252,7 +252,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 	else if (type == 0xdb){
 		//str 32
 		if (dataSize >= 5){
-			uint32_t n = read_ui32(buffer + 1);
+			uint32_t n = readUInt32(buffer + 1);
 			if (dataSize >= n + 5){
 				this->onReadString(buffer + 5, n);
 				return (n + 5);
@@ -263,7 +263,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 	else if (type == 0xd0){
 		//int 8
 		if (dataSize >= 2){
-			int8_t uintData = read_i8(buffer + 1);
+			int8_t uintData = readInt8(buffer + 1);
 			this->onReadInt(uintData);
 			return 2;
 		}
@@ -272,7 +272,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 	else if (type == 0xd1){
 		//int 16
 		if (dataSize >= 3){
-			int16_t uintData = read_i16(buffer + 1);
+			int16_t uintData = readInt16(buffer + 1);
 			this->onReadInt(uintData);
 			return 3;
 		}
@@ -281,7 +281,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 	else if (type == 0xd2){
 		//int 32
 		if (dataSize >= 5){
-			int64_t uintData = read_i32(buffer + 1);
+			int64_t uintData = readInt32(buffer + 1);
 			this->onReadInt(uintData);
 			return 5;
 		}
@@ -290,7 +290,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 	else if (type == 0xd3){
 		//int 64
 		if (dataSize >= 9){
-			int64_t uintData = read_i64(buffer + 1);
+			int64_t uintData = readInt64(buffer + 1);
 			this->onReadInt(uintData);
 			return 9;
 		}
@@ -299,7 +299,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 	else if (type == 0xcc){
 		//uint 8
 		if (dataSize >= 2){
-			uint8_t uintData = read_ui8(buffer + 1);
+			uint8_t uintData = readUInt8(buffer + 1);
 			this->onReadUnsignedInt(uintData);
 			return 2;
 		}
@@ -308,7 +308,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 	else if (type == 0xcd){
 		//uint 16
 		if (dataSize >= 3){
-			uint16_t uintData = read_ui16(buffer + 1);
+			uint16_t uintData = readUInt16(buffer + 1);
 			this->onReadUnsignedInt(uintData);
 			return 3;
 		}
@@ -317,7 +317,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 	else if (type == 0xce){
 		//uint 32
 		if (dataSize >= 5){
-			uint32_t uintData = read_ui32(buffer + 1);
+			uint32_t uintData = readUInt32(buffer + 1);
 			this->onReadUnsignedInt(uintData);
 			return 5;
 		}
@@ -326,7 +326,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 	else if (type == 0xcf){
 		//uint 64
 		if (dataSize >= 9){
-			uint64_t uintData = read_ui64(buffer + 1);
+			uint64_t uintData = readUInt64(buffer + 1);
 			this->onReadUnsignedInt(uintData);
 			return 9;
 		}
@@ -335,7 +335,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 	else if (type == 0xca){
 		//float 32
 		if (dataSize >= 5){
-			float f = read_float(buffer + 1);
+			float f = readFloat(buffer + 1);
 			this->onReadFloat(f);
 			return 5;
 		}
@@ -344,7 +344,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 	else if (type == 0xcb){
 		//float 64
 		if (dataSize >= 9){
-			double d = read_double(buffer + 1);
+			double d = readDouble(buffer + 1);
 			this->onReadFloat(d);
 			return 9;
 		}
@@ -353,7 +353,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 	else if (type == 0xc4){
 		//bin 8
 		if (dataSize >= 2){
-			int n = read_ui8(buffer + 1);
+			int n = readUInt8(buffer + 1);
 			if (dataSize >= n + 2){
 				this->onReadBin(buffer + 2, n);
 				return (n + 2);
@@ -364,7 +364,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 	else if (type == 0xc5){
 		//bin 16
 		if (dataSize >= 3){
-			int n = read_ui16(buffer + 1);
+			int n = readUInt16(buffer + 1);
 			if (dataSize >= n + 3){
 				this->onReadBin(buffer + 3, n);
 				return (n + 3);
@@ -375,7 +375,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 	else if (type == 0xc6){
 		//bin 32
 		if (dataSize >= 5){
-			int n = read_ui32(buffer + 1);
+			int n = readUInt32(buffer + 1);
 			if (dataSize >= n + 5){
 				this->onReadBin(buffer + 5, n);
 				return (n + 5);
@@ -386,7 +386,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 	else if (type == 0xdc){
 		//array 16
 		if (dataSize >= 3){
-			uint16_t n = read_ui16(buffer + 1);
+			uint16_t n = readUInt16(buffer + 1);
 			this->onReadArray(n);
 			return 3;
 		}
@@ -395,7 +395,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 	else if (type == 0xdd){
 		//array 32
 		if (dataSize >= 5){
-			uint32_t n = read_ui32(buffer + 1);
+			uint32_t n = readUInt32(buffer + 1);
 			this->onReadArray(n);
 			return 5;
 		}
@@ -404,7 +404,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 	else if (type == 0xde){
 		//map 16
 		if (dataSize >= 3){
-			uint16_t n = read_ui16(buffer + 1);
+			uint16_t n = readUInt16(buffer + 1);
 			this->onReadMap(n);
 			return 3;
 		}
@@ -413,7 +413,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 	else if (type == 0xdf){
 		//map 32
 		if (dataSize >= 5){
-			uint32_t n = read_ui32(buffer + 1);
+			uint32_t n = readUInt32(buffer + 1);
 			this->onReadMap(n);
 			return 5;
 		}
@@ -459,8 +459,8 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize){
 void EzyDataDecoder::onReadValue(entity::EzyValue* object){
 	if (mStack.empty()){
 		//call obj
-		if (_delegate){
-			_delegate->onRecvMessage(object);
+		if (mDelegate){
+			mDelegate->onRecvMessage(object);
 		}
 	}
 	else{

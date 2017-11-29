@@ -7,10 +7,8 @@ EZY_NAMESPACE_START
 namespace entity {
 
 class EzyString : public EzyValue {
-    
 protected:
-    
-    std::string data;
+    std::string mData;
 #ifdef EZY_DEBUG
     virtual void printToOutStream(std::ostringstream& stream, int padding);
 #endif

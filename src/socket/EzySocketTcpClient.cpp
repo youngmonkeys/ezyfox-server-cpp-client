@@ -23,14 +23,14 @@ void EzySocketTcpWriter::update(){
 			return;
 		}
 
-		EzySocketData* sendData = socketPool->take();
+		EzySocketData* sendData = mSocketPool->take();
 		if (sendData){
 			sentData = 0;
 			this->toBufferData(sendData);
-			const std::vector<char>& sendBuffer = encoder->getBuffer();
+			const std::vector<char>& sendBuffer = mEncoder->getBuffer();
 
 			while (true) {
-				rs = send(socketClient, sendBuffer.data() + sentData, sendBuffer.size() - sentData, 0);
+				rs = send(mSocket, sendBuffer.data() + sentData, sendBuffer.size() - sentData, 0);
 				//rs = write(mSocket, senderBuffer.data(), senderBuffer.size());
 				if (rs > 0){
 					sentData += rs;
@@ -81,7 +81,7 @@ void EzySocketTcpReader::update(){
 		if (!isRunning()){
 			break;
 		}
-		rs = recv(socketClient, dataBuffer, BUFFER_SIZE, 0);
+		rs = recv(mSocket, dataBuffer, BUFFER_SIZE, 0);
 		if (rs > 0){
 #ifdef EZY_DEBUG
 			logger::log("recvdata: %d",rs);
@@ -109,7 +109,7 @@ void EzySocketTcpReader::update(){
 /**/
 EzySocketTcpClient::EzySocketTcpClient() {
 	// TODO Auto-generated constructor stub
-	socketClient = SYS_SOCKET_INVALID;
+	mSocket = SYS_SOCKET_INVALID;
 
 #ifdef USE_WINSOCK_2
 	WORD wVersionRequested;
@@ -126,36 +126,36 @@ EzySocketTcpClient::~EzySocketTcpClient() {
 }
 
 void EzySocketTcpClient::closeSocket(){
-	std::unique_lock<std::mutex> lk(socketMutex);
-	if (socketClient != SYS_SOCKET_INVALID){
+	std::unique_lock<std::mutex> lk(mSocketMutex);
+	if (mSocket != SYS_SOCKET_INVALID){
 #ifdef USE_WINSOCK_2
 		shutdown(mSocket, SD_BOTH);
 		closesocket(mSocket);
 #else
-		shutdown(socketClient, SHUT_RDWR);
-		close(socketClient);
+		shutdown(mSocket, SHUT_RDWR);
+		close(mSocket);
 #endif
-		socketClient = SYS_SOCKET_INVALID;
+		mSocket = SYS_SOCKET_INVALID;
 	}
 }
 
 void EzySocketTcpClient::resetSocket() {
-	std::unique_lock<std::mutex> lk(socketMutex);
-	socketClient = SYS_SOCKET_INVALID;
+	std::unique_lock<std::mutex> lk(mSocketMutex);
+	mSocket = SYS_SOCKET_INVALID;
 }
 
 void EzySocketTcpClient::createAdapter() {
-	std::unique_lock<std::mutex> lk(clientMutex);
-	socketReader = new EzySocketTcpReader();
-	socketWriter = new EzySocketTcpWriter();
+	std::unique_lock<std::mutex> lk(mClientMutex);
+	mSocketReader = new EzySocketTcpReader();
+	mSocketWriter = new EzySocketTcpWriter();
 }
 
 void EzySocketTcpClient::startAdapter(){
-	std::unique_lock<std::mutex> lk(clientMutex);
-	((EzySocketTcpWriter*)socketWriter)->socketClient = socketClient;
-	socketWriter->start();
-	((EzySocketTcpReader*)socketReader)->socketClient = socketClient;
-	socketReader->start();
+	std::unique_lock<std::mutex> lk(mClientMutex);
+	((EzySocketTcpWriter*)mSocketWriter)->mSocket = mSocket;
+	mSocketWriter->start();
+	((EzySocketTcpReader*)mSocketReader)->mSocket = mSocket;
+	mSocketReader->start();
 }
 
 
@@ -175,35 +175,35 @@ bool EzySocketTcpClient::connectThread(){
 	hints.ai_socktype = SOCK_STREAM;
 
 	char service[128];
-	sprintf(service, "%d", port);
-	if (int ret = getaddrinfo(host.c_str(), service, &hints, &peer) != 0){
+	sprintf(service, "%d", mPort);
+	if (int ret = getaddrinfo(mHost.c_str(), service, &hints, &peer) != 0){
 #ifdef EZY_DEBUG
 		logger::log("getaddrinfo failure %d", ret);
 #endif
 		return false;
 	}
 
-	for (auto _peer = peer; _peer; _peer = _peer->ai_next){
-        socketClient = ::socket(_peer->ai_family, _peer->ai_socktype, _peer->ai_protocol);
-		if (socketClient == SYS_SOCKET_INVALID){
+	for (auto tpeer = peer; tpeer; tpeer = tpeer->ai_next){
+        mSocket = ::socket(tpeer->ai_family, tpeer->ai_socktype, tpeer->ai_protocol);
+		if (mSocket == SYS_SOCKET_INVALID){
 #ifdef EZY_DEBUG
 			logger::log("create socket failure");
 #endif
 			continue;
 		}
 
-		int rs = connect(socketClient, _peer->ai_addr, _peer->ai_addrlen);
+		int rs = connect(mSocket, tpeer->ai_addr, tpeer->ai_addrlen);
 		if (rs == 0){
-			std::unique_lock<std::mutex> lk(clientMutex);
-			if (socketReader && socketWriter){
+			std::unique_lock<std::mutex> lk(mClientMutex);
+			if (mSocketReader && mSocketWriter){
 				freeaddrinfo(peer);
 				return true;
 			}
 		}	
 #ifdef USE_WINSOCK_2
-		closesocket(socketClient);
+		closesocket(mSocket);
 #else
-		close(socketClient);
+		close(mSocket);
 #endif	
 	}
 
