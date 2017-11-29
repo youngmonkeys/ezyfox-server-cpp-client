@@ -30,22 +30,22 @@ public:
 };
 
 class EzyDataDecoder {
-	EzyDataDecoderDelegate* _delegate;
+	EzyDataDecoderDelegate* mDelegate;
 
-	std::vector<char> dataBuffer;
+	std::vector<char> mDataBuffer;
 
 	int processData(const char* buffer, int& dataSize);
 
-	uint8_t		read_ui8(const char* p);
-	uint16_t	read_ui16(const char* p);
-	uint32_t	read_ui32(const char* p);
-	uint64_t	read_ui64(const char* p);
-	int8_t		read_i8(const char* p);
-	int16_t		read_i16(const char* p);
-	int32_t		read_i32(const char* p);
-	int64_t		read_i64(const char* p);
-	float		read_float(const char* p);
-	double		read_double(const char* p);
+	uint8_t		readUInt8(const char* p);
+	uint16_t	readUInt16(const char* p);
+	uint32_t	readUInt32(const char* p);
+	uint64_t	readUInt64(const char* p);
+	int8_t		readInt8(const char* p);
+	int16_t		readInt16(const char* p);
+	int32_t		readInt32(const char* p);
+	int64_t		readInt64(const char* p);
+	float		readFloat(const char* p);
+	double		readDouble(const char* p);
 
 	void onReadNil();
 	void onReadBool(bool b);

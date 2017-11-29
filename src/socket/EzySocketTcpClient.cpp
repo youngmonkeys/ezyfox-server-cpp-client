@@ -183,8 +183,8 @@ bool EzySocketTcpClient::connectThread(){
 		return false;
 	}
 
-	for (auto _peer = peer; _peer; _peer = _peer->ai_next){
-        mSocket = ::socket(_peer->ai_family, _peer->ai_socktype, _peer->ai_protocol);
+	for (auto tpeer = peer; tpeer; tpeer = tpeer->ai_next){
+        mSocket = ::socket(tpeer->ai_family, tpeer->ai_socktype, tpeer->ai_protocol);
 		if (mSocket == SYS_SOCKET_INVALID){
 #ifdef EZY_DEBUG
 			logger::log("create socket failure");
@@ -192,7 +192,7 @@ bool EzySocketTcpClient::connectThread(){
 			continue;
 		}
 
-		int rs = connect(mSocket, _peer->ai_addr, _peer->ai_addrlen);
+		int rs = connect(mSocket, tpeer->ai_addr, tpeer->ai_addrlen);
 		if (rs == 0){
 			std::unique_lock<std::mutex> lk(mClientMutex);
 			if (mSocketReader && mSocketWriter){

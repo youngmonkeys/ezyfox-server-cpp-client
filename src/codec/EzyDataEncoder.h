@@ -13,17 +13,17 @@ EZY_NAMESPACE_START
 namespace codec {
 
 class EzyDataEncoder {
-	void write_native_Bytes(const char* bytes, int32_t size);
-	void write_native_Int8(int8_t value);
-	void write_native_Int16(int16_t value);
-	void write_native_Int32(int32_t value);
-	void write_native_Int64(int64_t value);
-	void write_native_UInt8(uint8_t value);
-	void write_native_UInt16(uint16_t value);
-	void write_native_UInt32(uint32_t value);
-	void write_native_UInt64(uint64_t value);
-	void write_native_float(float f);
-	void write_native_double(double d);
+	void writeNativeBytes(const char* bytes, int32_t size);
+	void writeNativeInt8(int8_t value);
+	void writeNativeInt16(int16_t value);
+	void writeNativeInt32(int32_t value);
+	void writeNativeInt64(int64_t value);
+	void writeNativeUInt8(uint8_t value);
+	void writeNativeUInt16(uint16_t value);
+	void writeNativeUInt32(uint32_t value);
+	void writeNativeUInt64(uint64_t value);
+	void writeNativeFloat(float f);
+	void writeNativeDouble(double d);
 
 	std::vector<char> mBuffer;
 public:
