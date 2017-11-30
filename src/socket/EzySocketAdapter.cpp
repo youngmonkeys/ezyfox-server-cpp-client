@@ -16,7 +16,7 @@ EzySocketAdapter::EzySocketAdapter() {
 }
 
 EzySocketAdapter::~EzySocketAdapter() {
-	EZY_DELETE_0(mSocketPool)
+    EZY_SAFE_DELETE(mSocketPool)
 }
 
 void EzySocketAdapter::updateThread(){

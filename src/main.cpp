@@ -58,15 +58,16 @@ void SocketStatusHandler::handleSocketStatus(const socket::EzySocketStatusData &
 
 void sendHandShake(socket::EzySocketTcpClient *client) {
     auto *params = new entity::EzyArray();
-    params->addString("clientId");
-    params->addString(CLIENT_KEY);
-    params->addString("token");
-    params->addString("C++");
-    params->addString("0.0.1");
+    auto *data = new entity::EzyArray();
+    params->addUInt(11);
+    params->addItem(data);
+    data->addString("clientId");
+    data->addString(CLIENT_KEY);
+    data->addString("token");
+    data->addString("C++");
+    data->addString("0.0.1");
     client->sendMessage(params);
 }
-
-//MFkwDQYJKoZIhvcNAQEBBQADSAAwRQJAfQmBWNzB2SlezzGGUapMOFQLOJ8fw6PQQutmYHK5rAXSZi893R49W99J7Aufh6t1ib6PxorGH2pc4xKTaBVbbQIBAw==
 
 int main(int argc, const char * argv[]) {
     socket::EzySocketTcpClient *client = new socket::EzySocketTcpClient();

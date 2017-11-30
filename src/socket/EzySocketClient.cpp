@@ -19,8 +19,8 @@ EzySocketClient::EzySocketClient() {
 EzySocketClient::~EzySocketClient() {
     this->closeSocket();
     this->clearAdapter();
-    EZY_DELETE_0(mDataHandler)
-    EZY_DELETE_0(mStatusHandler);
+    EZY_SAFE_DELETE(mDataHandler)
+    EZY_SAFE_DELETE(mStatusHandler)
 }
 
 void EzySocketClient::closeSocket() {

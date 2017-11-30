@@ -1,10 +1,3 @@
-/*
- * AutoReleasePool.cpp
- *
- *  Created on: Jun 4, 2016
- *      Author: Quyet Nguyen
- */
-
 #include "EzyRef.h"
 #include "../pool/EzyAutoReleasePool.h"
 

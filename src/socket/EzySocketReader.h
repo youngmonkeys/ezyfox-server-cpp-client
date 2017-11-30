@@ -11,10 +11,12 @@ protected:
 #ifdef USE_MESSAGE_HEADER
     std::vector<char> mByteBuffer;
     int mDataSize;
-    bool mRecvHeader;
+    codec::EzyDecodeState mDecodeState;
+    codec::EzyMessageHeader* mMessageHeader;
     
     virtual void onRecvData();
     virtual void onUpdateDataHeader();
+    virtual void onUpdateDataSize();
     virtual void onUpdateData();
 #endif
     

@@ -11,13 +11,10 @@ EZY_NAMESPACE_START
 namespace entity {
 	
 EzyValue::EzyValue() {
-	// TODO Auto-generated constructor stub
 	mValueType = EzyValueType::TypeNULL;
 }
 
 EzyValue::~EzyValue() {
-	// TODO Auto-generated destructor stub
-//	logger::log("delete Value[%d]", valueType);
 }
 
 void EzyValue::writeToBuffer(codec::EzyDataEncoder* encoder) {

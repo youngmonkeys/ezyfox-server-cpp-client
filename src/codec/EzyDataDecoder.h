@@ -9,6 +9,13 @@
 EZY_NAMESPACE_START
 namespace codec {
     
+enum EzyDecodeState {
+    prepareMessage = 1,
+    readMessageHeader,
+    readMessageSize,
+    readMessageContent
+};
+    
 class EzyArrayBuffer {
 private:
 	int mType;
@@ -30,6 +37,7 @@ public:
 };
 
 class EzyDataDecoder {
+protected:
 	EzyDataDecoderDelegate* mDelegate;
 
 	std::vector<char> mDataBuffer;

@@ -1,6 +1,7 @@
 
 #include "EzySocketWriter.h"
 #include "../logger/EzyLogger.h"
+#include "../codec/EzyMessage.h"
 
 EZY_NAMESPACE_START
 namespace socket {
@@ -19,9 +20,18 @@ void EzySocketWriter::toBufferData(EzySocketData* data){
     data->writeToBuffer(mEncoder);
     
 #ifdef USE_MESSAGE_HEADER
-    uint32_t dataSize = mEncoder->getSize();
-    dataSize = htonl(dataSize);
-    mEncoder->insertHeader((const char*) &dataSize, 4);
+    auto header = codec::EzyMessageHeader::create(mEncoder->getSize());
+    if(header->isBigSize()) {
+        uint32_t dataSize = mEncoder->getSize();
+        dataSize = htonl(dataSize);
+        mEncoder->insertDataSize(header, dataSize);
+    }
+    else {
+        uint16_t dataSize = mEncoder->getSize();
+        dataSize = htons(dataSize);
+        mEncoder->insertDataSize(header, dataSize);
+    }
+    mEncoder->insertHeader(header);
 #endif
     
 #ifdef EZY_DEBUG

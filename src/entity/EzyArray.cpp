@@ -8,7 +8,6 @@ EZY_NAMESPACE_START
 namespace entity {
 
 EzyArray::EzyArray() {
-	// TODO Auto-generated constructor stub
 	mValueType = EzyValueType::TypeArray;
 }
 

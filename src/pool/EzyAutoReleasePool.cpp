@@ -8,14 +8,12 @@ EzyAutoReleasePool::EzyAutoReleasePool() {
 }
 
 EzyAutoReleasePool::~EzyAutoReleasePool() {
-    // TODO Auto-generated destructor stub
 }
 
 EzyReleasePool* EzyAutoReleasePool::getPool() {
     std::unique_lock<std::mutex> lk(mPoolMutex);
     
     size_t threadId = std::hash<std::thread::id>()(std::this_thread::get_id());
-    //quyetnd::log("thread: %d", threadId);
     auto it = mPools.find(threadId);
     EzyReleasePool* pret = 0;
     if (it != mPools.end()) {
