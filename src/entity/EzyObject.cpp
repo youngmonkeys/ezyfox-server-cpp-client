@@ -1,10 +1,3 @@
-/*
- * EzyObject.cpp
- *
- *  Created on: Jun 4, 2016
- *      Author: Quyet Nguyen
- */
-
 #include "EzyObject.h"
 #include "EzyArray.h"
 #include "EzyPrimitive.h"

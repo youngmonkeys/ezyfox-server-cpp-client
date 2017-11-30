@@ -120,7 +120,7 @@ EzyJson::EzyJson(){
 }
 
 EzyJson::~EzyJson(){
-	EZY_DELETE_0(mValue)
+    EZY_SAFE_DELETE(mValue)
 }
 
 void EzyJson::writeToBuffer(codec::EzyDataEncoder* encoder) {
@@ -129,7 +129,7 @@ void EzyJson::writeToBuffer(codec::EzyDataEncoder* encoder) {
 		//error parse json
 	}
 	else{
-		EZY_DELETE_0(mValue)
+        EZY_SAFE_DELETE(mValue)
 		mValue = __createValueFromJson(doc);
         mValue->retain();
 		mValue->writeToBuffer(encoder);
@@ -160,7 +160,7 @@ void EzyJson::initWithString(const std::string& json){
 }
 
 void EzyJson::initWithValue(EzyValue* value){
-    EZY_DELETE_0(mValue);
+    EZY_SAFE_DELETE(mValue)
 	mValue = value;
 	mValue->retain();
 	mString = mValue->toJson();

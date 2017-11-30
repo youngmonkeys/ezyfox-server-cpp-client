@@ -8,11 +8,16 @@
 #include <string>
 #include <stack>
 #include "../EzyMacro.h"
+#include "EzyMessage.h"
 
 EZY_NAMESPACE_START
 namespace codec {
 
 class EzyDataEncoder {
+protected:
+    
+    std::vector<char> mBuffer;
+    
 	void writeNativeBytes(const char* bytes, int32_t size);
 	void writeNativeInt8(int8_t value);
 	void writeNativeInt16(int16_t value);
@@ -24,8 +29,8 @@ class EzyDataEncoder {
 	void writeNativeUInt64(uint64_t value);
 	void writeNativeFloat(float f);
 	void writeNativeDouble(double d);
-
-	std::vector<char> mBuffer;
+    
+    char getHeader(uint32_t data);
 public:
 	EzyDataEncoder();
 	virtual ~EzyDataEncoder();
@@ -45,7 +50,8 @@ public:
 	void writeMap(uint32_t size);
 
 	uint32_t getSize();
-	void insertHeader(const char* bytes, int size);
+    void insertHeader(EzyMessageHeader* header);
+	void insertDataSize(EzyMessageHeader* header, uint32_t dataSize);
 };
 
 }

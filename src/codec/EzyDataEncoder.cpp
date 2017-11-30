@@ -1,22 +1,13 @@
-/*
- * EzyDataEncoder.cpp
- *
- *  Created on: Jun 10, 2016
- *      Author: Quyet Nguyen
- */
-
 #include "EzyDataEncoder.h"
 
 EZY_NAMESPACE_START
 namespace codec {
 	
 EzyDataEncoder::EzyDataEncoder() {
-	// TODO Auto-generated constructor stub
 	mBuffer.reserve(102400); // 100KB Buffer
 }
 
 EzyDataEncoder::~EzyDataEncoder() {
-	// TODO Auto-generated destructor stub
 }
 
 const std::vector<char>& EzyDataEncoder::getBuffer() {
@@ -233,8 +224,16 @@ uint32_t EzyDataEncoder::getSize(){
 	return mBuffer.size();
 }
 
-void EzyDataEncoder::insertHeader(const char* bytes, int size){
-	mBuffer.insert(mBuffer.begin(), bytes, bytes + size);
+void EzyDataEncoder::insertHeader(EzyMessageHeader* header) {
+    auto headerByte = header->getByte();
+    const char* bytes = (const char*) &headerByte;
+	mBuffer.insert(mBuffer.begin(), bytes, bytes + 1);
+}
+    
+void EzyDataEncoder::insertDataSize(EzyMessageHeader* header, uint32_t dataSize) {
+    auto size = header->isBigSize() ? 4 : 2;
+    const char* bytes = (const char*) &dataSize;
+    mBuffer.insert(mBuffer.begin(), bytes, bytes + size);
 }
 
 }

@@ -8,3 +8,4 @@
 #include "entity/EzyString.h"
 #include "codec/EzyDataEncoder.h"
 #include "codec/EzyDataDecoder.h"
+#include "socket/EzySocketTcpClient.h"

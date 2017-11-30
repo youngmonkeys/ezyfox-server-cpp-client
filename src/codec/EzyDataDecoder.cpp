@@ -1,10 +1,3 @@
-/*
- * EzyDataDecoder.cpp
- *
- *  Created on: Jun 10, 2016
- *      Author: Quyet Nguyen
- */
-
 #include "EzyDataDecoder.h"
 #include "EzyPrimitive.h"
 #include "EzyArray.h"
@@ -64,13 +57,11 @@ entity::EzyValue* EzyArrayBuffer::toValue(){
 /****/
 
 EzyDataDecoder::EzyDataDecoder() {
-	// TODO Auto-generated constructor stub
 	mDataBuffer.reserve(16 * 1024); //16KB buffer
 	mDelegate = 0;
 }
 
 EzyDataDecoder::~EzyDataDecoder() {
-	// TODO Auto-generated destructor stub
 	while (!mStack.empty()){
 		auto item = mStack.top();
 		delete item;

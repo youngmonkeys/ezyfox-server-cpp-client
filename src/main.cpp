@@ -9,20 +9,75 @@
 #include <iostream>
 #include "EzyClient.h"
 
+#define CLIENT_KEY "MFkwDQYJKoZIhvcNAQEBBQADSAAwRQJAfQmBWNzB2SlezzGGUapMOFQLOJ8fw6PQQutmYHK5rAXSZi893R49W99J7Aufh6t1ib6PxorGH2pc4xKTaBVbbQIBAw=="
+
 using namespace com::tvd12::ezyfoxserver::client;
 
+void sendHandShake(socket::EzySocketTcpClient *client);
+
+class SocketDataHandler : public socket::EzySocketDataHandler {
+private:
+    socket::EzySocketTcpClient *client;
+public:
+    SocketDataHandler(socket::EzySocketTcpClient *client);
+    virtual void handleSocketData(socket::EzySocketData* data);
+};
+
+class SocketStatusHandler : public socket::EzySocketStatusHandler {
+private:
+    socket::EzySocketTcpClient *client;
+public:
+    SocketStatusHandler(socket::EzySocketTcpClient *client);
+    virtual void handleSocketStatus(const socket::EzySocketStatusData& status);
+};
+
+SocketDataHandler::SocketDataHandler(socket::EzySocketTcpClient *client) {
+    this->client = client;
+}
+
+void SocketDataHandler::handleSocketData(socket::EzySocketData *data) {
+}
+
+SocketStatusHandler::SocketStatusHandler(socket::EzySocketTcpClient *client) {
+    this->client = client;
+}
+
+void SocketStatusHandler::handleSocketStatus(const socket::EzySocketStatusData &status) {
+    if(status.status == socket::EzySocketStatusType::Connected) {
+    }
+    switch (status.status) {
+        case socket::Connected:
+            break;
+        case socket::Connecting:
+            sendHandShake(client);
+            break;
+        default:
+            break;
+    }
+}
+
+void sendHandShake(socket::EzySocketTcpClient *client) {
+    auto *params = new entity::EzyArray();
+    auto *data = new entity::EzyArray();
+    params->addUInt(11);
+    params->addItem(data);
+    data->addString("clientId");
+    data->addString(CLIENT_KEY);
+    data->addString("token");
+    data->addString("C++");
+    data->addString("0.0.1");
+    client->sendMessage(params);
+}
+
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    auto object = new entity::EzyObject();
-    object->setInt("1", 100);
-    object->setString("2", "hello world");
-    
-    auto json = entity::EzyJson::create(object);
-    
-    logger::log("my json: %s", json->toString().c_str());
-    
-//    EZY_DELETE_0(object);
-    EZY_DELETE_0(json);
-    
+    socket::EzySocketTcpClient *client = new socket::EzySocketTcpClient();
+    logger::log("start client");
+    client->setDataHandler(new SocketDataHandler(client));
+    client->setStatusHandler(new SocketStatusHandler(client));
+    client->connectTo("188.166.213.37", 3005);
+    do {
+        client->processMessage();
+    } while(client->getStatus() != socket::EzySocketStatusType::Closed);
+    logger::log("shutdown client");
     return 0;
 }
