@@ -7,10 +7,17 @@
 //
 
 #include <iostream>
+#include <thread>
+#include <chrono>
 #include "EzyClient.h"
+#include "EzySocketKeyPair.h"
+#include "cryptopp/rsa.h"
+#include "cryptopp/osrng.h"
+#include "cryptopp/base64.h"
 
 #define CLIENT_KEY "MFkwDQYJKoZIhvcNAQEBBQADSAAwRQJAfQmBWNzB2SlezzGGUapMOFQLOJ8fw6PQQutmYHK5rAXSZi893R49W99J7Aufh6t1ib6PxorGH2pc4xKTaBVbbQIBAw=="
 
+using namespace CryptoPP;
 using namespace com::tvd12::ezyfoxserver::client;
 
 void sendHandShake(socket::EzySocketTcpClient *client);
@@ -59,10 +66,14 @@ void SocketStatusHandler::handleSocketStatus(const socket::EzySocketStatusData &
 void sendHandShake(socket::EzySocketTcpClient *client) {
     auto *params = new entity::EzyArray();
     auto *data = new entity::EzyArray();
+    socket::EzyKeyPairGentor *keyPairGentor = new socket::EzyRsaKeyPairGentor();
+    socket::EzyKeyPair *keyPair = keyPairGentor->generate(512);
+    std::string clientKey = keyPair->getPublicKey();
+    logger::log("public key: %s", clientKey.c_str());
     params->addUInt(11);
     params->addItem(data);
     data->addString("clientId");
-    data->addString(CLIENT_KEY);
+    data->addString(clientKey);
     data->addString("token");
     data->addString("C++");
     data->addString("0.0.1");
@@ -70,6 +81,7 @@ void sendHandShake(socket::EzySocketTcpClient *client) {
 }
 
 int main(int argc, const char * argv[]) {
+    srand( static_cast<unsigned int>(time(NULL)));
     socket::EzySocketTcpClient *client = new socket::EzySocketTcpClient();
     logger::log("start client");
     client->setDataHandler(new SocketDataHandler(client));
@@ -77,6 +89,7 @@ int main(int argc, const char * argv[]) {
     client->connectTo("188.166.213.37", 3005);
     do {
         client->processMessage();
+        std::this_thread::sleep_for(std::chrono::milliseconds(3));
     } while(client->getStatus() != socket::EzySocketStatusType::Closed);
     logger::log("shutdown client");
     return 0;
