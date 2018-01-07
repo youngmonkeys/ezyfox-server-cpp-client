@@ -1,96 +1,20 @@
-//
-//  main.cpp
-//  ezyfox-server-cpp-client
-//
-//  Created by Dung Ta Van on 11/28/17.
-//  Copyright © 2017 Young Monkeys. All rights reserved.
-//
-
 #include <iostream>
 #include <thread>
 #include <chrono>
 #include "EzyClient.h"
-#include "EzySocketKeyPair.h"
-#include "cryptopp/rsa.h"
-#include "cryptopp/osrng.h"
-#include "cryptopp/base64.h"
+#include "socket/EzySocketTcpClient.h"
 
-#define CLIENT_KEY "MFkwDQYJKoZIhvcNAQEBBQADSAAwRQJAfQmBWNzB2SlezzGGUapMOFQLOJ8fw6PQQutmYHK5rAXSZi893R49W99J7Aufh6t1ib6PxorGH2pc4xKTaBVbbQIBAw=="
-
-using namespace CryptoPP;
-using namespace com::tvd12::ezyfoxserver::client;
-
-void sendHandShake(socket::EzySocketTcpClient *client);
-
-class SocketDataHandler : public socket::EzySocketDataHandler {
-private:
-    socket::EzySocketTcpClient *client;
-public:
-    SocketDataHandler(socket::EzySocketTcpClient *client);
-    virtual void handleSocketData(socket::EzySocketData* data);
-};
-
-class SocketStatusHandler : public socket::EzySocketStatusHandler {
-private:
-    socket::EzySocketTcpClient *client;
-public:
-    SocketStatusHandler(socket::EzySocketTcpClient *client);
-    virtual void handleSocketStatus(const socket::EzySocketStatusData& status);
-};
-
-SocketDataHandler::SocketDataHandler(socket::EzySocketTcpClient *client) {
-    this->client = client;
-}
-
-void SocketDataHandler::handleSocketData(socket::EzySocketData *data) {
-}
-
-SocketStatusHandler::SocketStatusHandler(socket::EzySocketTcpClient *client) {
-    this->client = client;
-}
-
-void SocketStatusHandler::handleSocketStatus(const socket::EzySocketStatusData &status) {
-    if(status.status == socket::EzySocketStatusType::Connected) {
-    }
-    switch (status.status) {
-        case socket::Connected:
-            break;
-        case socket::Connecting:
-            sendHandShake(client);
-            break;
-        default:
-            break;
-    }
-}
-
-void sendHandShake(socket::EzySocketTcpClient *client) {
-    auto *params = new entity::EzyArray();
-    auto *data = new entity::EzyArray();
-    socket::EzyKeyPairGentor *keyPairGentor = new socket::EzyRsaKeyPairGentor();
-    socket::EzyKeyPair *keyPair = keyPairGentor->generate(512);
-    std::string clientKey = keyPair->getPublicKey();
-    logger::log("public key: %s", clientKey.c_str());
-    params->addUInt(11);
-    params->addItem(data);
-    data->addString("clientId");
-    data->addString(clientKey);
-    data->addString("token");
-    data->addString("C++");
-    data->addString("0.0.1");
-    client->sendMessage(params);
-}
+using namespace EZY_NAMESPACE;
 
 int main(int argc, const char * argv[]) {
     srand( static_cast<unsigned int>(time(NULL)));
-    socket::EzySocketTcpClient *client = new socket::EzySocketTcpClient();
+    EzyClient *client = new EzyClient();
     logger::log("start client");
-    client->setDataHandler(new SocketDataHandler(client));
-    client->setStatusHandler(new SocketStatusHandler(client));
-    client->connectTo("188.166.213.37", 3005);
+    client->connect("tvd12.com", 3005);
     do {
-        client->processMessage();
+        client->processSocketEvent();
         std::this_thread::sleep_for(std::chrono::milliseconds(3));
-    } while(client->getStatus() != socket::EzySocketStatusType::Closed);
+    } while(true);
     logger::log("shutdown client");
     return 0;
 }

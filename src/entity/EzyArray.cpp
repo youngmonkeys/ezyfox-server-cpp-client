@@ -21,7 +21,6 @@ void EzyArray::writeToBuffer(codec::EzyDataEncoder* encoder){
 }
 
 EzyArray::~EzyArray() {
-	// TODO Auto-generated destructor stub
 	this->clear();
 }
 

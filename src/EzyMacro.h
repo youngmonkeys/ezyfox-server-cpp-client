@@ -53,6 +53,12 @@ protected:\
 public:\
     virtual varType get##varName(void) const { return m##varName; }
 
+#define EZY_SYNTHESIZE_WRITEONLY(varType, varName)\
+protected:\
+varType m##varName;\
+public:\
+virtual void set##varName(varType value) { m##varName = value; }
+
 //=========================================
 #define EZY_SYNTHESIZE_READONLY_PASS_BY_REF(varType, varName)\
 protected:\
@@ -128,6 +134,16 @@ public:\
 #define EZY_SAFE_RELEASE_NULL(p)     do { if(p) { (p)->release(); (p) = nullptr; } } while(0);
 #define EZY_SAFE_RETAIN(p)           do { if(p) { (p)->retain(); } } while(0);
 #define EZY_BREAK_IF(cond)           if(cond) break
+#define EZY_SAFE_DELETE_VECTOR(vector, varType) \
+for(int i = 0 ; i < vector.size() ; i++) {\
+    varType* p = vector[i];\
+    do { if(p) {delete (p); (p) = nullptr; } } while(0);\
+}
+#define EZY_SAFE_RELEASE_VECTOR(vector, varType) \
+for(int i = 0 ; i < vector.size() ; i++) {\
+    varType* p = vector[i];\
+    do { if(p) { (p)->release(); } } while(0);\
+}
 
 #define EZY_SINGLETON_GET_INSTANCE(className) \
 public: \
