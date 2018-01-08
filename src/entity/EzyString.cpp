@@ -30,7 +30,6 @@ void EzyString::setString(const std::string& str) {
 }
 
 void EzyString::setData(const char* buffer, int size) {
-    //data = std::string(buffer, size);
     if (size > 0){
         mData.assign(buffer, buffer + size);
     }

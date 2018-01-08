@@ -21,7 +21,7 @@ EzyObject* EzyObject::create(){
 }
 
 void EzyObject::writeToBuffer(codec::EzyDataEncoder* encoder){
-	encoder->writeMap(mData.size());
+	encoder->writeMap((uint32_t)mData.size());
 	if (mData.size() > 0){
 		for (auto it = mData.begin(); it != mData.end(); it++){
 			encoder->writeString(it->first);
@@ -96,7 +96,7 @@ void EzyObject::clear(){
 }
 
 int EzyObject::size(){
-	return mData.size();
+	return (int)mData.size();
 }
 
 

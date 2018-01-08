@@ -2,7 +2,7 @@
 #include <chrono>
 #include "EzySocketTcpClient.h"
 #include "../logger/EzyLogger.h"
-#include "../pool/EzyAutoReleasePool.h"
+#include "../gc/EzyAutoReleasePool.h"
 
 EZY_NAMESPACE_START
 namespace socket {
@@ -14,19 +14,19 @@ EzySocketTcpWriter::~EzySocketTcpWriter() {
 }
 
 void EzySocketTcpWriter::update(){
-	int rs;
-	int sentData;
-    auto releasePool = pool::EzyAutoReleasePool::getInstance()->getPool();
-	while (true){
+	size_t rs;
+	size_t sentData;
+    auto releasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
+	while (true) {
 		releasePool->releaseAll();
 		if (!isRunning()) {
 			return;
 		}
 
 		EzySocketData* sendData = mSocketPool->take();
-		if (sendData){
+		if (sendData) {
 			sentData = 0;
-			this->toBufferData(sendData);
+			toBufferData(sendData);
 			const std::vector<char>& sendBuffer = mEncoder->getBuffer();
 
 			while (true) {
@@ -43,20 +43,20 @@ void EzySocketTcpWriter::update(){
 #ifdef EZY_DEBUG
                     logger::log("server shutdown[2]");
 #endif
-					this->setRunning(false);
+					setRunning(false);
 					return;
 				}
 				else{
 #ifdef EZY_DEBUG
 					logger::log("send error");
 #endif
-					this->setRunning(false);
+					setRunning(false);
 					return;
 				}
 			}
 		}
 		else{
-			this->setRunning(false);
+			setRunning(false);
 			return;
 		}
 	}
@@ -69,11 +69,11 @@ EzySocketTcpReader::EzySocketTcpReader() {
 EzySocketTcpReader::~EzySocketTcpReader(){
 }
 
-#define BUFFER_SIZE 102400 //100KB
+#define BUFFER_SIZE 102400
 void EzySocketTcpReader::update(){
-	int rs;
+	size_t rs;
 	char dataBuffer[BUFFER_SIZE];
-    auto releasePool = pool::EzyAutoReleasePool::getInstance()->getPool();
+    auto releasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
 	while (true){
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		releasePool->releaseAll();
@@ -86,13 +86,13 @@ void EzySocketTcpReader::update(){
 #ifdef EZY_DEBUG
 			logger::log("recvdata: %d",rs);
 #endif
-			this->recvData(dataBuffer, rs);
+			recvData(dataBuffer, rs);
 		}
 		else if (rs == 0){
 #ifdef EZY_DEBUG
 			logger::log("server shutdown[1]");
 #endif
-			this->setRunning(false);
+			setRunning(false);
 			break;
 		}
 		else{
@@ -100,7 +100,7 @@ void EzySocketTcpReader::update(){
 #ifdef EZY_DEBUG
 			logger::log("recv header error");
 #endif
-			this->setRunning(false);
+			setRunning(false);
 			break;
 		}
 	}

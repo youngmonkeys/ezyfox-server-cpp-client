@@ -77,7 +77,7 @@ void EzyDataDecoder::addData(const char* data, int size){
 	mDataBuffer.insert(mDataBuffer.end(), data, data + size);
 
 	auto buffer = mDataBuffer.data();
-	int dataSize = mDataBuffer.size();
+	int dataSize = (int)mDataBuffer.size();
 	while (true){
 		auto n = processData(buffer, dataSize);
 		if (n <= 0){
@@ -89,12 +89,12 @@ void EzyDataDecoder::addData(const char* data, int size){
 	}
 	
 
-	int lastIndex = mDataBuffer.size() - dataSize;
+	int lastIndex = (int)(mDataBuffer.size() - dataSize);
 	mDataBuffer.erase(mDataBuffer.begin(), mDataBuffer.begin() + lastIndex);
 }
 
 void EzyDataDecoder::addData(const std::vector<char> data){
-	this->addData(data.data(), data.size());
+	this->addData(data.data(), (int)data.size());
 }
 
 /****/

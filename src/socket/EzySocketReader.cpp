@@ -25,7 +25,7 @@ void EzySocketReader::updateThread(){
     EzySocketAdapter::updateThread();
 }
 
-void EzySocketReader::recvData(const char* data, int size){
+void EzySocketReader::recvData(const char* data, size_t size){
     if (size <= 0){
         return;
     }

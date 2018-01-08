@@ -1,83 +1,129 @@
-//
-//  main.cpp
-//  ezyfox-server-cpp-client
-//
-//  Created by Dung Ta Van on 11/28/17.
-//  Copyright © 2017 Young Monkeys. All rights reserved.
-//
-
 #include <iostream>
+#include <thread>
+#include <chrono>
 #include "EzyClient.h"
+#include "socket/EzySocketTcpClient.h"
 
-#define CLIENT_KEY "MFkwDQYJKoZIhvcNAQEBBQADSAAwRQJAfQmBWNzB2SlezzGGUapMOFQLOJ8fw6PQQutmYHK5rAXSZi893R49W99J7Aufh6t1ib6PxorGH2pc4xKTaBVbbQIBAw=="
+using namespace EZY_NAMESPACE;
 
-using namespace com::tvd12::ezyfoxserver::client;
+//==========================================================
 
-void sendHandShake(socket::EzySocketTcpClient *client);
-
-class SocketDataHandler : public socket::EzySocketDataHandler {
-private:
-    socket::EzySocketTcpClient *client;
+class ConnectionSuccessEventHandler :
+public handler::EzyEventHandler<event::EzyConnectionSuccessEvent> {
+protected:
+    request::EzyRequestDeliver *requestDeliver;
+protected:
+    virtual void sendHandShakeRequest();
 public:
-    SocketDataHandler(socket::EzySocketTcpClient *client);
-    virtual void handleSocketData(socket::EzySocketData* data);
+    ConnectionSuccessEventHandler(request::EzyRequestDeliver *requestDeliver);
+    virtual void handle(event::EzyConnectionSuccessEvent *event);
 };
 
-class SocketStatusHandler : public socket::EzySocketStatusHandler {
-private:
-    socket::EzySocketTcpClient *client;
+//==========================================================
+
+class HandshakeEventHandler :
+public handler::EzyEventHandler<event::EzyHandshakeEvent> {
+protected:
+    request::EzyRequestDeliver *requestDeliver;
+protected:
+    virtual void sendLoginRequest();
 public:
-    SocketStatusHandler(socket::EzySocketTcpClient *client);
-    virtual void handleSocketStatus(const socket::EzySocketStatusData& status);
+    HandshakeEventHandler(request::EzyRequestDeliver* requestDeliver);
+    virtual void handle(event::EzyHandshakeEvent* event);
 };
 
-SocketDataHandler::SocketDataHandler(socket::EzySocketTcpClient *client) {
-    this->client = client;
+//==========================================================
+
+class LoginEventHandler :
+public handler::EzyEventHandler<event::EzyLoginEvent> {
+protected:
+    request::EzyRequestDeliver *requestDeliver;
+protected:
+    virtual void sendAccessAppRequest();
+public:
+    LoginEventHandler(request::EzyRequestDeliver* requestDeliver);
+    virtual void handle(event::EzyLoginEvent* event);
+};
+
+//==========================================================
+
+void ConnectionSuccessEventHandler::handle(event::EzyConnectionSuccessEvent *event) {
+    sendHandShakeRequest();
 }
 
-void SocketDataHandler::handleSocketData(socket::EzySocketData *data) {
+void ConnectionSuccessEventHandler::sendHandShakeRequest() {
+    auto keyPairGentor = new socket::EzyRsaKeyPairGentor();
+    auto keyPair = keyPairGentor->generate(512);
+    auto clientKey = keyPair->getPublicKey();
+    logger::log("public key: %s", clientKey.c_str());
+    auto params = new request::EzyHandshakeRequestParams();
+    params->setClientId("clientId");
+    params->setClientKey(clientKey);
+    params->setReconnectToken("reconectToken");
+    auto request = request::EzyHandshakeRequest::create(params);
+    requestDeliver->send(request);
 }
 
-SocketStatusHandler::SocketStatusHandler(socket::EzySocketTcpClient *client) {
-    this->client = client;
+ConnectionSuccessEventHandler::
+ConnectionSuccessEventHandler(request::EzyRequestDeliver *requestDeliver) {
+    this->requestDeliver = requestDeliver;
 }
 
-void SocketStatusHandler::handleSocketStatus(const socket::EzySocketStatusData &status) {
-    if(status.status == socket::EzySocketStatusType::Connected) {
-    }
-    switch (status.status) {
-        case socket::Connected:
-            break;
-        case socket::Connecting:
-            sendHandShake(client);
-            break;
-        default:
-            break;
-    }
+//==========================================================
+
+HandshakeEventHandler::
+HandshakeEventHandler(request::EzyRequestDeliver *requestDeliver) {
+    this->requestDeliver = requestDeliver;
 }
 
-void sendHandShake(socket::EzySocketTcpClient *client) {
-    auto *params = new entity::EzyArray();
-    auto *data = new entity::EzyArray();
-    params->addUInt(11);
-    params->addItem(data);
-    data->addString("clientId");
-    data->addString(CLIENT_KEY);
-    data->addString("token");
-    data->addString("C++");
-    data->addString("0.0.1");
-    client->sendMessage(params);
+void HandshakeEventHandler::handle(event::EzyHandshakeEvent *event) {
+    sendLoginRequest();
+    handler::EzyPingSchedule *pingSchedule = new handler::EzyPingSchedule(requestDeliver);
+    pingSchedule->setPeriod(5);
+    pingSchedule->start();
 }
+
+void HandshakeEventHandler::sendLoginRequest() {
+    auto params = new request::EzyLoginRequestParams();
+    params->setUsername("dungtv");
+    params->setPassword("123456");
+    params->setData(new entity::EzyArray());
+    auto request = request::EzyLoginRequest::create(params);
+    requestDeliver->send(request);
+}
+
+//==========================================================
+
+LoginEventHandler::LoginEventHandler(request::EzyRequestDeliver* requestDeliver) {
+    this->requestDeliver = requestDeliver;
+}
+
+void LoginEventHandler::handle(event::EzyLoginEvent *event) {
+    sendAccessAppRequest();
+}
+
+void LoginEventHandler::sendAccessAppRequest() {
+    auto params = new request::EzyAccessAppRequestParams();
+    params->setAppName("ezyfox-simple-chat");
+    params->setData(new entity::EzyArray());
+    auto request = request::EzyAccessAppRequest::create(params);
+    requestDeliver->send(request);
+}
+
+//==========================================================
 
 int main(int argc, const char * argv[]) {
-    socket::EzySocketTcpClient *client = new socket::EzySocketTcpClient();
+    srand( static_cast<unsigned int>(time(NULL)));
+    EzyClient *client = new EzyClient();
+    client->addEventHandler(event::ConnectionSuccess, new ConnectionSuccessEventHandler(client));
+    client->addEventHandler(event::Handshake, new HandshakeEventHandler(client));
+    client->addEventHandler(event::LoginSuccess, new LoginEventHandler(client));
     logger::log("start client");
-    client->setDataHandler(new SocketDataHandler(client));
-    client->setStatusHandler(new SocketStatusHandler(client));
-    client->connectTo("188.166.213.37", 3005);
+    client->connect("tvd12.com", 3005);
     do {
-        client->processMessage();
-    } while(client->getStatus() != socket::EzySocketStatusType::Closed);
+        client->processSocketEvent();
+        std::this_thread::sleep_for(std::chrono::milliseconds(3));
+    } while(true);
     logger::log("shutdown client");
     return 0;
 }

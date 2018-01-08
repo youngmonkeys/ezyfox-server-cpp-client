@@ -172,7 +172,7 @@ void EzyDataEncoder::writeString(const std::string& str){
 		writeNativeUInt32((uint32_t)size);
 	}
 
-	writeNativeBytes(str.data(), size);
+	writeNativeBytes(str.data(), (int32_t)size);
 }
 
 void EzyDataEncoder::writeBin(const char* str, uint32_t size){
@@ -221,7 +221,7 @@ void EzyDataEncoder::writeMap(uint32_t size){
 }
 
 uint32_t EzyDataEncoder::getSize(){
-	return mBuffer.size();
+	return (uint32_t)mBuffer.size();
 }
 
 void EzyDataEncoder::insertHeader(EzyMessageHeader* header) {

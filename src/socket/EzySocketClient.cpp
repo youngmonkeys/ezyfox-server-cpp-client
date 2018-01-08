@@ -1,6 +1,6 @@
 #include <thread>
 #include "EzySocketClient.h"
-#include "../pool/EzyAutoReleasePool.h"
+#include "../gc/EzyAutoReleasePool.h"
 
 EZY_NAMESPACE_START
 namespace socket {
@@ -71,7 +71,7 @@ void EzySocketClient::updateConnection(){
         }
     }
     
-    pool::EzyAutoReleasePool::getInstance()->removePool();
+    gc::EzyAutoReleasePool::getInstance()->removePool();
     this->release();
 }
 
@@ -170,7 +170,7 @@ void EzySocketClient::processMessage(){
     processEvent();
     
     if (!mReleasePool){
-        mReleasePool = pool::EzyAutoReleasePool::getInstance()->getPool();
+        mReleasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
     }
     mReleasePool->releaseAll();
 }

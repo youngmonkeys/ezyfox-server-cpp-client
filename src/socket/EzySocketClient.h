@@ -6,7 +6,7 @@
 EZY_NAMESPACE_START
 namespace socket {
 
-class EzySocketClient : public entity::EzyRef {
+class EzySocketClient : public base::EzyRef {
 protected:
     std::string mHost;
     int mPort;
@@ -18,7 +18,7 @@ protected:
     EzySocketReader* mSocketReader;
     EzySocketClientStatus mClientStatus;
     
-    pool::EzyReleasePool* mReleasePool;
+    gc::EzyReleasePool* mReleasePool;
     
     std::vector<EzySocketStatusData> mStatusBuffer;
     
