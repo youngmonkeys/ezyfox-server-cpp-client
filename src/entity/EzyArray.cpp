@@ -12,7 +12,7 @@ EzyArray::EzyArray() {
 }
 
 void EzyArray::writeToBuffer(codec::EzyDataEncoder* encoder){
-	encoder->writeArray((int)mData.size());
+	encoder->writeArray((uint32_t)mData.size());
 	if (mData.size() > 0) {
 		for (int i = 0; i < mData.size(); i++){
 			mData[i]->writeToBuffer(encoder);

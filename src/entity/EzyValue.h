@@ -30,7 +30,7 @@ class EzyObject;
 class EzyArray;
 class EzyString;
 
-class EzyValue : public EzyRef {
+class EzyValue : public base::EzyRef {
 	friend EzyPrimitive;
 	friend EzyObject;
 	friend EzyArray;

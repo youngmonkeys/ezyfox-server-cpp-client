@@ -6,7 +6,7 @@
 #include "../EzyMacro.h"
 
 EZY_NAMESPACE_START
-namespace entity {
+namespace base {
 
 class EzyRef {
 protected:

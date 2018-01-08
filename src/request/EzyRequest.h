@@ -28,7 +28,7 @@ public:
     virtual entity::EzyArray* serialize();
 };
 
-class EzyRequest : public entity::EzyRef {
+class EzyRequest : public base::EzyRef {
 protected:
     EZY_SYNTHESIZE_READONLY(command::EzyCommand, Command)
     EZY_SYNTHESIZE_READONLY(EzyParams*, Params)

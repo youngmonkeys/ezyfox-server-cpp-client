@@ -2,7 +2,7 @@
 #include "EzyAutoReleasePool.h"
 
 EZY_NAMESPACE_START
-namespace pool {
+namespace gc {
 
 EzyAutoReleasePool::EzyAutoReleasePool() {
 }

@@ -5,8 +5,8 @@
 #include <condition_variable>
 #include "EzySocketCore.h"
 #include "EzySocketPool.h"
-#include "../entity/EzyRef.h"
-#include "../pool/EzyReleasePool.h"
+#include "../base/EzyRef.h"
+#include "../gc/EzyReleasePool.h"
 
 EZY_NAMESPACE_START
 namespace socket {
@@ -23,7 +23,7 @@ public:
     virtual void handleSocketStatus(const EzySocketStatusData& data) = 0;
 };
 
-class EzySocketAdapter : public entity::EzyRef {
+class EzySocketAdapter : public base::EzyRef {
     
 protected:
     

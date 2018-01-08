@@ -1,7 +1,7 @@
 #include "EzyReleasePool.h"
 
 EZY_NAMESPACE_START
-namespace pool {
+namespace gc {
     
 EzyReleasePool::EzyReleasePool() {
     
@@ -11,7 +11,7 @@ EzyReleasePool::~EzyReleasePool() {
     this->releaseAll();
 }
     
-void EzyReleasePool::addObject(entity::EzyRef* object) {
+void EzyReleasePool::addObject(base::EzyRef* object) {
     mObjects.push_back(object);
     object->retain();
 }

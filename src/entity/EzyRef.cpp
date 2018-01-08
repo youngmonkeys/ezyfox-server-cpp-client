@@ -1,8 +1,8 @@
 #include "EzyRef.h"
-#include "../pool/EzyAutoReleasePool.h"
+#include "../gc/EzyAutoReleasePool.h"
 
 EZY_NAMESPACE_START
-namespace entity {
+namespace base {
 
 EzyRef::EzyRef(){
 	mRetainCount = 1;
@@ -29,7 +29,7 @@ void EzyRef::release(){
 }
 
 void EzyRef::autorelease(){
-    auto pool = pool::EzyAutoReleasePool::getInstance()->getPool();
+    auto pool = gc::EzyAutoReleasePool::getInstance()->getPool();
 	pool->addObject(this);
 	this->release();
 }

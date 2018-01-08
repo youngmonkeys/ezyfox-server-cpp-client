@@ -27,7 +27,7 @@ namespace event {
 
 //===================================
     
-class EzyEvent : public entity::EzyRef {
+class EzyEvent : public base::EzyRef {
 public:
     virtual EzyEventType getType() = 0;
 };

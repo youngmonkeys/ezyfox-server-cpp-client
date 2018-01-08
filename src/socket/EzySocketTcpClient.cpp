@@ -2,7 +2,7 @@
 #include <chrono>
 #include "EzySocketTcpClient.h"
 #include "../logger/EzyLogger.h"
-#include "../pool/EzyAutoReleasePool.h"
+#include "../gc/EzyAutoReleasePool.h"
 
 EZY_NAMESPACE_START
 namespace socket {
@@ -16,7 +16,7 @@ EzySocketTcpWriter::~EzySocketTcpWriter() {
 void EzySocketTcpWriter::update(){
 	size_t rs;
 	size_t sentData;
-    auto releasePool = pool::EzyAutoReleasePool::getInstance()->getPool();
+    auto releasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
 	while (true) {
 		releasePool->releaseAll();
 		if (!isRunning()) {
@@ -73,7 +73,7 @@ EzySocketTcpReader::~EzySocketTcpReader(){
 void EzySocketTcpReader::update(){
 	size_t rs;
 	char dataBuffer[BUFFER_SIZE];
-    auto releasePool = pool::EzyAutoReleasePool::getInstance()->getPool();
+    auto releasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
 	while (true){
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		releasePool->releaseAll();

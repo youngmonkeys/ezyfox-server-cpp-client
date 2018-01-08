@@ -5,7 +5,7 @@
 #include "../entity/EzyValue.h"
 #include "../entity/EzyJson.h"
 #include "../entity/EzyObject.h"
-#include "../pool/EzyAutoReleasePool.h"
+#include "../gc/EzyAutoReleasePool.h"
 
 EZY_NAMESPACE_START
 namespace socket {
@@ -21,7 +21,7 @@ EzySocketAdapter::~EzySocketAdapter() {
 
 void EzySocketAdapter::updateThread(){
 	this->update();
-    pool::EzyAutoReleasePool::getInstance()->removePool();
+    gc::EzyAutoReleasePool::getInstance()->removePool();
 	this->release();
 }
 

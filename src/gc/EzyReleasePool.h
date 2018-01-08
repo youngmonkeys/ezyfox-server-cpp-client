@@ -1,17 +1,17 @@
 #pragma once
 
 #include "../EzyMacro.h"
-#include "../entity/EzyRef.h"
+#include "../base/EzyRef.h"
 
 EZY_NAMESPACE_START
-namespace pool {
+namespace gc {
 
 class EzyReleasePool {
-    std::vector<entity::EzyRef*> mObjects;
+    std::vector<base::EzyRef*> mObjects;
 public:
     EzyReleasePool();
     virtual ~EzyReleasePool();
-    virtual void addObject(entity::EzyRef* object);
+    virtual void addObject(base::EzyRef* object);
     virtual void releaseAll();
 };
 

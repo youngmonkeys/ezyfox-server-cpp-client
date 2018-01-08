@@ -1,11 +1,11 @@
 #pragma once
 
 #include "../EzyMacro.h"
-#include "../entity/EzyRef.h"
+#include "../base/EzyRef.h"
 #include "EzyReleasePool.h"
 
 EZY_NAMESPACE_START
-namespace pool {
+namespace gc {
 
 class EzyAutoReleasePool {
     std::mutex mPoolMutex;

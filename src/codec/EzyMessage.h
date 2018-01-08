@@ -7,7 +7,7 @@
 EZY_NAMESPACE_START
 namespace codec {
 
-class EzyMessageHeader : public entity::EzyRef {
+class EzyMessageHeader : public base::EzyRef {
 protected:
     EZY_SYNTHESIZE_BOOL_READONLY(BigSize) //bit 1
     EZY_SYNTHESIZE_BOOL(Encrypted) //bit 2
