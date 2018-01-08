@@ -6,9 +6,11 @@ EZY_NAMESPACE_START
 namespace event {
     
 enum EzyEventType {
-    connectionSuccess,
-    connectionFailure,
-    handshake
+    ConnectionSuccess = 0,
+    ConnectionFailure,
+    Handshake,
+    LoginSuccess,
+    AccessAppSuccess,
 };
     
 }

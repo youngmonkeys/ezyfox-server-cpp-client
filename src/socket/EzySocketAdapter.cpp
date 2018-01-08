@@ -38,8 +38,6 @@ void EzySocketAdapter::setRunning(bool running) {
 void EzySocketAdapter::start() {
 	if (!isRunning()){
 		this->setRunning(true);
-		//running = true;
-
 		this->retain();
 		std::thread newThread(&EzySocketAdapter::updateThread, this);
 		newThread.detach();

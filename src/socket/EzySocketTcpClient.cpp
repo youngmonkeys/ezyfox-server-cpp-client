@@ -69,7 +69,7 @@ EzySocketTcpReader::EzySocketTcpReader() {
 EzySocketTcpReader::~EzySocketTcpReader(){
 }
 
-#define BUFFER_SIZE 32768
+#define BUFFER_SIZE 102400
 void EzySocketTcpReader::update(){
 	size_t rs;
 	char dataBuffer[BUFFER_SIZE];

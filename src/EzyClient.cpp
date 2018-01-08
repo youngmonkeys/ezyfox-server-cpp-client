@@ -1,14 +1,12 @@
 #include <thread>
 #include <chrono>
 #include "EzyClient.h"
-#include "EzySocketKeyPair.h"
-#include "handler/EzyPingSchedule.h"
 
 EZY_NAMESPACE_START
 
 //==========================================================
 
-class SocketDataHandler : public socket::EzySocketDataHandler {
+class EzySimpleSocketDataHandler : public socket::EzySocketDataHandler {
 protected:
     EZY_SYNTHESIZE_WRITEONLY(handler::EzyEventHandlers*, EventHandlers)
 public:
@@ -17,7 +15,7 @@ public:
 
 //==========================================================
 
-class SocketStatusHandler : public socket::EzySocketStatusHandler {
+class EzySimpleSocketStatusHandler : public socket::EzySocketStatusHandler {
 protected:
     EZY_SYNTHESIZE_WRITEONLY(handler::EzyEventHandlers*, EventHandlers)
 public:
@@ -26,109 +24,39 @@ public:
 
 //==========================================================
 
-class ConnectionSuccessEventHandler :
-public handler::EzyEventHandler<event::EzyConnectionSuccessEvent> {
-protected:
-    request::EzyRequestDeliver *requestDeliver;
-protected:
-    virtual void sendHandShakeRequest();
-public:
-    ConnectionSuccessEventHandler(request::EzyRequestDeliver *requestDeliver);
-    virtual void handle(event::EzyConnectionSuccessEvent *event);
-};
-
-//==========================================================
-
-class HandshakeEventHandler :
-public handler::EzyEventHandler<event::EzyHandshakeEvent> {
-protected:
-    request::EzyRequestDeliver *requestDeliver;
-protected:
-    virtual void sendLoginRequest();
-public:
-    HandshakeEventHandler(request::EzyRequestDeliver *requestDeliver);
-    virtual void handle(event::EzyHandshakeEvent *event);
-};
-
-//==========================================================
-
-void SocketDataHandler::handleSocketData(socket::EzySocketData *data) {
-    entity::EzyArray *array = (entity::EzyArray*)data;
-    constant::EzyCommand cmd = (constant::EzyCommand)array->getInt(0);
+void EzySimpleSocketDataHandler::handleSocketData(socket::EzySocketData *data) {
+    auto array = (entity::EzyArray*)data;
+    auto cmd = (command::EzyCommand)array->getInt(0);
+    event::EzyEvent* event = nullptr;
     switch (cmd) {
-        case constant::handshake: {
-            event::EzyHandshakeEvent* event = event::EzyHandshakeEvent::create();
-            mEventHandlers->handleEvent(event);
+        case command::Handshake: {
+            auto args = event::EzyHandshakeEventArgs::create(array->getArray(1));
+            event = event::EzyHandshakeEvent::create(args);
         }
             break;
-        case constant::login: {
-            
+        case command::Login: {
+            auto args = event::EzyLoginEventArgs::create(array->getArray(1));
+            event = event::EzyLoginEvent::create(args);
             break;
         }
         default:
             break;
     }
+    if(event) mEventHandlers->handleEvent(event);
 }
 
 //==========================================================
 
-void SocketStatusHandler::handleSocketStatus(const socket::EzySocketStatusData &status) {
+void EzySimpleSocketStatusHandler::handleSocketStatus(const socket::EzySocketStatusData &status) {
     switch (status.status) {
         case socket::Connected: {
-            event::EzyConnectionSuccessEvent *event = event::EzyConnectionSuccessEvent::create();
+            auto *event = event::EzyConnectionSuccessEvent::create();
             mEventHandlers->handleEvent(event);
         }
             break;
         default:
             break;
     }
-}
-
-//==========================================================
-
-void ConnectionSuccessEventHandler::handle(event::EzyConnectionSuccessEvent *event) {
-    sendHandShakeRequest();
-}
-
-void ConnectionSuccessEventHandler::sendHandShakeRequest() {
-    auto *keyPairGentor = new socket::EzyRsaKeyPairGentor();
-    auto *keyPair = keyPairGentor->generate(512);
-    auto clientKey = keyPair->getPublicKey();
-    logger::log("public key: %s", clientKey.c_str());
-    auto params = new request::EzyHandshakeParams();
-    params->setClientId("clientId");
-    params->setClientKey(clientKey);
-    params->setReconnectToken("reconectToken");
-    auto *request = request::EzyHandshakeRequest::create(params);
-    requestDeliver->send(request);
-}
-
-ConnectionSuccessEventHandler::
-ConnectionSuccessEventHandler(request::EzyRequestDeliver *requestDeliver) {
-    this->requestDeliver = requestDeliver;
-}
-
-//==========================================================
-
-HandshakeEventHandler::
-HandshakeEventHandler(request::EzyRequestDeliver *requestDeliver) {
-    this->requestDeliver = requestDeliver;
-}
-
-void HandshakeEventHandler::handle(event::EzyHandshakeEvent *event) {
-    sendLoginRequest();
-    handler::EzyPingSchedule *pingSchedule = new handler::EzyPingSchedule(requestDeliver);
-    pingSchedule->setPeriod(5);
-    pingSchedule->start();
-}
-
-void HandshakeEventHandler::sendLoginRequest() {
-    auto params = new request::EzyLoginParams();
-    params->setUsername("dungtv");
-    params->setPassword("123456");
-    params->setData(new entity::EzyArray());
-    auto *request = request::EzyLoginRequest::create(params);
-    requestDeliver->send(request);
 }
 
 //==========================================================
@@ -136,18 +64,10 @@ void HandshakeEventHandler::sendLoginRequest() {
 EzyClient::EzyClient() {
     mEventHandlers = new handler::EzyEventHandlers();
     mRequestSerializer = new request::EzyArrayRequestSerializer();
-    addEventHandler(event::connectionSuccess, new ConnectionSuccessEventHandler(this));
-    addEventHandler(event::handshake, new HandshakeEventHandler(this));
 }
 
 EzyClient::~EzyClient() {
     EZY_SAFE_DELETE(mEventHandlers);
-}
-
-template<class T>
-void EzyClient::addEventHandler(event::EzyEventType eventType,
-                                handler::EzyEventHandler<T> *handler) {
-    mEventHandlers->addEventHandler(eventType, handler);
 }
 
 void EzyClient::handleEvent(event::EzyEvent *event) {
@@ -156,9 +76,9 @@ void EzyClient::handleEvent(event::EzyEvent *event) {
 
 void EzyClient::connect(std::string host, int port) {
     mSocketClient = newSocketClient();
-    auto socketDataHandler = new SocketDataHandler();
+    auto socketDataHandler = new EzySimpleSocketDataHandler();
     socketDataHandler->setEventHandlers(mEventHandlers);
-    auto socketStatusHanlder = new SocketStatusHandler();
+    auto socketStatusHanlder = new EzySimpleSocketStatusHandler();
     socketStatusHanlder->setEventHandlers(mEventHandlers);
     mSocketClient->setDataHandler(socketDataHandler);
     mSocketClient->setStatusHandler(socketStatusHanlder);
@@ -180,7 +100,7 @@ void EzyClient::processSocketEvent() {
 }
 
 void EzyClient::send(request::EzyRequest *request) {
-    entity::EzyArray* data = mRequestSerializer->serialize(request);
+    auto data = mRequestSerializer->serialize(request);
     if(mSocketClient)
         mSocketClient->sendMessage(data);
 }

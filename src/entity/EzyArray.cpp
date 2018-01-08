@@ -12,7 +12,7 @@ EzyArray::EzyArray() {
 }
 
 void EzyArray::writeToBuffer(codec::EzyDataEncoder* encoder){
-	encoder->writeArray(mData.size());
+	encoder->writeArray((int)mData.size());
 	if (mData.size() > 0) {
 		for (int i = 0; i < mData.size(); i++){
 			mData[i]->writeToBuffer(encoder);
@@ -36,7 +36,7 @@ void EzyArray::printToOutStream(std::ostringstream& outStream, int padding){
 
 	this->printPadding(outStream, padding);
 	outStream << "{" << std::endl;
-	for (int i=0; i < mData.size(); i++){
+	for (int i = 0; i < mData.size(); i++){
 		this->printPadding(outStream, padding + 1);
 		mData[i]->printToOutStream(outStream, padding + 1);
 		outStream << std::endl;
@@ -65,7 +65,7 @@ EzyValue* EzyArray::getItem(int index){
 }
 
 int EzyArray::size(){
-	return mData.size();
+	return (int)mData.size();
 }
 
 void EzyArray::clear(){

@@ -8,8 +8,8 @@
 #define EZY_DECLARE_PARAMS_REQUEST_CLASS(className) \
 class Ezy##className##Request : public EzyRequest {\
 public:\
-    Ezy##className##Request(Ezy##className##Params* params);\
-static Ezy##className##Request* create(Ezy##className##Params* params);\
+    Ezy##className##Request(Ezy##className##RequestParams* params);\
+    static Ezy##className##Request* create(Ezy##className##RequestParams* params);\
 };
 
 #define EZY_DECLARE_REQUEST_CLASS(className) \
@@ -30,12 +30,12 @@ public:
 
 class EzyRequest : public entity::EzyRef {
 protected:
-    EZY_SYNTHESIZE_READONLY(constant::EzyCommand, Command)
+    EZY_SYNTHESIZE_READONLY(command::EzyCommand, Command)
     EZY_SYNTHESIZE_READONLY(EzyParams*, Params)
 public:
-    EzyRequest(constant::EzyCommand cmd, EzyParams* params);
+    EzyRequest(command::EzyCommand cmd, EzyParams* params);
     virtual ~EzyRequest();
-    static EzyRequest* create(constant::EzyCommand cmd, EzyParams* params);
+    static EzyRequest* create(command::EzyCommand cmd, EzyParams* params);
 };
 
 //==========================================
@@ -44,7 +44,7 @@ EZY_DECLARE_REQUEST_CLASS(Ping);
 
 //==========================================
     
-class EzyHandshakeParams : public EzyParams {
+class EzyHandshakeRequestParams : public EzyParams {
 protected:
     EZY_SYNTHESIZE(std::string, ClientId)
     EZY_SYNTHESIZE(std::string, ClientKey)
@@ -59,16 +59,30 @@ EZY_DECLARE_PARAMS_REQUEST_CLASS(Handshake)
     
 //==========================================
     
-class EzyLoginParams : public EzyParams {
+class EzyLoginRequestParams : public EzyParams {
 protected:
     EZY_SYNTHESIZE(std::string, Username)
     EZY_SYNTHESIZE(std::string, Password)
     EZY_SYNTHESIZE(entity::EzyArray*, Data)
 public:
+    ~EzyLoginRequestParams();
     entity::EzyArray* serialize();
 };
     
 EZY_DECLARE_PARAMS_REQUEST_CLASS(Login);
+    
+//==========================================
+    
+class EzyAccessAppRequestParams : public EzyParams {
+protected:
+    EZY_SYNTHESIZE(std::string, AppName);
+    EZY_SYNTHESIZE(entity::EzyValue*, Data);
+public:
+    ~EzyAccessAppRequestParams();
+    entity::EzyArray* serialize();
+};
+    
+EZY_DECLARE_PARAMS_REQUEST_CLASS(AccessApp)
 
 }
 

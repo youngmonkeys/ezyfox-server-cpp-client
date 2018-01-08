@@ -6,6 +6,8 @@
 #include "request/EzyRequest.h"
 #include "request/EzyRequestDeliver.h"
 #include "request/EzyArrayRequestSerializer.h"
+#include "EzySocketKeyPair.h"
+#include "handler/EzyPingSchedule.h"
 
 EZY_NAMESPACE_START
 
@@ -14,6 +16,10 @@ protected:
     socket::EzySocketClient* mSocketClient;
     handler::EzyEventHandlers* mEventHandlers;
     request::EzyArrayRequestSerializer* mRequestSerializer;
+    
+protected:
+    EZY_SYNTHESIZE_BOOL_READONLY(Connected)
+    
 protected:
     socket::EzySocketClient* newSocketClient();
     
@@ -32,5 +38,11 @@ public:
     void processSocketEvent();
     
 };
+
+template<class T>
+void EzyClient::addEventHandler(event::EzyEventType eventType,
+                                handler::EzyEventHandler<T> *handler) {
+    mEventHandlers->addEventHandler(eventType, handler);
+}
 
 EZY_NAMESPACE_END

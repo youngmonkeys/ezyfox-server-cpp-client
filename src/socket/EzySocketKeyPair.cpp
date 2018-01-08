@@ -28,7 +28,7 @@ EzyKeyPair* EzyRsaKeyPairGentor::generate(int keySize) {
     publicKey.DEREncode(publicKeyBase64Encoder);
     privateKeyBase64Encoder.MessageEnd();
     publicKeyBase64Encoder.MessageEnd();
-    EzyKeyPair* pRet = new EzyKeyPair(privateKeyString, publicKeyString);
+    auto pRet = new EzyKeyPair(privateKeyString, publicKeyString);
     return pRet;
 }
 

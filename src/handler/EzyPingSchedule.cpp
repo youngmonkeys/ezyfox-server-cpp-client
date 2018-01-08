@@ -6,6 +6,7 @@ namespace handler {
     
 EzyPingSchedule::EzyPingSchedule(request::EzyRequestDeliver* requestDeliver) {
     mActive = false;
+    mThread = nullptr;
     mRequestDeliver = requestDeliver;
 }
     

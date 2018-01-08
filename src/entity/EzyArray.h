@@ -42,6 +42,8 @@ public:
 	std::string getString(int index);
 	EzyObject* getObject(int index);
 	EzyArray* getArray(int index);
+    template <class T>
+    T getValue(int index);
 
 	static EzyArray* create();
 };
