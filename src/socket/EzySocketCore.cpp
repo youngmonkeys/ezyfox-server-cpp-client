@@ -1,8 +1,7 @@
 #include <map>
 #include "EzySocketCore.h"
 
-EZY_NAMESPACE_START
-namespace socket {
+EZY_NAMESPACE_START_WITH(socket)
 
 static std::map<int, std::string> sSocketStatusNames = {
 	{ NotConnection, "NotConnection" },
@@ -62,5 +61,4 @@ void EzySocketClientStatus::clear(){
 	mStatusEvent.clear();
 }
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

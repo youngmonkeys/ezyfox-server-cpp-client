@@ -2,8 +2,7 @@
 
 #include "EzySocketClient.h"
 
-EZY_NAMESPACE_START
-namespace socket {
+EZY_NAMESPACE_START_WITH(socket)
 
 #ifdef USE_WINSOCK_2
 	typedef SOCKET EzyTcpSocket;
@@ -45,6 +44,4 @@ public:
 	virtual void closeSocket();
 };
 
-
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

@@ -1,7 +1,6 @@
 #include "EzyReleasePool.h"
 
-EZY_NAMESPACE_START
-namespace gc {
+EZY_NAMESPACE_START_WITH(gc)
     
 EzyReleasePool::EzyReleasePool() {
     
@@ -22,6 +21,5 @@ void EzyReleasePool::releaseAll(){
     }
     mObjects.clear();
 }
-    
-}
-EZY_NAMESPACE_END
+
+EZY_NAMESPACE_END_WITH

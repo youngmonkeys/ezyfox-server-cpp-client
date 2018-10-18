@@ -1,8 +1,11 @@
 #pragma once
 
+#include "../EzyMacro.h"
+#include "../base/EzyRef.h"
 #include "EzyEventType.h"
 #include "../entity/EzyValue.h"
-#include "../io/EzyArrayDataDeserializable.h"
+#include "../constant/EzyDisconnectReason.h"
+#include "../constant/EzyConnectionFailedReason.h"
 
 #define EZY_DECLARE_EVENT_CLASS(className)\
 class Ezy##className##Event : public EzyEvent {\
@@ -11,19 +14,7 @@ public:\
     EzyEventType getType();\
 };
 
-#define EZY_DECLARE_ARGS_EVENT_CLASS(className)\
-class Ezy##className##Event : public EzyEvent {\
-protected:\
-    EZY_SYNTHESIZE_READONLY(Ezy##className##EventArgs*, Args);\
-public:\
-    Ezy##className##Event(Ezy##className##EventArgs* args);\
-    ~Ezy##className##Event();\
-    static Ezy##className##Event* create(Ezy##className##EventArgs* args);\
-    EzyEventType getType();\
-};
-
-EZY_NAMESPACE_START
-namespace event {
+EZY_NAMESPACE_START_WITH(event)
 
 //===================================
     
@@ -37,33 +28,43 @@ public:
 EZY_DECLARE_EVENT_CLASS(ConnectionSuccess)
     
 //===================================
-    
-class EzyHandshakeEventArgs : public io::EzyArrayDataDeserializable {
+
+class EzyConnectionFailureEvent : public EzyEvent {
 protected:
-    EZY_SYNTHESIZE_READONLY(std::string, ServerPublicKey)
-    EZY_SYNTHESIZE_READONLY(std::string, ReconnectToken)
-    EZY_SYNTHESIZE_BOOL_READONLY(Reconnect)
+    EZY_SYNTHESIZE_READONLY(constant::EzyConnectionFailedReason, Reason);
 public:
-    static EzyHandshakeEventArgs* create(entity::EzyArray* array);
-    void deserialize(entity::EzyArray* array);
+    static EzyConnectionFailureEvent* create(constant::EzyConnectionFailedReason reason);
+    EzyConnectionFailureEvent(constant::EzyConnectionFailedReason reason);
 };
 
-EZY_DECLARE_ARGS_EVENT_CLASS(Handshake)
-    
 //===================================
-    
-class EzyLoginEventArgs : public io::EzyArrayDataDeserializable {
-protected:
-    EZY_SYNTHESIZE_READONLY(int64_t, UserId)
-    EZY_SYNTHESIZE_READONLY(std::string, Username);
-    EZY_SYNTHESIZE_READONLY(entity::EzyArray*, JoinedApp);
-    EZY_SYNTHESIZE_READONLY(entity::EzyValue*, data);
-public:
-    static EzyLoginEventArgs* create(entity::EzyArray* array);
-    void deserialize(entity::EzyArray* array);
-};
-    
-EZY_DECLARE_ARGS_EVENT_CLASS(Login)
 
-}
-EZY_NAMESPACE_END
+class EzyDisconnectionEvent : public EzyEvent {
+protected:
+    EZY_SYNTHESIZE_READONLY(constant::EzyDisconnectReason, Reason);
+public:
+    static EzyDisconnectionEvent* create(constant::EzyDisconnectReason reason);
+    EzyDisconnectionEvent(constant::EzyDisconnectReason reason);
+};
+
+//===================================
+
+class EzyLostPingEvent : public EzyEvent {
+protected:
+    EZY_SYNTHESIZE_READONLY(int, Count);
+public:
+    static EzyDisconnectionEvent* create(int count);
+    EzyLostPingEvent(int count);
+};
+
+//===================================
+
+class EzyTryConnectEvent : public EzyEvent {
+protected:
+    EZY_SYNTHESIZE_READONLY(int, Count);
+public:
+    static EzyDisconnectionEvent* create(int count);
+    EzyTryConnectEvent(int count);
+};
+
+EZY_NAMESPACE_END_WITH

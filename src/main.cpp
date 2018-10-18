@@ -11,7 +11,7 @@ using namespace EZY_NAMESPACE;
 class ConnectionSuccessEventHandler :
 public handler::EzyEventHandler<event::EzyConnectionSuccessEvent> {
 protected:
-    request::EzyRequestDeliver *requestDeliver;
+    request::EzyRequestDeliver *mRequestDeliver;
 protected:
     virtual void sendHandShakeRequest();
 public:
@@ -24,7 +24,7 @@ public:
 class HandshakeEventHandler :
 public handler::EzyEventHandler<event::EzyHandshakeEvent> {
 protected:
-    request::EzyRequestDeliver *requestDeliver;
+    request::EzyRequestDeliver *mRequestDeliver;
 protected:
     virtual void sendLoginRequest();
 public:
@@ -37,12 +37,25 @@ public:
 class LoginEventHandler :
 public handler::EzyEventHandler<event::EzyLoginEvent> {
 protected:
-    request::EzyRequestDeliver *requestDeliver;
+    request::EzyRequestDeliver *mRequestDeliver;
 protected:
     virtual void sendAccessAppRequest();
 public:
     LoginEventHandler(request::EzyRequestDeliver* requestDeliver);
     virtual void handle(event::EzyLoginEvent* event);
+};
+
+//==========================================================
+
+class AccessAppEventHandler :
+public handler::EzyEventHandler<event::EzyLoginEvent> {
+protected:
+    EzyAppManager* mAppManager;
+    request::EzyRequestDeliver *mRequestDeliver;
+public:
+    AccessAppEventHandler(EzyAppManager* appManager,
+                          request::EzyRequestDeliver* requestDeliver);
+    virtual void handle(event::EzyAccessAppEvent* event);
 };
 
 //==========================================================
@@ -61,24 +74,24 @@ void ConnectionSuccessEventHandler::sendHandShakeRequest() {
     params->setClientKey(clientKey);
     params->setReconnectToken("reconectToken");
     auto request = request::EzyHandshakeRequest::create(params);
-    requestDeliver->send(request);
+    mRequestDeliver->send(request);
 }
 
 ConnectionSuccessEventHandler::
 ConnectionSuccessEventHandler(request::EzyRequestDeliver *requestDeliver) {
-    this->requestDeliver = requestDeliver;
+    this->mRequestDeliver = requestDeliver;
 }
 
 //==========================================================
 
 HandshakeEventHandler::
 HandshakeEventHandler(request::EzyRequestDeliver *requestDeliver) {
-    this->requestDeliver = requestDeliver;
+    this->mRequestDeliver = requestDeliver;
 }
 
 void HandshakeEventHandler::handle(event::EzyHandshakeEvent *event) {
     sendLoginRequest();
-    handler::EzyPingSchedule *pingSchedule = new handler::EzyPingSchedule(requestDeliver);
+    handler::EzyPingSchedule *pingSchedule = new handler::EzyPingSchedule(mRequestDeliver);
     pingSchedule->setPeriod(5);
     pingSchedule->start();
 }
@@ -89,13 +102,13 @@ void HandshakeEventHandler::sendLoginRequest() {
     params->setPassword("123456");
     params->setData(new entity::EzyArray());
     auto request = request::EzyLoginRequest::create(params);
-    requestDeliver->send(request);
+    mRequestDeliver->send(request);
 }
 
 //==========================================================
 
 LoginEventHandler::LoginEventHandler(request::EzyRequestDeliver* requestDeliver) {
-    this->requestDeliver = requestDeliver;
+    this->mRequestDeliver = requestDeliver;
 }
 
 void LoginEventHandler::handle(event::EzyLoginEvent *event) {
@@ -107,7 +120,23 @@ void LoginEventHandler::sendAccessAppRequest() {
     params->setAppName("ezyfox-simple-chat");
     params->setData(new entity::EzyArray());
     auto request = request::EzyAccessAppRequest::create(params);
-    requestDeliver->send(request);
+    mRequestDeliver->send(request);
+}
+
+//==========================================================
+
+AccessAppEventHandler::AccessAppEventHandler(EzyAppManager* appManager,
+                                             request::EzyRequestDeliver* requestDeliver) {
+    this->mAppManager = appManager;
+    this->mRequestDeliver = requestDeliver;
+}
+
+void AccessAppEventHandler::handle(event::EzyAccessAppEvent *event) {
+    auto args = event->getArgs();
+    auto app = new EzyApp();
+    app->setId(args->getAppId());
+    app->setName(args->getAppName());
+    mAppManager->addApp(app);
 }
 
 //==========================================================
@@ -119,7 +148,7 @@ int main(int argc, const char * argv[]) {
     client->addEventHandler(event::Handshake, new HandshakeEventHandler(client));
     client->addEventHandler(event::LoginSuccess, new LoginEventHandler(client));
     logger::log("start client");
-    client->connect("tvd12.com", 3005);
+    client->connect("127.0.0.1", 3005);
     do {
         client->processSocketEvent();
         std::this_thread::sleep_for(std::chrono::milliseconds(3));

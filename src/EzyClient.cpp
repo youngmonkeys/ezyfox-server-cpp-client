@@ -24,21 +24,44 @@ public:
 
 //==========================================================
 
+#define EZY_NEW_EVENT_FROM_DATA(eventName)\
+{\
+    auto args = event::Ezy##eventName##EventArgs::create(array->getArray(1)); \
+    event = event::Ezy##eventName##Event::create(args); \
+}
+
 void EzySimpleSocketDataHandler::handleSocketData(socket::EzySocketData *data) {
     auto array = (entity::EzyArray*)data;
-    auto cmd = (command::EzyCommand)array->getInt(0);
+    auto cmd = (constant::EzyCommand)array->getInt(0);
     event::EzyEvent* event = nullptr;
     switch (cmd) {
-        case command::Handshake: {
-            auto args = event::EzyHandshakeEventArgs::create(array->getArray(1));
-            event = event::EzyHandshakeEvent::create(args);
-        }
+        case command::Handshake:
+            EZY_NEW_EVENT_FROM_DATA(Handshake)
             break;
-        case command::Login: {
-            auto args = event::EzyLoginEventArgs::create(array->getArray(1));
-            event = event::EzyLoginEvent::create(args);
+        case command::Login:
+            EZY_NEW_EVENT_FROM_DATA(Login)
             break;
-        }
+        case command::LoginError:
+            break;
+        case command::AppAccess:
+            EZY_NEW_EVENT_FROM_DATA(AccessApp)
+            break;
+        case command::AppRequest:
+            break;
+        case command::AppAccessError:
+            break;
+        case command::AppExit:
+            break;
+        case command::Disconnect:
+            break;
+        case command::Error:
+            break;
+        case command::Ping:
+            break;
+        case command::PluginRequestById:
+            break;
+        case command::Pong:
+            break;
         default:
             break;
     }
@@ -48,15 +71,19 @@ void EzySimpleSocketDataHandler::handleSocketData(socket::EzySocketData *data) {
 //==========================================================
 
 void EzySimpleSocketStatusHandler::handleSocketStatus(const socket::EzySocketStatusData &status) {
+    event::EzyEvent* event = nullptr;
     switch (status.status) {
-        case socket::Connected: {
-            auto *event = event::EzyConnectionSuccessEvent::create();
-            mEventHandlers->handleEvent(event);
-        }
+        case socket::Connected:
+            event = event::EzyConnectionSuccessEvent::create();
+            break;
+        case socket::Closed:
+            break;
+        case socket::LostConnection:
             break;
         default:
             break;
     }
+    if(event) mEventHandlers->handleEvent(event);
 }
 
 //==========================================================
@@ -96,7 +123,8 @@ void EzyClient::disconnect() {
 }
 
 void EzyClient::processSocketEvent() {
-    mSocketClient->processMessage();
+    if(mSocketClient)
+        mSocketClient->processMessage();
 }
 
 void EzyClient::send(request::EzyRequest *request) {

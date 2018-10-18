@@ -10,8 +10,7 @@
 #include "../EzyMacro.h"
 #include "EzyMessage.h"
 
-EZY_NAMESPACE_START
-namespace codec {
+EZY_NAMESPACE_START_WITH(codec)
 
 class EzyDataEncoder {
 protected:
@@ -54,5 +53,4 @@ public:
 	void insertDataSize(EzyMessageHeader* header, uint32_t dataSize);
 };
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

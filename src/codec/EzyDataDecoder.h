@@ -6,8 +6,7 @@
 #include <stack>
 #include "../entity/EzyValue.h"
 
-EZY_NAMESPACE_START
-namespace codec {
+EZY_NAMESPACE_START_WITH(codec)
     
 enum EzyDecodeState {
     prepareMessage = 1,
@@ -82,5 +81,4 @@ public:
 	void addData(const std::vector<char> data);
 };
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

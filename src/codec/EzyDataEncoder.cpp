@@ -1,7 +1,6 @@
 #include "EzyDataEncoder.h"
 
-EZY_NAMESPACE_START
-namespace codec {
+EZY_NAMESPACE_START_WITH(codec)
 	
 EzyDataEncoder::EzyDataEncoder() {
 	mBuffer.reserve(102400); // 100KB Buffer
@@ -236,5 +235,4 @@ void EzyDataEncoder::insertDataSize(EzyMessageHeader* header, uint32_t dataSize)
     mBuffer.insert(mBuffer.begin(), bytes, bytes + size);
 }
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

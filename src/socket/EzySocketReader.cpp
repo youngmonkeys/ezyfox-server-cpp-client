@@ -2,8 +2,7 @@
 #include "../logger/EzyLogger.h"
 #include "../entity/EzyJson.h"
 
-EZY_NAMESPACE_START
-namespace socket {
+EZY_NAMESPACE_START_WITH(socket)
 
 EzySocketReader::EzySocketReader(){
     mSocketPool = new EzySocketPool();
@@ -64,6 +63,7 @@ void EzySocketReader::onUpdateDataHeader() {
     if(mByteBuffer.size() >= 1) {
         char headerByte;
         memcpy(&headerByte, mByteBuffer.data(), sizeof(headerByte));
+        mMessageHeader->parse(headerByte);
         mByteBuffer.erase(mByteBuffer.begin(), mByteBuffer.begin() + 1);
         mDecodeState = codec::readMessageSize;
         onRecvData();
@@ -118,5 +118,4 @@ void EzySocketReader::onRecvMessage(entity::EzyValue* value){
     pushMessage(value);
 }
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

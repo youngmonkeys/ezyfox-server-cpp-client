@@ -4,13 +4,12 @@
 
 #include <sstream>
 #include "EzyMacro.h"
-#include "EzyRef.h"
+#include "../base/EzyRef.h"
 #include "../rapidjson/rapidjson.h"
 #include "../rapidjson/document.h"
 #include "../codec/EzyDataEncoder.h"
 
-EZY_NAMESPACE_START
-namespace entity {
+EZY_NAMESPACE_START_WITH(entity)
 
 enum EzyValueType {
 	TypeNULL = 0,
@@ -22,7 +21,7 @@ enum EzyValueType {
 	TypeString = 6,
 	TypeDict = 7,
 	TypeArray = 8,
-    TypeJSON = 101,
+    TypeJson = 101,
 };
 
 class EzyPrimitive;
@@ -55,5 +54,4 @@ public:
 	std::string toJson();
 };
 
-EZY_NAMESPACE_END
-}
+EZY_NAMESPACE_END_WITH

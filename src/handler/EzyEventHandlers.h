@@ -2,11 +2,11 @@
 
 #include <map>
 #include "../EzyMacro.h"
-#include "EzyEvent.h"
+#include "../event/EzyEvent.h"
+#include "../event/EzyEventType.h"
 #include "EzyEventHandler.h"
 
-EZY_NAMESPACE_START
-namespace handler {
+EZY_NAMESPACE_START_WITH(handler)
 
 class EzyEventHandlers {
 protected:
@@ -26,5 +26,4 @@ void EzyEventHandlers::addEventHandler(event::EzyEventType eventType, EzyEventHa
     handlers[eventType] = (EzyEventHandler<event::EzyEvent>*)handler;
 }
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

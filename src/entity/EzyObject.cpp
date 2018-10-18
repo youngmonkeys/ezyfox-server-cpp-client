@@ -3,8 +3,7 @@
 #include "EzyPrimitive.h"
 #include "EzyString.h"
 
-EZY_NAMESPACE_START
-namespace entity {
+EZY_NAMESPACE_START_WITH(entity)
 
 EzyObject::EzyObject() {
 	mValueType = EzyValueType::TypeDict;
@@ -231,5 +230,4 @@ EzyArray* EzyObject::setArray(const std::string& key, EzyArray* value){
 	return value;
 }
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

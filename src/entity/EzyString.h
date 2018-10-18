@@ -3,8 +3,7 @@
 #include "EzyValue.h"
 #include "../EzyMacro.h"
 
-EZY_NAMESPACE_START
-namespace entity {
+EZY_NAMESPACE_START_WITH(entity)
 
 class EzyString : public EzyValue {
 protected:
@@ -23,7 +22,6 @@ public:
     void setData(const char* data, int size);
     const std::string& getString();
 };
-    
-}
-EZY_NAMESPACE_END
+
+EZY_NAMESPACE_END_WITH
 

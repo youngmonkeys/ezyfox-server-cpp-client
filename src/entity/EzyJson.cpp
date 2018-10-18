@@ -9,15 +9,16 @@
 #include "../rapidjson/stringbuffer.h"
 #include "../rapidjson/writer.h"
 
-EZY_NAMESPACE_START
-namespace entity {
+EZY_NAMESPACE_START_WITH(entity)
 
 inline bool __checkDoubleIsFloat(double d){
-	if (d < static_cast<double>(-std::numeric_limits<float>::max()) || d > static_cast<double>(std::numeric_limits<float>::max())){
+	if (d < static_cast<double>(-std::numeric_limits<float>::max()) ||
+        d > static_cast<double>(std::numeric_limits<float>::max())) {
 		return false;
 	}
 	double b = static_cast<double>(static_cast<float>(d));
-	return d >= b && d <= b;
+	bool answer = (d >= b && d <= b);
+    return answer;
 }
 
 inline EzyValue* __createDictFromJson(const rapidjson::Value& value);
@@ -73,7 +74,6 @@ inline EzyValue* __createValueFromJson(const rapidjson::Value& value){
 		auto pret = new entity::EzyString();
         pret->autorelease();
 		pret->setString(value.GetString());
-		//pret->setData(value.GetString(), value.GetStringLength());
 		return pret;
 	}
 	case rapidjson::Type::kObjectType:{
@@ -116,7 +116,7 @@ inline EzyValue* __createArrayFromJson(const rapidjson::Value& value){
 EzyJson::EzyJson(){
     mValue = 0;
     mString = "";
-    mValueType = EzyValueType::TypeJSON;
+    mValueType = EzyValueType::TypeJson;
 }
 
 EzyJson::~EzyJson(){
@@ -180,5 +180,4 @@ EzyJson* EzyJson::create(entity::EzyValue* value){
 	return pret;
 }
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

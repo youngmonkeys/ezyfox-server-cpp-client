@@ -2,16 +2,14 @@
 
 #include "../EzyMacro.h"
 
-EZY_NAMESPACE_START
-namespace event {
+EZY_NAMESPACE_START_WITH_ONLY(event)
     
 enum EzyEventType {
-    ConnectionSuccess = 0,
-    ConnectionFailure,
-    Handshake,
-    LoginSuccess,
-    AccessAppSuccess,
+    ConnectionSuccess = 1,
+    ConnectionFailure = 2,
+    Disconnection = 3,
+    LostPing = 4,
+    TryConnect = 5
 };
-    
-}
-EZY_NAMESPACE_END
+
+EZY_NAMESPACE_END_WITH

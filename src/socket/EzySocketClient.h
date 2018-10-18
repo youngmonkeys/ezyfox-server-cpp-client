@@ -3,8 +3,7 @@
 #include "EzySocketWriter.h"
 #include "EzySocketReader.h"
 
-EZY_NAMESPACE_START
-namespace socket {
+EZY_NAMESPACE_START_WITH(socket)
 
 class EzySocketClient : public base::EzyRef {
 protected:
@@ -54,6 +53,5 @@ public:
     virtual void setDataHandler(EzySocketDataHandler* handler);
     virtual void setStatusHandler(EzySocketStatusHandler* handler);
 };
-    
-}
-EZY_NAMESPACE_END
+
+EZY_NAMESPACE_END_WITH

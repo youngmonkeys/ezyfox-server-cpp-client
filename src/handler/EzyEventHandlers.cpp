@@ -2,8 +2,7 @@
 
 #define HANDLERS_MAP std::map<event::EzyEventType, EzyEventHandler<event::EzyEvent>*>
 
-EZY_NAMESPACE_START
-namespace handler {
+EZY_NAMESPACE_START_WITH(handler)
     
 EzyEventHandlers::EzyEventHandlers() {
 }
@@ -20,6 +19,5 @@ void EzyEventHandlers::handleEvent(event::EzyEvent *event) {
     auto *hanlder = handlers.at(eventType);
     if(hanlder) hanlder->handle(event);
 }
-    
-}
-EZY_NAMESPACE_END
+
+EZY_NAMESPACE_END_WITH

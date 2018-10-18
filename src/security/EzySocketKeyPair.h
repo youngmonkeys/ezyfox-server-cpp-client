@@ -3,8 +3,7 @@
 #include <string>
 #include "../EzyMacro.h"
 
-EZY_NAMESPACE_START
-namespace socket {
+EZY_NAMESPACE_START_WITH_ONLY(security)
 
 class EzyKeyPair {
 protected:
@@ -23,7 +22,5 @@ class EzyRsaKeyPairGentor : public EzyKeyPairGentor {
 public:
     EzyKeyPair* generate(int keySize);
 };
-    
-}
 
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

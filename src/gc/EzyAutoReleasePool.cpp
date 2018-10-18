@@ -1,8 +1,7 @@
 #include <thread>
 #include "EzyAutoReleasePool.h"
 
-EZY_NAMESPACE_START
-namespace gc {
+EZY_NAMESPACE_START_WITH(gc)
 
 EzyAutoReleasePool::EzyAutoReleasePool() {
 }
@@ -41,6 +40,5 @@ static EzyAutoReleasePool sInstance;
 EzyAutoReleasePool* EzyAutoReleasePool::getInstance() {
     return &sInstance;
 }
-    
-}
-EZY_NAMESPACE_END
+
+EZY_NAMESPACE_END_WITH

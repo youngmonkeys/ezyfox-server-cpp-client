@@ -4,8 +4,7 @@
 #include "EzyString.h"
 #include "../logger/EzyLogger.h"
 
-EZY_NAMESPACE_START
-namespace entity {
+EZY_NAMESPACE_START_WITH(entity)
 
 EzyArray::EzyArray() {
 	mValueType = EzyValueType::TypeArray;
@@ -174,5 +173,4 @@ EzyArray* EzyArray::getArray(int index){
 	return ((EzyArray*)getItem(index));
 }
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

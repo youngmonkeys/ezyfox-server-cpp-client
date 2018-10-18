@@ -1,26 +1,25 @@
 #include "EzyRef.h"
 #include "../gc/EzyAutoReleasePool.h"
 
-EZY_NAMESPACE_START
-namespace base {
+EZY_NAMESPACE_START_WITH(base)
 
-EzyRef::EzyRef(){
+EzyRef::EzyRef() {
 	mRetainCount = 1;
 }
 
-EzyRef::~EzyRef(){
+EzyRef::~EzyRef() {
 }
 
-void EzyRef::retain(){
+void EzyRef::retain() {
 	mMutex.lock();
 	mRetainCount++;
 	mMutex.unlock();
 }
 
-void EzyRef::release(){
+void EzyRef::release() {
 	mMutex.lock();
 	mRetainCount--;
-	if (mRetainCount <= 0){
+	if (mRetainCount <= 0) {
 		mMutex.unlock();
 		delete this;
 		return;
@@ -28,11 +27,10 @@ void EzyRef::release(){
 	mMutex.unlock();
 }
 
-void EzyRef::autorelease(){
+void EzyRef::autorelease() {
     auto pool = gc::EzyAutoReleasePool::getInstance()->getPool();
 	pool->addObject(this);
 	this->release();
 }
-	
-}
-EZY_NAMESPACE_END
+
+EZY_NAMESPACE_END_WITH

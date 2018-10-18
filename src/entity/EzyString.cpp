@@ -1,7 +1,6 @@
 #include "EzyString.h"
 
-EZY_NAMESPACE_START
-namespace entity {
+EZY_NAMESPACE_START_WITH(entity)
 
 EzyString::EzyString() {
     mData = "";
@@ -39,5 +38,4 @@ const std::string& EzyString::getString() {
     return mData;
 }
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

@@ -2,8 +2,7 @@
 
 #include "../EzyMacro.h"
 
-EZY_NAMESPACE_START
-namespace handler {
+EZY_NAMESPACE_START_WITH_ONLY(handler)
 
 template <class T>
 class EzyEventHandler {
@@ -15,6 +14,5 @@ public:
 template <class T>
 EzyEventHandler<T>::~EzyEventHandler() {
 }
-    
-}
-EZY_NAMESPACE_END
+
+EZY_NAMESPACE_END_WITH

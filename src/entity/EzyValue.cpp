@@ -7,8 +7,7 @@
 #include "../rapidjson/stringbuffer.h"
 #include "../rapidjson/prettywriter.h"
 
-EZY_NAMESPACE_START
-namespace entity {
+EZY_NAMESPACE_START_WITH(entity)
 	
 EzyValue::EzyValue() {
 	mValueType = EzyValueType::TypeNULL;
@@ -66,5 +65,4 @@ std::string EzyValue::toJson() {
 	return json;
 }
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

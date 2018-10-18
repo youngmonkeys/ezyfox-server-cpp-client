@@ -1,10 +1,10 @@
 #pragma once
 
+#include <map>
 #include "EzyValue.h"
 #include "../codec/EzyDataEncoder.h"
 
-EZY_NAMESPACE_START
-namespace entity {
+EZY_NAMESPACE_START_WITH(entity)
 
 class EzyObject : public EzyValue {
 protected:
@@ -46,5 +46,4 @@ public:
 	static EzyObject* create();
 };
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

@@ -1,7 +1,6 @@
 #include "EzyMessage.h"
 
-EZY_NAMESPACE_START
-namespace codec {
+EZY_NAMESPACE_START_WITH(codec)
     
 EzyMessageHeader::EzyMessageHeader() {
     mText = false;
@@ -33,20 +32,19 @@ EzyMessageHeader* EzyMessageHeader::create(uint32_t dataSize) {
 }
     
 void EzyMessageHeader::parse(char headerByte) {
-    mBigSize = (headerByte & 1 << 0) > 0;
-    mEncrypted = (headerByte & 1 << 1) > 0;
-    mCompressed = (headerByte & 1 << 2) > 0;
-    mText = (headerByte & 1 << 3) > 0;
+    mBigSize        = (headerByte & 1 << 0) > 0;
+    mEncrypted      = (headerByte & 1 << 1) > 0;
+    mCompressed     = (headerByte & 1 << 2) > 0;
+    mText           = (headerByte & 1 << 3) > 0;
 }
     
 char EzyMessageHeader::getByte() {
     char headerByte = 0;
-    headerByte |= mBigSize ? 1 << 0 : 0;
-    headerByte |= mEncrypted ? 1 << 1 : 0;
-    headerByte |= mCompressed ? 1 << 2 : 0;
-    headerByte |= mText ? 1 << 3 : 0;
+    headerByte      |= mBigSize      ? 1 << 0 : 0;
+    headerByte      |= mEncrypted    ? 1 << 1 : 0;
+    headerByte      |= mCompressed   ? 1 << 2 : 0;
+    headerByte      |= mText         ? 1 << 3 : 0;
     return headerByte;
 }
-    
-}
-EZY_NAMESPACE_END
+
+EZY_NAMESPACE_END_WITH

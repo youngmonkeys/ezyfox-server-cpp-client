@@ -10,59 +10,57 @@ EzyEventType Ezy##className##Event::getType() {\
     return eventType;\
 }
 
-#define EZY_IMPLEMENT_ARGS_EVENT_CLASS(className, eventType)\
-Ezy##className##Event::Ezy##className##Event(Ezy##className##EventArgs* args) {\
-    this->mArgs = args;\
-}\
-Ezy##className##Event::~Ezy##className##Event() {\
-    EZY_SAFE_DELETE(mArgs);\
-}\
-Ezy##className##Event* Ezy##className##Event::create(Ezy##className##EventArgs* args) {\
-    auto pRet = new Ezy##className##Event(args);\
-    pRet->autorelease();\
-    return pRet;\
-}\
-EzyEventType Ezy##className##Event::getType() {\
-    return eventType;\
-}
-
-#define EZY_CREATE_EVENT_ARGS_METHOD(methodName)\
-Ezy##methodName##EventArgs* Ezy##methodName##EventArgs::create(entity::EzyArray *array) {\
-    auto pRet = new Ezy##methodName##EventArgs();\
-    pRet->deserialize(array);\
-    return pRet;\
-}
-
-EZY_NAMESPACE_START
-namespace event {
+EZY_NAMESPACE_START_WITH(event)
 //===============================================
     
-EZY_IMPLEMENT_EVENT_CLASS(ConnectionSuccess, ConnectionSuccess);
+EZY_IMPLEMENT_EVENT_CLASS(ConnectionSuccess, EzyEventType::ConnectionSuccess);
     
 //===============================================
 
-EZY_CREATE_EVENT_ARGS_METHOD(Handshake);
-    
-void EzyHandshakeEventArgs::deserialize(entity::EzyArray *array) {
-    mServerPublicKey = array->getString(0);
-    mReconnectToken = array->getString(1);
-    mReconnect = array->getBool(2);
+EzyConnectionFailureEvent* EzyConnectionFailureEvent::create(constant::EzyConnectionFailedReason reason) {
+    var pRet = new EzyConnectionFailureEvent(reason);
+    pRet->autorelease();
+    return pRet;
 }
-    
-EZY_IMPLEMENT_ARGS_EVENT_CLASS(Handshake, Handshake);
+
+EzyConnectionFailureEvent::EzyConnectionFailureEvent(constant::EzyConnectionFailedReason reason) {
+    this->reason = reason;
+}
 
 //===============================================
-    
-EZY_CREATE_EVENT_ARGS_METHOD(Login)
 
-void EzyLoginEventArgs::deserialize(entity::EzyArray *array) {
-    mUserId = array->getInt(0);
-    mUsername = array->getString(1);
-    mJoinedApp = array->getArray(2);
-    mdata = array->getItem(3);
+EzyDisconnectionEvent* EzyDisconnectionEvent::create(constant::EzyDisconnectReason reason) {
+    var pRet = new EzyDisconnectionEvent(reason);
+    pRet->autorelease();
+    return pRet;
+}
+
+EzyDisconnectionEvent::EzyDisconnectionEvent(constant::EzyDisconnectReason reason) {
+    this->reason = reason;
 }
     
-EZY_IMPLEMENT_ARGS_EVENT_CLASS(Login, LoginSuccess)
-    
+//===============================================
+
+EzyLostPingEvent* EzyLostPingEvent::create(int count) {
+    var pRet = new EzyLostPingEvent(count);
+    pRet->autorelease();
+    return pRet;
 }
+
+EzyLostPingEvent::EzyLostPingEvent(int count) {
+    this->count = count;
+}
+
+//===============================================
+
+EzyTryConnectEvent* EzyTryConnectEvent::create(int count) {
+    var pRet = new EzyTryConnectEvent(count);
+    pRet->autorelease();
+    return pRet;
+}
+
+EzyTryConnectEvent::EzyTryConnectEvent(int count) {
+    this->count = count;
+}
+
 EZY_NAMESPACE_END

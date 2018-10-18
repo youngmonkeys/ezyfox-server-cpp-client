@@ -1,7 +1,6 @@
 #include "EzySocketPool.h"
 
-EZY_NAMESPACE_START
-namespace socket {
+EZY_NAMESPACE_START_WITH(socket)
 
 EzySocketPool::EzySocketPool(){
     mDataQueue = new std::queue<EzySocketData*>();
@@ -90,6 +89,5 @@ EzySocketData* EzySocketPool::pop() {
     }
     return 0;
 }
-    
-}
-EZY_NAMESPACE_END
+
+EZY_NAMESPACE_END_WITH
