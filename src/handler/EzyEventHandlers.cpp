@@ -7,6 +7,7 @@ EZY_NAMESPACE_START_WITH(handler)
     
 EzyEventHandlers::EzyEventHandlers(EzyClient* client) {
     this->mClient = client;
+    this->addHandler(event::ConnectionSuccess, new EzyConnectionSuccessHandler());
 }
 
 EzyEventHandlers::~EzyEventHandlers() {
@@ -32,7 +33,9 @@ EzyEventHandler* EzyEventHandlers::getHandler(event::EzyEventType eventType) {
 
 void EzyEventHandlers::addHandler(event::EzyEventType eventType, EzyEventHandler *handler) {
     handler->setClient(mClient);
+    auto old = mHandlers[eventType];
     mHandlers[eventType] = handler;
+    if(old) EZY_SAFE_DELETE(old);
 }
 
 EZY_NAMESPACE_END_WITH

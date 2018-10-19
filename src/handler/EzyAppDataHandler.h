@@ -13,9 +13,10 @@ public:
 
 template <class T>
 class EzyAbstractAppDataHandler : public EzyAppDataHandler {
+protected:
+    virtual void process(T* data) = 0;
 public:
     void handle(entity::EzyValue* data);
-    void process(T* data);
     
 };
 

@@ -11,28 +11,22 @@
 EZY_NAMESPACE_START_WITH(socket)
 
 class EzySocketAdapter : public base::EzyRef {
-    
 protected:
-	bool mRunning;
+    bool mActive;
 	std::mutex mMutex;
 	EzySocketPool* mSocketPool;
-    
+protected:
 	virtual void update();
-    
 public:
 	EzySocketAdapter();
 	virtual ~EzySocketAdapter();
-
 	virtual void updateThread();
-
-	virtual bool isRunning();
-	virtual void setRunning(bool running);
-
 	virtual void start();
 	virtual void stop();
-
+    virtual bool isActive();
+    virtual void setActive(bool active);
+    virtual EzySocketData* popMessage();
 	virtual void pushMessage(EzySocketData* data);
-	virtual EzySocketData* popMessage();
 };
 
 EZY_NAMESPACE_END_WITH

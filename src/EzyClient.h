@@ -25,13 +25,19 @@ class EzySocketClient;
 class EzyPingSchedule;
 EZY_NAMESPACE_END_WITH
 
+EZY_NAMESPACE_START_WITH_ONLY(command)
+class EzySetup;
+EZY_NAMESPACE_END_WITH
+
 EZY_NAMESPACE_START
 
 class EzyClient : public socket::EzySender {
 protected:
+    command::EzySetup* mSetup;
     socket::EzySocketClient* mSocketClient;
-    std::map<int, entity::EzyApp> mAppsById;
+    std::map<int, entity::EzyApp*> mAppsById;
     request::EzyRequestSerializer* mRequestSerializer;
+    
     
 protected:
     EZY_SYNTHESIZE(entity::EzyUser*, Me)
@@ -49,6 +55,7 @@ public:
     ~EzyClient();
     void connect(std::string host, int port);
     void disconnect();
+    command::EzySetup* setup();
     void send(request::EzyRequest* request);
     void addApp(entity::EzyApp* app);
     entity::EzyApp* getAppById(int appId);

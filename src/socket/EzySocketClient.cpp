@@ -6,6 +6,7 @@
 #include "../handler/EzyEventHandlers.h"
 #include "../handler/EzyDataHandlers.h"
 #include "../constant/EzyDisconnectReason.h"
+#include "../constant/EzyConnectionFailedReason.h"
 
 EZY_NAMESPACE_START_WITH(socket)
 
@@ -61,7 +62,7 @@ void EzySocketClient::updateConnection() {
     bool success = this->connectNow();
     mConnectTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     
-    if (success){
+    if (success) {
         this->startAdapter();
         auto evt = event::EzyConnectionSuccessEvent::create();
         this->mSocketEventQueue.addEvent(evt);
@@ -99,11 +100,12 @@ void EzySocketClient::sendMessage(EzySocketData* data) {
 }
 
 void EzySocketClient::processEvent() {
-    mSocketEventQueue.popAll(mStatusBuffer);
-    for (int i = 0; i < mStatusBuffer.size(); i++) {
-        mEventHandlers->handle(mStatusBuffer[i]);
+    mSocketEventQueue.popAll(mLocalEventQueue);
+    for (int i = 0; i < mLocalEventQueue.size(); i++) {
+        auto event = mLocalEventQueue[i];
+        mEventHandlers->handle(event);
     }
-    mStatusBuffer.clear();
+    mLocalEventQueue.clear();
 }
 
 void EzySocketClient::processRecvMessage() {

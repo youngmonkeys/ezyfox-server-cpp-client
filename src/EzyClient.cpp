@@ -2,8 +2,9 @@
 #include <chrono>
 #include "EzyClient.h"
 #include "entity/EzyApp.h"
+#include "command/EzySetup.h"
 #include "logger/EzyLogger.h"
-#include "socket/EzySocketTcpClient.h"
+#include "socket/EzyTcpSocketClient.h"
 #include "socket/EzyPingSchedule.h"
 #include "request/EzyRequestSerializer.h"
 #include "manager/EzyHandlerManager.h"
@@ -16,6 +17,7 @@ EzyClient::EzyClient() {
     mPingSchedule = new socket::EzyPingSchedule(this);
     mHandlerManager = new manager::EzyHandlerManager(this);
     mRequestSerializer = new request::EzyRequestSerializer();
+    mSetup = new command::EzySetup(mHandlerManager);
 }
 
 EzyClient::~EzyClient() {
@@ -28,7 +30,9 @@ void EzyClient::connect(std::string host, int port) {
 }
 
 socket::EzySocketClient* EzyClient::newSocketClient() {
-    return new socket::EzySocketTcpClient();
+    auto socketClient = new socket::EzyTcpSocketClient();
+    socketClient->setHandlerManager(mHandlerManager);
+    return socketClient;
 }
 
 void EzyClient::disconnect() {
@@ -46,6 +50,19 @@ void EzyClient::send(request::EzyRequest *request) {
     auto data = mRequestSerializer->serialize(request);
     if(mSocketClient)
         mSocketClient->sendMessage(data);
+}
+
+command::EzySetup* EzyClient::setup() {
+    return mSetup;
+}
+
+void EzyClient::addApp(entity::EzyApp *app) {
+    mAppsById[app->getId()] = app;
+}
+
+entity::EzyApp* EzyClient::getAppById(int appId) {
+    auto app = mAppsById[appId];
+    return app;
 }
 
 EZY_NAMESPACE_END

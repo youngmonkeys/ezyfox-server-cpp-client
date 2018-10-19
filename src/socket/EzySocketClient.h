@@ -32,7 +32,7 @@ protected:
     handler::EzyEventHandlers* mEventHandlers;
     handler::EzyDataHandlers* mDataHandlers;
     manager::EzyHandlerManager* mHandlerManager;
-    std::vector<event::EzyEvent*> mStatusBuffer;
+    std::vector<event::EzyEvent*> mLocalEventQueue;
     
 protected:
     virtual void processEvent();

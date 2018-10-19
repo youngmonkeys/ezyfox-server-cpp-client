@@ -37,7 +37,7 @@ void EzyAbstractEventHandler<T>::handle(event::EzyEvent* event) {
 }
 
 //==========================================================
-class EzyConnectionSuccessHandler : EzyAbstractEventHandler<event::EzyEvent> {
+class EzyConnectionSuccessHandler : public EzyAbstractEventHandler<event::EzyEvent> {
 protected:
     void process(event::EzyEvent* event);
 protected:

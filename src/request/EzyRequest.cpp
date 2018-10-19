@@ -4,12 +4,12 @@
 Ezy##className##Request::Ezy##className##Request() : EzyRequest() {\
 }\
 Ezy##className##Request* Ezy##className##Request::create() {\
-Ezy##className##Request* pRet = new Ezy##className##Request();\
-pRet->autorelease();\
-return pRet;\
+    Ezy##className##Request* pRet = new Ezy##className##Request();\
+    pRet->autorelease();\
+    return pRet;\
 }\
 constant::EzyCommand Ezy##className##Request::getCommand() {\
-return constant::className;\
+    return constant::className;\
 }
 
 EZY_NAMESPACE_START_WITH(request)
@@ -41,6 +41,7 @@ EZY_IMPLEMENT_REQUEST_CLASS(Handshake)
 
 entity::EzyArray* EzyLoginRequest::serialize() {
     auto array = new entity::EzyArray();
+    array->addString(mZoneName);
     array->addString(mUsername);
     array->addString(mPassword);
     array->addArray(mData);

@@ -4,8 +4,6 @@
 #include "../base/EzyRef.h"
 #include "EzyEventType.h"
 #include "../entity/EzyValue.h"
-#include "../constant/EzyDisconnectReason.h"
-#include "../constant/EzyConnectionFailedReason.h"
 
 #define EZY_DECLARE_EVENT_CLASS(className)\
 class Ezy##className##Event : public EzyEvent {\
@@ -35,10 +33,10 @@ EZY_DECLARE_EVENT_CLASS(ConnectionClosed)
 
 class EzyConnectionFailureEvent : public EzyEvent {
 protected:
-    EZY_SYNTHESIZE_READONLY(constant::EzyConnectionFailedReason, Reason);
+    EZY_SYNTHESIZE_READONLY(int, Reason);
 public:
-    static EzyConnectionFailureEvent* create(constant::EzyConnectionFailedReason reason);
-    EzyConnectionFailureEvent(constant::EzyConnectionFailedReason reason);
+    static EzyConnectionFailureEvent* create(int reason);
+    EzyConnectionFailureEvent(int reason);
     EzyEventType getType();
 };
 
@@ -46,10 +44,10 @@ public:
 
 class EzyDisconnectionEvent : public EzyEvent {
 protected:
-    EZY_SYNTHESIZE_READONLY(constant::EzyDisconnectReason, Reason);
+    EZY_SYNTHESIZE_READONLY(int, Reason);
 public:
-    static EzyDisconnectionEvent* create(constant::EzyDisconnectReason reason);
-    EzyDisconnectionEvent(constant::EzyDisconnectReason reason);
+    static EzyDisconnectionEvent* create(int reason);
+    EzyDisconnectionEvent(int reason);
     EzyEventType getType();
 };
 

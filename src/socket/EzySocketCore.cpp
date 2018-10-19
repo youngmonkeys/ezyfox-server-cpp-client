@@ -18,7 +18,9 @@ void EzySocketEventQueue::addEvent(event::EzyEvent *event) {
 void EzySocketEventQueue::popAll(std::vector<event::EzyEvent*> &buffer){
 	std::unique_lock<std::mutex> lk(mMutex);
 	for (int i = 0; i < mEvents.size(); i++){
-		buffer.push_back(mEvents[i]);
+        auto event = mEvents[i];
+        event->autorelease();
+		buffer.push_back(event);
 	}
     mEvents.clear();
 }

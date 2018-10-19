@@ -10,26 +10,26 @@ EZY_NAMESPACE_START_WITH(socket)
 	typedef int EzyTcpSocket;
 #endif
 
-class EzySocketTcpWriter : public EzySocketWriter {
+class EzyTcpSocketWriter : public EzySocketWriter {
 public:
 	EzyTcpSocket mSocket;
 protected:
 	virtual void update();
 public:
-	EzySocketTcpWriter();
-	virtual ~EzySocketTcpWriter();
+	EzyTcpSocketWriter();
+	virtual ~EzyTcpSocketWriter();
 };
 
-class EzySocketTcpReader : public EzySocketReader {
+class EzyTcpSocketReader : public EzySocketReader {
 	virtual void update();
 public:
 	EzyTcpSocket mSocket;
 public:
-	EzySocketTcpReader();
-	virtual ~EzySocketTcpReader();
+	EzyTcpSocketReader();
+	virtual ~EzyTcpSocketReader();
 };
 
-class EzySocketTcpClient : public EzySocketClient {
+class EzyTcpSocketClient : public EzySocketClient {
 	EzyTcpSocket mSocket;
 	std::mutex mSocketMutex;
 
@@ -38,8 +38,8 @@ class EzySocketTcpClient : public EzySocketClient {
 	virtual bool connectNow();
 	virtual void startAdapter();
 public:
-	EzySocketTcpClient();
-	virtual ~EzySocketTcpClient();
+	EzyTcpSocketClient();
+	virtual ~EzyTcpSocketClient();
 
 	virtual void closeSocket();
 };

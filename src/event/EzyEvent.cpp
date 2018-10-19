@@ -3,7 +3,6 @@
 #define EZY_IMPLEMENT_EVENT_CLASS(className, eventType)\
 Ezy##className##Event* Ezy##className##Event::create() {\
     Ezy##className##Event* pRet = new Ezy##className##Event();\
-    pRet->autorelease();\
     return pRet;\
 }\
 EzyEventType Ezy##className##Event::getType() {\
@@ -21,13 +20,12 @@ EZY_IMPLEMENT_EVENT_CLASS(ConnectionClosed, EzyEventType::ConnectionClosed);
     
 //===============================================
 
-EzyConnectionFailureEvent* EzyConnectionFailureEvent::create(constant::EzyConnectionFailedReason reason) {
+EzyConnectionFailureEvent* EzyConnectionFailureEvent::create(int reason) {
     auto pRet = new EzyConnectionFailureEvent(reason);
-    pRet->autorelease();
     return pRet;
 }
 
-EzyConnectionFailureEvent::EzyConnectionFailureEvent(constant::EzyConnectionFailedReason reason) {
+EzyConnectionFailureEvent::EzyConnectionFailureEvent(int reason) {
     this->mReason = reason;
 }
 
@@ -37,13 +35,12 @@ EzyEventType EzyConnectionFailureEvent::getType() {
 
 //===============================================
 
-EzyDisconnectionEvent* EzyDisconnectionEvent::create(constant::EzyDisconnectReason reason) {
+EzyDisconnectionEvent* EzyDisconnectionEvent::create(int reason) {
     auto pRet = new EzyDisconnectionEvent(reason);
-    pRet->autorelease();
     return pRet;
 }
 
-EzyDisconnectionEvent::EzyDisconnectionEvent(constant::EzyDisconnectReason reason) {
+EzyDisconnectionEvent::EzyDisconnectionEvent(int reason) {
     this->mReason = reason;
 }
 
@@ -55,7 +52,6 @@ EzyEventType EzyDisconnectionEvent::getType() {
 
 EzyLostPingEvent* EzyLostPingEvent::create(int count) {
     auto pRet = new EzyLostPingEvent(count);
-    pRet->autorelease();
     return pRet;
 }
 
@@ -71,7 +67,6 @@ EzyEventType EzyLostPingEvent::getType() {
 
 EzyTryConnectEvent* EzyTryConnectEvent::create(int count) {
     auto pRet = new EzyTryConnectEvent(count);
-    pRet->autorelease();
     return pRet;
 }
 

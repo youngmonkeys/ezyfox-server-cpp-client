@@ -6,9 +6,9 @@ EZY_NAMESPACE_START_WITH(socket)
 
 EzySocketReader::EzySocketReader(){
     mSocketPool = new EzySocketPool();
+    mMessageHeader = new codec::EzyMessageHeader();
     mDecoder = new codec::EzyDataDecoder();
     mDecoder->setDelegate(this);
-    mMessageHeader = new codec::EzyMessageHeader();
 }
 
 EzySocketReader::~EzySocketReader(){
@@ -105,7 +105,7 @@ void EzySocketReader::onRecvMessage(entity::EzyValue* value){
 #ifdef EZY_DEBUG
         logger::log("error parse data");
 #endif
-        setRunning(false);
+        setActive(false);
         return;
     }
     

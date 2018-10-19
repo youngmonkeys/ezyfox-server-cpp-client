@@ -4,7 +4,6 @@
 #include "../EzyMacro.h"
 #include "../entity/EzyArray.h"
 #include "../constant/EzyCommand.h"
-#include "../io/EzyArrayDataSerializable.h"
 
 #define EZY_DECLARE_REQUEST_CLASS(className) \
 class Ezy##className##Request : public EzyRequest {\
@@ -16,7 +15,7 @@ public:\
 
 EZY_NAMESPACE_START_WITH(request)
 
-class EzyRequest : public base::EzyRef, io::EzyArrayDataSerializable {
+class EzyRequest : public base::EzyRef {
 public:
     virtual entity::EzyArray* serialize();
     virtual constant::EzyCommand getCommand() = 0;

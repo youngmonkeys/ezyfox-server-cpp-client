@@ -10,7 +10,7 @@
 EZY_NAMESPACE_START_WITH(socket)
 
 EzySocketAdapter::EzySocketAdapter() {
-	mRunning = false;
+	mActive = false;
 	mSocketPool = 0;
 }
 
@@ -24,19 +24,19 @@ void EzySocketAdapter::updateThread(){
 	this->release();
 }
 
-bool EzySocketAdapter::isRunning() {
+bool EzySocketAdapter::isActive() {
 	std::unique_lock<std::mutex> lk(mMutex);
-	return mRunning;
+	return mActive;
 }
 
-void EzySocketAdapter::setRunning(bool running) {
+void EzySocketAdapter::setActive(bool active) {
 	std::unique_lock<std::mutex> lk(mMutex);
-	this->mRunning = running;
+	this->mActive = active;
 }
 
 void EzySocketAdapter::start() {
-	if (!isRunning()){
-		this->setRunning(true);
+	if (!isActive()){
+		this->setActive(true);
 		this->retain();
 		std::thread newThread(&EzySocketAdapter::updateThread, this);
 		newThread.detach();
@@ -44,7 +44,7 @@ void EzySocketAdapter::start() {
 }
 
 void EzySocketAdapter::stop(){
-	this->setRunning(false);
+	this->setActive(false);
 	mSocketPool->clear();
 }
 
