@@ -38,10 +38,6 @@ protected:
 public:
     EzyClient();
     ~EzyClient();
-
-    template<class T>
-    void addEventHandler(event::EzyEventType eventType,
-                         handler::EzyEventHandler<T>* handler);
     void handleEvent(event::EzyEvent* event);
     void connect(std::string host, int port);
     void disconnect();
@@ -49,14 +45,7 @@ public:
     void addApp(entity::EzyApp* app);
     entity::EzyApp* getAppById(int appId);
     manager::EzyPingManager* getPingManager();
-    void processSocketEvent();
-    
+    void processEvents();
 };
-
-template<class T>
-void EzyClient::addEventHandler(event::EzyEventType eventType,
-                                handler::EzyEventHandler<T> *handler) {
-    mEventHandlers->addEventHandler(eventType, handler);
-}
 
 EZY_NAMESPACE_END

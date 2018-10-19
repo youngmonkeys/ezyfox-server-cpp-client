@@ -2,10 +2,14 @@
 
 #include <map>
 #include "../EzyMacro.h"
-#include "../base/EzyRef.h"
-#include "EzyReleasePool.h"
+
+EZY_NAMESPACE_START_WITH_ONLY(base)
+class EzyRef;
+EZY_NAMESPACE_END_WITH
 
 EZY_NAMESPACE_START_WITH(gc)
+
+class EzyReleasePool;
 
 class EzyAutoReleasePool {
     std::mutex mPoolMutex;

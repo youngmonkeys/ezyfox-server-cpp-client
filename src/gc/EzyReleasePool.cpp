@@ -1,3 +1,4 @@
+#include "../base/EzyRef.h"
 #include "EzyReleasePool.h"
 
 EZY_NAMESPACE_START_WITH(gc)

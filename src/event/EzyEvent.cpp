@@ -18,49 +18,65 @@ EZY_IMPLEMENT_EVENT_CLASS(ConnectionSuccess, EzyEventType::ConnectionSuccess);
 //===============================================
 
 EzyConnectionFailureEvent* EzyConnectionFailureEvent::create(constant::EzyConnectionFailedReason reason) {
-    var pRet = new EzyConnectionFailureEvent(reason);
+    auto pRet = new EzyConnectionFailureEvent(reason);
     pRet->autorelease();
     return pRet;
 }
 
 EzyConnectionFailureEvent::EzyConnectionFailureEvent(constant::EzyConnectionFailedReason reason) {
-    this->reason = reason;
+    this->mReason = reason;
+}
+
+EzyEventType EzyConnectionFailureEvent::getType() {
+    return EzyEventType::ConnectionFailure;
 }
 
 //===============================================
 
 EzyDisconnectionEvent* EzyDisconnectionEvent::create(constant::EzyDisconnectReason reason) {
-    var pRet = new EzyDisconnectionEvent(reason);
+    auto pRet = new EzyDisconnectionEvent(reason);
     pRet->autorelease();
     return pRet;
 }
 
 EzyDisconnectionEvent::EzyDisconnectionEvent(constant::EzyDisconnectReason reason) {
-    this->reason = reason;
+    this->mReason = reason;
+}
+
+EzyEventType EzyDisconnectionEvent::getType() {
+    return EzyEventType::Disconnection;
 }
     
 //===============================================
 
 EzyLostPingEvent* EzyLostPingEvent::create(int count) {
-    var pRet = new EzyLostPingEvent(count);
+    auto pRet = new EzyLostPingEvent(count);
     pRet->autorelease();
     return pRet;
 }
 
 EzyLostPingEvent::EzyLostPingEvent(int count) {
-    this->count = count;
+    this->mCount = count;
+}
+
+EzyEventType EzyLostPingEvent::getType() {
+    return EzyEventType::LostPing;
 }
 
 //===============================================
 
 EzyTryConnectEvent* EzyTryConnectEvent::create(int count) {
-    var pRet = new EzyTryConnectEvent(count);
+    auto pRet = new EzyTryConnectEvent(count);
     pRet->autorelease();
     return pRet;
 }
 
 EzyTryConnectEvent::EzyTryConnectEvent(int count) {
-    this->count = count;
+    this->mCount = count;
 }
 
-EZY_NAMESPACE_END
+EzyEventType EzyTryConnectEvent::getType() {
+    return EzyEventType::TryConnect;
+}
+
+EZY_NAMESPACE_END_WITH

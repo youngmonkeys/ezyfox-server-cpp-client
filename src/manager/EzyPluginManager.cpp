@@ -25,7 +25,7 @@ entity::EzyPlugin* EzyPluginManager::getPluginByName(std::string pluginName) {
 }
 
 std::vector<entity::EzyPlugin*> EzyPluginManager::getPlugins() {
-    return EzyMaps::getValues<int, entity::EzyPlugin>(mPluginByIds);
+    return util::EzyMaps::getValues<int, entity::EzyPlugin>(mPluginByIds);
 }
 
 void EzyPluginManager::clear() {

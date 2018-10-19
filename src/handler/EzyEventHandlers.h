@@ -10,20 +10,12 @@ EZY_NAMESPACE_START_WITH(handler)
 
 class EzyEventHandlers {
 protected:
-    std::map<event::EzyEventType, EzyEventHandler<event::EzyEvent>*> handlers;
+    std::map<event::EzyEventType, EzyEventHandler*> handlers;
 public:
     EzyEventHandlers();
     ~EzyEventHandlers();
-    
-    void handleEvent(event::EzyEvent* event);
-    
-    template<class T>
-    void addEventHandler(event::EzyEventType eventType, EzyEventHandler<T>* handler);
+    void handle(event::EzyEvent* event);
+    void addHandler(event::EzyEventType eventType, EzyEventHandler* handler);
 };
-    
-template<class T>
-void EzyEventHandlers::addEventHandler(event::EzyEventType eventType, EzyEventHandler<T> *handler) {
-    handlers[eventType] = (EzyEventHandler<event::EzyEvent>*)handler;
-}
 
 EZY_NAMESPACE_END_WITH

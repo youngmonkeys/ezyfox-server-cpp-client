@@ -1,4 +1,5 @@
 #include <thread>
+#include "EzyReleasePool.h"
 #include "EzyAutoReleasePool.h"
 
 EZY_NAMESPACE_START_WITH(gc)

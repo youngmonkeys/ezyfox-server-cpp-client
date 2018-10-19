@@ -35,6 +35,7 @@ protected:
 public:
     static EzyConnectionFailureEvent* create(constant::EzyConnectionFailedReason reason);
     EzyConnectionFailureEvent(constant::EzyConnectionFailedReason reason);
+    EzyEventType getType();
 };
 
 //===================================
@@ -45,6 +46,7 @@ protected:
 public:
     static EzyDisconnectionEvent* create(constant::EzyDisconnectReason reason);
     EzyDisconnectionEvent(constant::EzyDisconnectReason reason);
+    EzyEventType getType();
 };
 
 //===================================
@@ -53,8 +55,9 @@ class EzyLostPingEvent : public EzyEvent {
 protected:
     EZY_SYNTHESIZE_READONLY(int, Count);
 public:
-    static EzyDisconnectionEvent* create(int count);
+    static EzyLostPingEvent* create(int count);
     EzyLostPingEvent(int count);
+    EzyEventType getType();
 };
 
 //===================================
@@ -63,8 +66,9 @@ class EzyTryConnectEvent : public EzyEvent {
 protected:
     EZY_SYNTHESIZE_READONLY(int, Count);
 public:
-    static EzyDisconnectionEvent* create(int count);
+    static EzyTryConnectEvent* create(int count);
     EzyTryConnectEvent(int count);
+    EzyEventType getType();
 };
 
 EZY_NAMESPACE_END_WITH

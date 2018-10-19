@@ -1,6 +1,7 @@
 #include <thread>
 #include <chrono>
 #include "EzyClient.h"
+#include "logger/EzyLogger.h"
 
 EZY_NAMESPACE_START
 
@@ -24,43 +25,34 @@ public:
 
 //==========================================================
 
-#define EZY_NEW_EVENT_FROM_DATA(eventName)\
-{\
-    auto args = event::Ezy##eventName##EventArgs::create(array->getArray(1)); \
-    event = event::Ezy##eventName##Event::create(args); \
-}
-
 void EzySimpleSocketDataHandler::handleSocketData(socket::EzySocketData *data) {
     auto array = (entity::EzyArray*)data;
     auto cmd = (constant::EzyCommand)array->getInt(0);
     event::EzyEvent* event = nullptr;
     switch (cmd) {
-        case command::Handshake:
-            EZY_NEW_EVENT_FROM_DATA(Handshake)
+        case constant::Handshake:
             break;
-        case command::Login:
-            EZY_NEW_EVENT_FROM_DATA(Login)
+        case constant::Login:
             break;
-        case command::LoginError:
+        case constant::LoginError:
             break;
-        case command::AppAccess:
-            EZY_NEW_EVENT_FROM_DATA(AccessApp)
+        case constant::AppAccess:
             break;
-        case command::AppRequest:
+        case constant::AppRequest:
             break;
-        case command::AppAccessError:
+        case constant::AppAccessError:
             break;
-        case command::AppExit:
+        case constant::AppExit:
             break;
-        case command::Disconnect:
+        case constant::Disconnect:
             break;
-        case command::Error:
+        case constant::Error:
             break;
-        case command::Ping:
+        case constant::Ping:
             break;
-        case command::PluginRequestById:
+        case constant::PluginRequestById:
             break;
-        case command::Pong:
+        case constant::Pong:
             break;
         default:
             break;
@@ -83,7 +75,10 @@ void EzySimpleSocketStatusHandler::handleSocketStatus(const socket::EzySocketSta
         default:
             break;
     }
-    if(event) mEventHandlers->handleEvent(event);
+    if(event)
+        mEventHandlers->handleEvent(event);
+    else
+        logger::log("has no handler with status %d", status.status);
 }
 
 //==========================================================
@@ -122,7 +117,7 @@ void EzyClient::disconnect() {
     EZY_SAFE_DELETE(mSocketClient);
 }
 
-void EzyClient::processSocketEvent() {
+void EzyClient::processEvents() {
     if(mSocketClient)
         mSocketClient->processMessage();
 }

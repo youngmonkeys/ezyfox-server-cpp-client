@@ -13,6 +13,7 @@ EZY_NAMESPACE_START_WITH(manager)
 
 class EzyAppManager {
 protected:
+    std::vector<entity::EzyApp*> mAppList;
     std::map<int, entity::EzyApp*> mAppByIds;
     std::map<std::string, entity::EzyApp*> mAppByNames;
 public:
