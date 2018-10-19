@@ -3,6 +3,10 @@
 #include <thread>
 #include "../EzyMacro.h"
 
+EZY_NAMESPACE_START
+class EzyClient;
+EZY_NAMESPACE_END
+
 EZY_NAMESPACE_START_WITH_ONLY(manager)
 class EzyPingManager;
 EZY_NAMESPACE_END_WITH
@@ -15,14 +19,14 @@ class EzyPingSchedule {
 protected:
     
     bool mActive;
-    EzySender* mSender;
+    EzyClient* mClient;
     std::thread* mThread;
     manager::EzyPingManager* mPingManager;
     
     void loop();
     void sendPingRequest();
 public:
-    EzyPingSchedule(EzySender* sender, manager::EzyPingManager* pingManager);
+    EzyPingSchedule(EzyClient* mClient);
     ~EzyPingSchedule();
     void start();
     void stop();

@@ -1,43 +1,29 @@
 #pragma once
 
-#include "EzySocketDefine.h"
+#include <mutex>
 #include "../EzyMacro.h"
+#include "EzySocketDefine.h"
 #include "../entity/EzyValue.h"
+
+EZY_NAMESPACE_START_WITH_ONLY(event)
+class EzyEvent;
+EZY_NAMESPACE_END_WITH
 
 EZY_NAMESPACE_START_WITH(socket)
 
-enum EzySocketStatusType {
-	NotConnection = 0,
-	Connecting, //1
-	Connected, //2
-	ConnectFailure, //3
-	LostConnection, //4
-	Closed //5
-};
+typedef entity::EzyValue EzySocketData;
 
-const char* EzySocketStatusName(int status);
-
-struct EzySocketStatusData {
-	EzySocketStatusType preStatus;
-	EzySocketStatusType status;
-};
-
-class EzySocketClientStatus {
-	EzySocketStatusType mClientStatus;
-	std::mutex mStatusMutex;
-	std::vector<EzySocketStatusData> mStatusEvent;
+class EzySocketEventQueue {
+	std::mutex mMutex;
+    std::vector<event::EzyEvent*> mEvents;
 public:
-	EzySocketClientStatus();
-	~EzySocketClientStatus();
+	EzySocketEventQueue();
+	~EzySocketEventQueue();
 
-	void set(EzySocketStatusType status, bool event);
-	EzySocketStatusType get();
-
-	void popAllStatus(std::vector<EzySocketStatusData> &buffer);
+    void addEvent(event::EzyEvent* event);
+    void popAll(std::vector<event::EzyEvent*> &buffer);
 	void clear();
 };
-
-typedef entity::EzyValue EzySocketData;
 
 EZY_NAMESPACE_END_WITH
 

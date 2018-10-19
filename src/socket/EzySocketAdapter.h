@@ -9,23 +9,10 @@
 #include "../gc/EzyReleasePool.h"
 
 EZY_NAMESPACE_START_WITH(socket)
-    
-class EzySocketDataHandler {
-public:
-    virtual ~EzySocketDataHandler() {}
-    virtual void handleSocketData(EzySocketData* data) = 0;
-};
-    
-class EzySocketStatusHandler {
-public:
-    virtual ~EzySocketStatusHandler() {}
-    virtual void handleSocketStatus(const EzySocketStatusData& data) = 0;
-};
 
 class EzySocketAdapter : public base::EzyRef {
     
 protected:
-    
 	bool mRunning;
 	std::mutex mMutex;
 	EzySocketPool* mSocketPool;
@@ -33,7 +20,6 @@ protected:
 	virtual void update();
     
 public:
-    
 	EzySocketAdapter();
 	virtual ~EzySocketAdapter();
 

@@ -24,21 +24,14 @@ entity::EzyArray* EzyRequest::serialize() {
 
 //=======================================================
 
-std::string EzyHandshakeRequest::getClientType() {
-    return "C++";
-}
-
-std::string EzyHandshakeRequest::getClientVersion() {
-    return "1.0.0";
-}
-
 entity::EzyArray* EzyHandshakeRequest::serialize() {
     auto array = new entity::EzyArray();
     array->addString(mClientId);
     array->addString(mClientKey);
+    array->addString(mClientType);
+    array->addString(mClientVersion);
+    array->addBool(mEnableEncryption);
     array->addString(mToken);
-    array->addString(getClientType());
-    array->addString(getClientVersion());
     return array;
 }
 

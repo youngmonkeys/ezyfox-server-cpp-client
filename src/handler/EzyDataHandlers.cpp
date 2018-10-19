@@ -7,26 +7,30 @@ EzyDataHandlers::EzyDataHandlers() {
 }
 
 EzyDataHandlers::~EzyDataHandlers() {
-    for(auto it = handlers.begin() ; it != handlers.end() ; ++it) {
+    EZY_FOREACH_MAP(mHandlers) {
         EZY_SAFE_DELETE(it->second);
     }
-    handlers.clear();
+    mHandlers.clear();
 }
     
 void EzyDataHandlers::handle(entity::EzyArray *data) {
     auto cmdId = data->getInt(0);
     auto cmd = (constant::EzyCommand)cmdId;
     auto responseData = data->getArray(1);
-    auto handler = handlers[cmd];
+    auto handler = mHandlers[cmd];
     if(handler)
         handler->handle(responseData);
     else
         logger::log("has no handler for command: %d", cmd);
-    
+}
+
+EzyDataHandler* EzyDataHandlers::getHandler(constant::EzyCommand cmd) {
+    auto handler = mHandlers[cmd];
+    return handler;
 }
 
 void EzyDataHandlers::addHandler(constant::EzyCommand cmd, EzyDataHandler *handler) {
-    handlers[cmd] = handler;
+    mHandlers[cmd] = handler;
 }
 
 EZY_NAMESPACE_END_WITH

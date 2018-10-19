@@ -9,7 +9,7 @@ enum EzyConnectionFailedReason {
     NetworkUnreachable = 1,
     UnknownHost = 2,
     ConnectionRefused = 3,
-    Unknown = 4
+    UnknownFailure = 4
 };
 
 EZY_NAMESPACE_END_WITH

@@ -4,17 +4,24 @@
 #include "../EzyMacro.h"
 #include "../event/EzyEvent.h"
 #include "../event/EzyEventType.h"
-#include "EzyEventHandler.h"
+
+EZY_NAMESPACE_START
+class EzyClient;
+EZY_NAMESPACE_END
 
 EZY_NAMESPACE_START_WITH(handler)
 
+class EzyEventHandler;
+
 class EzyEventHandlers {
 protected:
-    std::map<event::EzyEventType, EzyEventHandler*> handlers;
+    EzyClient* mClient;
+    std::map<event::EzyEventType, EzyEventHandler*> mHandlers;
 public:
-    EzyEventHandlers();
+    EzyEventHandlers(EzyClient* mClient);
     ~EzyEventHandlers();
     void handle(event::EzyEvent* event);
+    EzyEventHandler* getHandler(event::EzyEventType eventType);
     void addHandler(event::EzyEventType eventType, EzyEventHandler* handler);
 };
 

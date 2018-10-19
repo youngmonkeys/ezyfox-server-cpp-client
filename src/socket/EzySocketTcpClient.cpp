@@ -158,7 +158,7 @@ void EzySocketTcpClient::startAdapter(){
 }
 
 
-bool EzySocketTcpClient::connectThread(){
+bool EzySocketTcpClient::connectNow(){
 	addrinfo hints, *peer;
 	memset(&hints, 0, sizeof(struct addrinfo));
 #ifdef __linux

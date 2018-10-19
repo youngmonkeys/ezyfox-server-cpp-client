@@ -1,8 +1,9 @@
 #pragma once
 
+#include <string>
 #include "../EzyMacro.h"
 
-EZY_NAMESPACE_START_WITH(constant)
+EZY_NAMESPACE_START_WITH_ONLY(constant)
 
 enum EzyCommand {
     Error = 10,
@@ -20,5 +21,7 @@ enum EzyCommand {
     PluginRequestByName = 41,
     PluginRequestById = 42
 };
+
+std::string getCommandName(int command);
 
 EZY_NAMESPACE_END_WITH

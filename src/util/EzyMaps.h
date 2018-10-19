@@ -17,7 +17,7 @@ public:
 template <class K, class V>
 std::vector<V*> EzyMaps::getValues(std::map<K,V*> map) {
     std::vector<V*> answer;
-    EZY_FOREACH_MAP(K, V*) {
+    for(typename std::map<K,V*>::iterator it = map.begin() ; it != map.end() ; ++it) {
         answer.push_back(it->second);
     }
     return answer;

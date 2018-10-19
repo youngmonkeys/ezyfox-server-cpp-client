@@ -1,15 +1,16 @@
 #include <chrono>
 #include "EzySender.h"
-#include "../manager/EzyPingManager.h"
 #include "EzyPingSchedule.h"
+#include "../manager/EzyPingManager.h"
+#include "../EzyClient.h"
 
 EZY_NAMESPACE_START_WITH(socket)
 
-EzyPingSchedule::EzyPingSchedule(EzySender* sender, manager::EzyPingManager* manager) {
+EzyPingSchedule::EzyPingSchedule(EzyClient* client) {
     this->mActive = false;
     this->mThread = nullptr;
-    this->mSender = sender;
-    this->mPingManager = manager;
+    this->mClient = client;
+    this->mPingManager = client->getPingManager();
 }
 
 EzyPingSchedule::~EzyPingSchedule() {
@@ -39,7 +40,7 @@ void EzyPingSchedule::loop() {
 
 void EzyPingSchedule::sendPingRequest() {
     auto request = request::EzyPingRequest::create();
-    mSender->send(request);
+    mClient->send(request);
 }
 
 EZY_NAMESPACE_END_WITH

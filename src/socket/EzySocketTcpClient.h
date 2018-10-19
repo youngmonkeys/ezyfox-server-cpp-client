@@ -35,7 +35,7 @@ class EzySocketTcpClient : public EzySocketClient {
 
 	virtual void resetSocket();
 	virtual void createAdapter();
-	virtual bool connectThread();
+	virtual bool connectNow();
 	virtual void startAdapter();
 public:
 	EzySocketTcpClient();

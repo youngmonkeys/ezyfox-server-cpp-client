@@ -19,7 +19,7 @@ EZY_NAMESPACE_START_WITH(request)
 class EzyRequest : public base::EzyRef, io::EzyArrayDataSerializable {
 public:
     virtual entity::EzyArray* serialize();
-    virtual constant::EzyCommand getCommand();
+    virtual constant::EzyCommand getCommand() = 0;
 };
 
 EZY_DECLARE_REQUEST_CLASS(Ping);
@@ -30,13 +30,13 @@ class EzyHandshakeRequest : public EzyRequest {
 protected:
     EZY_SYNTHESIZE(std::string, ClientId)
     EZY_SYNTHESIZE(std::string, ClientKey)
+    EZY_SYNTHESIZE(std::string, ClientType)
+    EZY_SYNTHESIZE(std::string, ClientVersion)
     EZY_SYNTHESIZE_BOOL(EnableEncryption)
     EZY_SYNTHESIZE(std::string, Token)
 public:
     EzyHandshakeRequest();
-    EzyHandshakeRequest* create();
-    std::string getClientType();
-    std::string getClientVersion();
+    static EzyHandshakeRequest* create();
     entity::EzyArray* serialize();
     constant::EzyCommand getCommand();
 };
@@ -51,7 +51,7 @@ protected:
     EZY_SYNTHESIZE(entity::EzyArray*, Data)
 public:
     EzyLoginRequest();
-    EzyLoginRequest* create();
+    static EzyLoginRequest* create();
     entity::EzyArray* serialize();
     constant::EzyCommand getCommand();
 };
@@ -64,7 +64,7 @@ protected:
     EZY_SYNTHESIZE(entity::EzyValue*, Data);
 public:
     EzyAppAccessRequest();
-    EzyAppAccessRequest* create();
+    static EzyAppAccessRequest* create();
     entity::EzyArray* serialize();
     constant::EzyCommand getCommand();
 };
@@ -77,7 +77,7 @@ protected:
     EZY_SYNTHESIZE(entity::EzyValue*, Data);
 public:
     EzyAppRequestRequest();
-    EzyAppRequestRequest* create();
+    static EzyAppRequestRequest* create();
     entity::EzyArray* serialize();
     constant::EzyCommand getCommand();
 };
@@ -90,7 +90,7 @@ protected:
     EZY_SYNTHESIZE(entity::EzyValue*, Data);
 public:
     EzyPluginRequestByIdRequest();
-    EzyPluginRequestByIdRequest* create();
+    static EzyPluginRequestByIdRequest* create();
     entity::EzyArray* serialize();
     constant::EzyCommand getCommand();
 };
@@ -103,7 +103,7 @@ protected:
     EZY_SYNTHESIZE(entity::EzyValue*, Data);
 public:
     EzyPluginRequestByNameRequest();
-    EzyPluginRequestByNameRequest* create();
+    static EzyPluginRequestByNameRequest* create();
     entity::EzyArray* serialize();
     constant::EzyCommand getCommand();
 };

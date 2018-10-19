@@ -26,7 +26,11 @@ public:
 //===================================
     
 EZY_DECLARE_EVENT_CLASS(ConnectionSuccess)
-    
+
+//===================================
+
+EZY_DECLARE_EVENT_CLASS(ConnectionClosed)
+
 //===================================
 
 class EzyConnectionFailureEvent : public EzyEvent {

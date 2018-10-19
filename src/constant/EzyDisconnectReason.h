@@ -6,7 +6,7 @@ EZY_NAMESPACE_START_WITH(constant)
 
 enum EzyDisconnectReason
 {
-    Uknown = 0,
+    UnknownDisconnection = 0,
     Idle = 1,
     NotLoggedIn = 2,
     AnotherSessionLogin = 3,

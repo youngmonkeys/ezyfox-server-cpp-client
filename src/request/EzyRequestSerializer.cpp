@@ -1,8 +1,8 @@
-#include "EzyArrayRequestSerializer.h"
+#include "EzyRequestSerializer.h"
 
 EZY_NAMESPACE_START_WITH(request)
 
-entity::EzyArray* EzyArrayRequestSerializer::serialize(EzyRequest *request) {
+entity::EzyArray* EzyRequestSerializer::serialize(EzyRequest *request) {
     auto array = new entity::EzyArray();
     auto command = request->getCommand();
     auto params = request->serialize();

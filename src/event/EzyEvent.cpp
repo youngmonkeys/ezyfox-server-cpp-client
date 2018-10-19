@@ -14,6 +14,10 @@ EZY_NAMESPACE_START_WITH(event)
 //===============================================
     
 EZY_IMPLEMENT_EVENT_CLASS(ConnectionSuccess, EzyEventType::ConnectionSuccess);
+
+//===============================================
+
+EZY_IMPLEMENT_EVENT_CLASS(ConnectionClosed, EzyEventType::ConnectionClosed);
     
 //===============================================
 

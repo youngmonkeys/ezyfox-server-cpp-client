@@ -187,5 +187,5 @@ public: \
     className(const className&) = delete; \
     void operator = (const className &) = delete;
 
-#define EZY_FOREACH_MAP(K, V)\
-for(typename std::map<K,V>::iterator it = map.begin() ; it != map.end() ; ++it)
+#define EZY_FOREACH_MAP(map)\
+for(auto it = map.begin() ; it != map.end() ; ++it)
