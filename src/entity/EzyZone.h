@@ -22,7 +22,7 @@ protected:
     EZY_SYNTHESIZE_READONLY(manager::EzyAppManager*, AppManager);
     EZY_SYNTHESIZE_READONLY(manager::EzyPluginManager*, PluginManager);
 public:
-    EzyZone(int identifier, std::string name, EzyClient* client);
+    EzyZone(EzyClient* client, int identifier, std::string name);
     ~EzyZone();
 };
 

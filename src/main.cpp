@@ -16,13 +16,24 @@ protected:
     };
 };
 
+class ExLoginSuccessHandler : public handler::EzyLoginSuccessHandler {
+protected:
+    void handleLoginSuccess(entity::EzyValue* responseData) {
+        auto request = new request::EzyAppAccessRequest();
+        request->setAppName("freechat");
+        request->setData(new entity::EzyArray());
+        mClient->send(request);
+    }
+};
+
 int main(int argc, const char * argv[]) {
     srand( static_cast<unsigned int>(time(NULL)));
     EzyClient *client = new EzyClient();
     auto setup = client->setup();
     setup->addEventHandler(event::ConnectionSuccess, new handler::EzyConnectionSuccessHandler());
     setup->addDataHandler(constant::Handshake, new ExHandshakeHandler());
-    logger::log("start client");
+    setup->addDataHandler(constant::Login, new ExLoginSuccessHandler());
+    std::cout << "start client";
     client->connect("127.0.0.1", 3005);
     do {
         client->processEvents();

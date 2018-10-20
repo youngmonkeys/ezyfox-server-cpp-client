@@ -7,7 +7,6 @@ EZY_NAMESPACE_START_WITH(handler)
     
 EzyEventHandlers::EzyEventHandlers(EzyClient* client) {
     this->mClient = client;
-    this->addHandler(event::ConnectionSuccess, new EzyConnectionSuccessHandler());
 }
 
 EzyEventHandlers::~EzyEventHandlers() {

@@ -108,7 +108,7 @@ void EzySocketClient::processEvent() {
     mLocalEventQueue.clear();
 }
 
-void EzySocketClient::processRecvMessage() {
+void EzySocketClient::processReceivedMessage() {
     auto data = mSocketReader->popMessage();
     while (data){
         mDataHandlers->handle((entity::EzyArray*)data);
@@ -140,7 +140,7 @@ void EzySocketClient::processSocketError() {
 
 void EzySocketClient::processMessage() {
     processEvent();
-    processRecvMessage();
+    processReceivedMessage();
     mReleasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
     mReleasePool->releaseAll();
 }

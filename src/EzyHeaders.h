@@ -7,7 +7,6 @@
 #include "entity/EzyJson.h"
 #include "entity/EzyString.h"
 #include "command/EzySetup.h"
-#include "EzyClient.h"
 #include "handler/EzyDataHandler.h"
 #include "handler/EzyDataHandlers.h"
 #include "handler/EzyEventHandler.h"
@@ -16,3 +15,5 @@
 #include "handler/EzyAppDataHandlers.h"
 #include "event/EzyEvent.h"
 #include "event/EzyEventType.h"
+#include "request/EzyRequest.h"
+#include "EzyClient.h"

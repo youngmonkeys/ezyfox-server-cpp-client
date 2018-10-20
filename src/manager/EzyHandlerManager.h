@@ -31,6 +31,9 @@ protected:
 protected:
     EZY_SYNTHESIZE_READONLY(handler::EzyDataHandlers*, DataHandlers);
     EZY_SYNTHESIZE_READONLY(handler::EzyEventHandlers*, EventHandlers);
+protected:
+    handler::EzyEventHandlers* newEventHandlers();
+    handler::EzyDataHandlers* newDataHandlers();
 public:
     EzyHandlerManager(EzyClient* client);
     handler::EzyDataHandler* getDataHandler(constant::EzyCommand cmd);

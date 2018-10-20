@@ -36,7 +36,7 @@ protected:
     
 protected:
     virtual void processEvent();
-    virtual void processRecvMessage();
+    virtual void processReceivedMessage();
     virtual void clearAdapter();
     virtual void resetSocket();
     virtual void updateConnection();

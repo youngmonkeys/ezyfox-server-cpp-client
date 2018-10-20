@@ -12,8 +12,20 @@ EZY_NAMESPACE_START_WITH(manager)
 
 EzyHandlerManager::EzyHandlerManager(EzyClient* client) {
     this->mClient = client;
-    this->mEventHandlers = new handler::EzyEventHandlers(client);
+    this->mEventHandlers = newEventHandlers();
     this->mDataHandlers = new handler::EzyDataHandlers(client);
+}
+
+handler::EzyEventHandlers* EzyHandlerManager::newEventHandlers() {
+    auto handlers = new handler::EzyEventHandlers(mClient);
+    handlers->addHandler(event::ConnectionSuccess, new handler::EzyConnectionSuccessHandler());
+    return handlers;
+}
+
+handler::EzyDataHandlers* EzyHandlerManager::newDataHandlers(){
+    auto handlers = new handler::EzyDataHandlers(mClient);
+    handlers->addHandler(constant::Login, new handler::EzyLoginSuccessHandler());
+    return handlers;
 }
 
 handler::EzyDataHandler* EzyHandlerManager::getDataHandler(constant::EzyCommand cmd) {

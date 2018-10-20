@@ -9,8 +9,7 @@ class EzyUser {
 protected:
     EZY_SYNTHESIZE_READONLY(long, Id);
     EZY_SYNTHESIZE_READONLY(std::string, Name);
-    
-protected:
+public:
     EzyUser(long identifier, std::string name);
 };
 

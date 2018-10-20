@@ -12,6 +12,16 @@ constant::EzyCommand Ezy##className##Request::getCommand() {\
     return constant::className;\
 }
 
+#define EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(className) \
+Ezy##className##Request* Ezy##className##Request::create() {\
+    Ezy##className##Request* pRet = new Ezy##className##Request();\
+    pRet->autorelease();\
+    return pRet;\
+}\
+constant::EzyCommand Ezy##className##Request::getCommand() {\
+    return constant::className;\
+}
+
 EZY_NAMESPACE_START_WITH(request)
 
 //=======================================================
@@ -39,6 +49,11 @@ EZY_IMPLEMENT_REQUEST_CLASS(Handshake)
 
 //=======================================================
 
+EzyLoginRequest::EzyLoginRequest() {
+    this->mPassword = "";
+    this->mData = nullptr;
+}
+
 entity::EzyArray* EzyLoginRequest::serialize() {
     auto array = new entity::EzyArray();
     array->addString(mZoneName);
@@ -48,7 +63,7 @@ entity::EzyArray* EzyLoginRequest::serialize() {
     return array;
 }
 
-EZY_IMPLEMENT_REQUEST_CLASS(Login)
+EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(Login)
 
 //=======================================================
 
@@ -63,6 +78,10 @@ EZY_IMPLEMENT_REQUEST_CLASS(AppAccess)
 
 //=======================================================
 
+EzyAppRequestRequest::EzyAppRequestRequest() {
+    this->mData = nullptr;
+}
+
 entity::EzyArray* EzyAppRequestRequest::serialize() {
     auto array = new entity::EzyArray();
     array->addInt(mAppId);
@@ -70,9 +89,13 @@ entity::EzyArray* EzyAppRequestRequest::serialize() {
     return array;
 }
 
-EZY_IMPLEMENT_REQUEST_CLASS(AppRequest)
+EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(AppRequest)
 
 //=======================================================
+
+EzyPluginRequestByIdRequest::EzyPluginRequestByIdRequest() {
+    this->mData = nullptr;
+}
 
 entity::EzyArray* EzyPluginRequestByIdRequest::serialize() {
     auto array = new entity::EzyArray();
@@ -81,9 +104,13 @@ entity::EzyArray* EzyPluginRequestByIdRequest::serialize() {
     return array;
 }
 
-EZY_IMPLEMENT_REQUEST_CLASS(PluginRequestById)
+EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(PluginRequestById)
 
 //=======================================================
+
+EzyPluginRequestByNameRequest::EzyPluginRequestByNameRequest() {
+    this->mData = nullptr;
+}
 
 entity::EzyArray* EzyPluginRequestByNameRequest::serialize() {
     auto array = new entity::EzyArray();
@@ -92,6 +119,6 @@ entity::EzyArray* EzyPluginRequestByNameRequest::serialize() {
     return array;
 }
 
-EZY_IMPLEMENT_REQUEST_CLASS(PluginRequestByName)
+EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(PluginRequestByName)
 
 EZY_NAMESPACE_END_WITH

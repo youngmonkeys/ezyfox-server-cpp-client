@@ -5,7 +5,7 @@
 
 EZY_NAMESPACE_START_WITH(entity)
 
-EzyZone::EzyZone(int identifier, std::string name, EzyClient* client) {
+EzyZone::EzyZone(EzyClient* client, int identifier, std::string name) {
     this->mId = identifier;
     this->mName = name;
     this->mClient = client;
