@@ -13,20 +13,19 @@ protected:
     codec::EzyDecodeState mDecodeState;
     codec::EzyMessageHeader* mMessageHeader;
     
-    virtual void onRecvData();
+    virtual void onDataReceived();
     virtual void onUpdateDataHeader();
     virtual void onUpdateDataSize();
     virtual void onUpdateData();
 #endif
     
     codec::EzyDataDecoder* mDecoder;
-    virtual void recvData(const char* data, size_t size);
+    virtual void acceptData(const char* data, size_t size);
     virtual void onRecvMessage(entity::EzyValue* value);
 public:
     EzySocketReader();
     virtual ~EzySocketReader();
-    
-    virtual void updateThread();
+    virtual void run();
 };
 
 EZY_NAMESPACE_END_WITH

@@ -3,6 +3,10 @@
 #include "EzySocketWriter.h"
 #include "EzySocketReader.h"
 
+EZY_NAMESPACE_START_WITH_ONLY(config)
+class EzyReconnectConfig;
+EZY_NAMESPACE_END_WITH
+
 EZY_NAMESPACE_START_WITH_ONLY(event)
 class EzyEvent;
 EZY_NAMESPACE_END_WITH
@@ -24,6 +28,7 @@ protected:
     int mPort;
     long long mConnectTime;
     std::mutex mClientMutex;
+    int mReconnectCount;
     
     gc::EzyReleasePool* mReleasePool;
     EzySocketWriter* mSocketWriter;
@@ -32,6 +37,7 @@ protected:
     handler::EzyEventHandlers* mEventHandlers;
     handler::EzyDataHandlers* mDataHandlers;
     manager::EzyHandlerManager* mHandlerManager;
+    config::EzyReconnectConfig* mReconnectConfig;
     std::vector<event::EzyEvent*> mLocalEventQueue;
     
 protected:
@@ -39,19 +45,21 @@ protected:
     virtual void processReceivedMessage();
     virtual void clearAdapter();
     virtual void resetSocket();
-    virtual void updateConnection();
     virtual void startAdapter();
     virtual void createAdapter();
     virtual bool connectNow();
+    virtual void connect0(long sleepTime);
     virtual void processSocketError();
 public:
     EzySocketClient();
     virtual ~EzySocketClient();
     virtual void connectTo(const std::string& host, int port);
+    virtual bool reconnect();
     virtual void closeClient();
     virtual void closeSocket();
     virtual void sendMessage(EzySocketData* data);
     virtual void processMessage();
+    virtual void setReconnectConfig(config::EzyReconnectConfig* reconnectConfig);
     virtual void setHandlerManager(manager::EzyHandlerManager* handlerManager);
 };
 

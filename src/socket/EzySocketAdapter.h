@@ -20,8 +20,8 @@ protected:
 public:
 	EzySocketAdapter();
 	virtual ~EzySocketAdapter();
-	virtual void updateThread();
 	virtual void start();
+    virtual void run();
 	virtual void stop();
     virtual bool isActive();
     virtual void setActive(bool active);

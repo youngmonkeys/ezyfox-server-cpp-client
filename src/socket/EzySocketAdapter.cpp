@@ -18,7 +18,7 @@ EzySocketAdapter::~EzySocketAdapter() {
     EZY_SAFE_DELETE(mSocketPool)
 }
 
-void EzySocketAdapter::updateThread(){
+void EzySocketAdapter::run() {
 	this->update();
     gc::EzyAutoReleasePool::getInstance()->removePool();
 	this->release();
@@ -31,20 +31,20 @@ bool EzySocketAdapter::isActive() {
 
 void EzySocketAdapter::setActive(bool active) {
 	std::unique_lock<std::mutex> lk(mMutex);
-	this->mActive = active;
+	mActive = active;
 }
 
 void EzySocketAdapter::start() {
 	if (!isActive()){
-		this->setActive(true);
-		this->retain();
-		std::thread newThread(&EzySocketAdapter::updateThread, this);
+		setActive(true);
+		retain();
+		std::thread newThread(&EzySocketAdapter::run, this);
 		newThread.detach();
 	}
 }
 
 void EzySocketAdapter::stop(){
-	this->setActive(false);
+	setActive(false);
 	mSocketPool->clear();
 }
 

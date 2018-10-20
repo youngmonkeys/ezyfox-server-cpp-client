@@ -65,11 +65,11 @@ void EzyTcpSocketWriter::update(){
 EzyTcpSocketReader::EzyTcpSocketReader() {
 }
 
-EzyTcpSocketReader::~EzyTcpSocketReader(){
+EzyTcpSocketReader::~EzyTcpSocketReader() {
 }
 
 #define BUFFER_SIZE 102400
-void EzyTcpSocketReader::update(){
+void EzyTcpSocketReader::update() {
 	size_t rs;
 	char dataBuffer[BUFFER_SIZE];
     auto releasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
@@ -85,7 +85,7 @@ void EzyTcpSocketReader::update(){
 #ifdef EZY_DEBUG
 			logger::log("recvdata: %d",rs);
 #endif
-			recvData(dataBuffer, rs);
+			acceptData(dataBuffer, rs);
 		}
 		else if (rs == 0){
 #ifdef EZY_DEBUG

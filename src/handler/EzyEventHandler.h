@@ -52,4 +52,15 @@ private:
     void updateConnectionStatus();
 };
 //==========================================================
+
+//==========================================================
+class EzyDisconnectionHandler : public EzyAbstractEventHandler<event::EzyDisconnectionEvent> {
+protected:
+    void process(event::EzyDisconnectionEvent* event);
+protected:
+    virtual void preHandle(event::EzyDisconnectionEvent* event);
+    virtual bool shouldReconnect(event::EzyDisconnectionEvent* event);
+    virtual void control(event::EzyDisconnectionEvent* event);
+};
+//==========================================================
 EZY_NAMESPACE_END_WITH

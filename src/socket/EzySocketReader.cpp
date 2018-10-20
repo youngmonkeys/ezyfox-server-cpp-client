@@ -15,22 +15,22 @@ EzySocketReader::~EzySocketReader(){
     EZY_SAFE_DELETE(mDecoder)
 }
 
-void EzySocketReader::updateThread(){
+void EzySocketReader::run(){
 #ifdef USE_MESSAGE_HEADER
     mDecodeState = codec::prepareMessage;
     mDataSize = 0;
     mByteBuffer.reserve(100 * 1024); // 100KB RAM
 #endif
-    EzySocketAdapter::updateThread();
+    EzySocketAdapter::run();
 }
 
-void EzySocketReader::recvData(const char* data, size_t size){
+void EzySocketReader::acceptData(const char* data, size_t size){
     if (size <= 0){
         return;
     }
 #ifdef USE_MESSAGE_HEADER
     mByteBuffer.insert(mByteBuffer.end(), data, data + size);
-    onRecvData();
+    onDataReceived();
 #else
     mDecoder->addData(data, size);
 #endif
@@ -38,8 +38,8 @@ void EzySocketReader::recvData(const char* data, size_t size){
 
 
 #ifdef USE_MESSAGE_HEADER
-void EzySocketReader::onRecvData(){
-    if (mByteBuffer.size() <= 0){
+void EzySocketReader::onDataReceived() {
+    if (mByteBuffer.size() <= 0) {
         return;
     }
     switch (mDecodeState) {
@@ -54,7 +54,7 @@ void EzySocketReader::onRecvData(){
             break;
         default:
             mDecodeState = codec::readMessageHeader;
-            onRecvData();
+            onDataReceived();
             break;
     }
 }
@@ -66,7 +66,7 @@ void EzySocketReader::onUpdateDataHeader() {
         mMessageHeader->parse(headerByte);
         mByteBuffer.erase(mByteBuffer.begin(), mByteBuffer.begin() + 1);
         mDecodeState = codec::readMessageSize;
-        onRecvData();
+        onDataReceived();
     }
 }
     
@@ -86,16 +86,16 @@ void EzySocketReader::onUpdateDataSize() {
         }
         mByteBuffer.erase(mByteBuffer.begin(), mByteBuffer.begin() + dataSizeLength);
         mDecodeState = codec::readMessageContent;
-        onRecvData();
+        onDataReceived();
     }
 }
 
 void EzySocketReader::onUpdateData() {
-    if (mByteBuffer.size() >= mDataSize){
+    if (mByteBuffer.size() >= mDataSize) {
         mDecoder->addData(mByteBuffer.data(), mDataSize);
         mByteBuffer.erase(mByteBuffer.begin(), mByteBuffer.begin() + mDataSize);
         mDecodeState = codec::prepareMessage;
-        onRecvData();
+        onDataReceived();
     }
 }
 #endif

@@ -9,10 +9,12 @@
 #include "request/EzyRequestSerializer.h"
 #include "manager/EzyHandlerManager.h"
 #include "manager/EzyPingManager.h"
+#include "config/EzyClientConfig.h"
 
 EZY_NAMESPACE_START
 
-EzyClient::EzyClient() {
+EzyClient::EzyClient(config::EzyClientConfig* config) {
+    mConfig = config;
     mPingManager = new manager::EzyPingManager();
     mPingSchedule = new socket::EzyPingSchedule(this);
     mHandlerManager = new manager::EzyHandlerManager(this);
@@ -21,12 +23,20 @@ EzyClient::EzyClient() {
 }
 
 EzyClient::~EzyClient() {
+    EZY_SAFE_DELETE(mConfig);
 }
 
 void EzyClient::connect(std::string host, int port) {
     mSocketClient = newSocketClient();
     mSocketClient->setHandlerManager(mHandlerManager);
     mSocketClient->connectTo(host, port);
+}
+
+bool EzyClient::reconnect() {
+    bool success = mSocketClient->reconnect();
+    if (success)
+        setStatus(constant::Reconnecting);
+    return success;
 }
 
 socket::EzySocketClient* EzyClient::newSocketClient() {
@@ -63,6 +73,16 @@ void EzyClient::addApp(entity::EzyApp *app) {
 entity::EzyApp* EzyClient::getAppById(int appId) {
     auto app = mAppsById[appId];
     return app;
+}
+
+void EzyClient::setStatus(constant::EzyConnectionStatus status) {
+    std::unique_lock<std::mutex> lock(mStatusMutex);
+    mStatus = status;
+}
+
+constant::EzyConnectionStatus EzyClient::getStatus() {
+    std::unique_lock<std::mutex> lock(mStatusMutex);
+    return mStatus;
 }
 
 EZY_NAMESPACE_END

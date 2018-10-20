@@ -28,7 +28,8 @@ protected:
 
 int main(int argc, const char * argv[]) {
     srand( static_cast<unsigned int>(time(NULL)));
-    EzyClient *client = new EzyClient();
+    auto config = config::EzyClientConfig::create();
+    auto client = new EzyClient(config);
     auto setup = client->setup();
     setup->addEventHandler(event::ConnectionSuccess, new handler::EzyConnectionSuccessHandler());
     setup->addDataHandler(constant::Handshake, new ExHandshakeHandler());

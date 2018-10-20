@@ -7,6 +7,8 @@
 #include "../handler/EzyDataHandlers.h"
 #include "../constant/EzyDisconnectReason.h"
 #include "../constant/EzyConnectionFailedReason.h"
+#include "../config/EzyClientConfig.h"
+#include "../logger/EzyLogger.h"
 
 EZY_NAMESPACE_START_WITH(socket)
 
@@ -17,11 +19,18 @@ EzySocketClient::EzySocketClient() {
     mSocketReader = 0;
     mSocketWriter = 0;
     mReleasePool = 0;
+    mReconnectCount = 0;
+    mReconnectConfig = 0;
+    mHandlerManager = 0;
 }
 
 EzySocketClient::~EzySocketClient() {
     this->closeSocket();
     this->clearAdapter();
+}
+
+void EzySocketClient::setReconnectConfig(config::EzyReconnectConfig *reconnectConfig) {
+    this->mReconnectConfig = reconnectConfig;
 }
 
 void EzySocketClient::setHandlerManager(manager::EzyHandlerManager* handlerManager) {
@@ -40,23 +49,37 @@ bool EzySocketClient::connectNow() {
     return false;
 }
 
-void EzySocketClient::connectTo(const std::string& host, int port){
+void EzySocketClient::connectTo(const std::string& host, int port) {
     clearAdapter();
     createAdapter();
     closeSocket();
     mSocketEventQueue.clear();
     mHost = host;
     mPort = port;
+    mReconnectCount = 0;
     retain();
-    std::thread newThread(&EzySocketClient::updateConnection, this);
+    std::thread newThread(&EzySocketClient::connect0, this, 0);
     newThread.detach();
 }
 
-void EzySocketClient::updateConnection() {
+bool EzySocketClient::reconnect() {
+    auto maxReconnectCount = mReconnectConfig->getMaxReconnectCount();
+    if (mReconnectCount >= maxReconnectCount)
+        return false;
+    auto reconnectSleepTime = mReconnectConfig->getReconnectPeriod();
+    connect0(reconnectSleepTime);
+    mReconnectCount++;
+    logger::log("try reconnect to server: %d, wating time: %d", mReconnectCount, reconnectSleepTime);
+    auto tryConnectEvent = event::EzyTryConnectEvent::create(mReconnectCount);
+    mSocketEventQueue.addEvent(tryConnectEvent);
+    return true;
+}
+
+void EzySocketClient::connect0(long sleepTime) {
     auto currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     auto dt = currentTime - mConnectTime;
-    if (dt < 2000){ //delay 2000ms
-        std::this_thread::sleep_for(std::chrono::milliseconds(2000 - dt));
+    if (dt < sleepTime) { //delay 2000ms
+        std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime - dt));
     }
     
     bool success = this->connectNow();
@@ -64,6 +87,7 @@ void EzySocketClient::updateConnection() {
     
     if (success) {
         this->startAdapter();
+        this->mReconnectCount = 0;
         auto evt = event::EzyConnectionSuccessEvent::create();
         this->mSocketEventQueue.addEvent(evt);
     }

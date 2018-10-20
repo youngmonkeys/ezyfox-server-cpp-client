@@ -17,3 +17,4 @@
 #include "event/EzyEventType.h"
 #include "request/EzyRequest.h"
 #include "EzyClient.h"
+#include "EzyClientConfig.h"
