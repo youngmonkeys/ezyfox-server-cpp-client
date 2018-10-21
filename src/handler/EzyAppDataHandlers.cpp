@@ -15,23 +15,23 @@ EzyAppDataHandlers::~EzyAppDataHandlers() {
         mHandlersByString.clear();
 }
 
-void EzyAppDataHandlers::handleByInt(entity::EzyArray* data) {
+void EzyAppDataHandlers::handleByInt(entity::EzyApp* app, entity::EzyArray* data) {
     auto cmd = (int)data->getInt(0);
-    auto responseData = data->getArray(1);
+    auto responseData = data->getItem(1, nullptr);
     auto handler = mHandlersByInt[cmd];
     if(handler)
-        handler->handle(responseData);
+        handler->handle(app, responseData);
     else
         logger::log("has no handler for command: %d", cmd);
 
 }
 
-void EzyAppDataHandlers::handleByString(entity::EzyArray* data) {
+void EzyAppDataHandlers::handleByString(entity::EzyApp* app, entity::EzyArray* data) {
     auto cmd = data->getString(0);
-    auto responseData = data->getArray(1);
+    auto responseData = data->getItem(1, nullptr);
     auto handler = mHandlersByString[cmd];
     if(handler)
-        handler->handle(responseData);
+        handler->handle(app, responseData);
     else
         logger::log("has no handler for command: %s", cmd.c_str());
 

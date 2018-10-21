@@ -22,7 +22,7 @@ protected:
 public:
     EzyDataHandlers(EzyClient* client);
     ~EzyDataHandlers();
-    void handle(entity::EzyArray* data);
+    void handle(constant::EzyCommand cmd, entity::EzyArray* data);
     EzyDataHandler* getHandler(constant::EzyCommand cmd);
     void addHandler(constant::EzyCommand cmd, EzyDataHandler* handler);
 };

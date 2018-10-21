@@ -4,12 +4,17 @@
 #include "../request/EzyRequest.h"
 #include "../util/EzyMaps.h"
 #include "../EzyClient.h"
+#include "../handler/EzyAppDataHandlers.h"
+#include "../manager/EzyHandlerManager.h"
 
 EZY_NAMESPACE_START_WITH(entity)
 
-EzyApp::EzyApp(EzyZone* zone) {
+EzyApp::EzyApp(EzyZone* zone, int identifier, std::string name) {
+    this->mId = identifier;
+    this->mName = name;
     this->mZone = zone;
     this->mClient = zone->getClient();
+    this->mDataHandlers = mClient->getHandlerManager()->getAppDataHandlers(name);
 }
 
 EzyApp::~EzyApp() {

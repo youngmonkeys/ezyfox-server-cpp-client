@@ -23,6 +23,7 @@ public:
 
 	void addItem(EzyValue* item);
 	EzyValue* getItem(int index);
+    EzyValue* getItem(int index, EzyValue* defValue);
 
 	void addBool(bool value);
 	void addFloat(float value);

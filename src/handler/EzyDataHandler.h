@@ -10,6 +10,7 @@ EZY_NAMESPACE_END
 EZY_NAMESPACE_START_WITH_ONLY(entity)
 class EzyUser;
 class EzyZone;
+class EzyApp;
 EZY_NAMESPACE_END_WITH
 
 EZY_NAMESPACE_START_WITH_ONLY(socket)
@@ -21,6 +22,8 @@ class EzyRequest;
 EZY_NAMESPACE_END_WITH
 
 EZY_NAMESPACE_START_WITH(handler)
+
+class EzyAppDataHandlers;
 
 class EzyDataHandler {
 protected:
@@ -60,6 +63,35 @@ protected:
     virtual void handleReconnectSuccess(entity::EzyValue* responseData);
 public:
     void handle(entity::EzyArray* data);
+};
+
+//===============================================
+
+class EzyAccessAppHandler : public EzyDataHandler {
+protected:
+    virtual void postHandle(entity::EzyApp* app, entity::EzyArray* data);
+    virtual entity::EzyApp* newApp(entity::EzyZone* zone, entity::EzyArray* data);
+public:
+    void handle(entity::EzyArray* data);
+};
+
+//===============================================
+
+class EzyAbstractAppResponseHandler : public EzyDataHandler {
+public:
+    virtual void handle(entity::EzyArray* data);
+protected:
+    virtual void handle(EzyAppDataHandlers* handlers, entity::EzyApp* app, entity::EzyArray* data) = 0;
+};
+
+class EzyAppResponseByIntHandler : public EzyAbstractAppResponseHandler {
+protected:
+    void handle(EzyAppDataHandlers* handlers, entity::EzyApp* app, entity::EzyArray* data);
+};
+
+class EzyAppResponseByStringHandler : public EzyAbstractAppResponseHandler {
+protected:
+    void handle(EzyAppDataHandlers* handlers, entity::EzyApp* app, entity::EzyArray* data);
 };
 
 //===============================================

@@ -16,13 +16,10 @@ EzyDataHandlers::~EzyDataHandlers() {
     mHandlers.clear();
 }
     
-void EzyDataHandlers::handle(entity::EzyArray *data) {
-    auto cmdId = data->getInt(0);
-    auto cmd = (constant::EzyCommand)cmdId;
-    auto responseData = data->getArray(1);
+void EzyDataHandlers::handle(constant::EzyCommand cmd, entity::EzyArray *data) {
     auto handler = mHandlers[cmd];
     if(handler)
-        handler->handle(responseData);
+        handler->handle(data);
     else
         logger::log("has no handler for command: %d", cmd);
 }

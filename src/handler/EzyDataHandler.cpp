@@ -3,8 +3,11 @@
 #include "../request/EzyRequest.h"
 #include "../socket/EzyPingSchedule.h"
 #include "../entity/EzyZone.h"
+#include "../entity/EzyApp.h"
 #include "../entity/EzyUser.h"
 #include "../manager/EzyHandlerManager.h"
+#include "../manager/EzyAppManager.h"
+#include "../handler/EzyAppDataHandlers.h"
 
 EZY_NAMESPACE_START_WITH(handler)
 
@@ -90,6 +93,49 @@ void EzyLoginSuccessHandler::handleLoginSuccess(entity::EzyValue* responseData) 
 
 void EzyLoginSuccessHandler::handleReconnectSuccess(entity::EzyValue* responseData) {
     handleLoginSuccess(responseData);
+}
+
+//===============================================
+
+void EzyAccessAppHandler::handle(entity::EzyArray* data) {
+    auto zone = mClient->getZone();
+    auto appManager = zone->getAppManager();
+    auto app = newApp(zone, data);
+    appManager->addApp(app);
+    mClient->addApp(app);
+    postHandle(app, data);
+}
+
+void EzyAccessAppHandler::postHandle(entity::EzyApp* app, entity::EzyArray* data) {
+}
+
+entity::EzyApp* EzyAccessAppHandler::newApp(entity::EzyZone* zone, entity::EzyArray* data) {
+    auto appId = data->getInt(0);
+    auto appName = data->getString(1);
+    auto app = new entity::EzyApp(zone, (int)appId, appName);
+    return app;
+}
+
+//===============================================
+
+void EzyAbstractAppResponseHandler::handle(entity::EzyArray* data) {
+    auto appId = data->getInt(0);
+    auto responseData = data->getArray(1);
+    auto app = mClient->getAppById((int)appId);
+    auto dataHandlers = app->getDataHandlers();
+    handle(dataHandlers, app, responseData);
+}
+
+void EzyAppResponseByIntHandler::handle(EzyAppDataHandlers* handlers,
+                                        entity::EzyApp* app,
+                                        entity::EzyArray* data) {
+    handlers->handleByInt(app, data);
+}
+
+void EzyAppResponseByStringHandler::handle(EzyAppDataHandlers* handlers,
+                                           entity::EzyApp* app,
+                                           entity::EzyArray* data) {
+    handlers->handleByString(app, data);
 }
 
 //===============================================

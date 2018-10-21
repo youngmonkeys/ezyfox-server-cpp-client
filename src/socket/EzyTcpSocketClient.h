@@ -21,6 +21,7 @@ public:
 };
 
 class EzyTcpSocketReader : public EzySocketReader {
+protected:
 	virtual void update();
 public:
 	EzyTcpSocket mSocket;
@@ -30,13 +31,14 @@ public:
 };
 
 class EzyTcpSocketClient : public EzySocketClient {
+protected:
 	EzyTcpSocket mSocket;
 	std::mutex mSocketMutex;
 
 	virtual void resetSocket();
-	virtual void createAdapter();
+	virtual void createAdapters();
 	virtual bool connectNow();
-	virtual void startAdapter();
+	virtual void startAdapters();
 public:
 	EzyTcpSocketClient();
 	virtual ~EzyTcpSocketClient();

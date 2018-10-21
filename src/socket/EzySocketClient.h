@@ -27,8 +27,9 @@ protected:
     std::string mHost;
     int mPort;
     long long mConnectTime;
-    std::mutex mClientMutex;
     int mReconnectCount;
+    int mConnectionFailedReason;
+    std::mutex mClientMutex;
     
     gc::EzyReleasePool* mReleasePool;
     EzySocketWriter* mSocketWriter;
@@ -41,15 +42,17 @@ protected:
     std::vector<event::EzyEvent*> mLocalEventQueue;
     
 protected:
-    virtual void processEvent();
-    virtual void processReceivedMessage();
-    virtual void clearAdapter();
-    virtual void resetSocket();
-    virtual void startAdapter();
-    virtual void createAdapter();
     virtual bool connectNow();
     virtual void connect0(long sleepTime);
-    virtual void processSocketError();
+    virtual void processEvents();
+    virtual void clearAdapters();
+    virtual void resetSocket();
+    virtual void startAdapters();
+    virtual void createAdapters();
+    virtual void stopAdapter(EzySocketAdapter* adapter);
+    virtual void clearAdapter(EzySocketAdapter* adapter);
+    virtual void processReceivedMessages();
+    virtual void processReceivedMessage(EzySocketData* message);
 public:
     EzySocketClient();
     virtual ~EzySocketClient();
@@ -57,8 +60,9 @@ public:
     virtual bool reconnect();
     virtual void closeClient();
     virtual void closeSocket();
-    virtual void sendMessage(EzySocketData* data);
-    virtual void processMessage();
+    virtual void sendMessage(EzySocketData* message);
+    virtual void processEventMessages();
+    virtual void onDisconnected(int reason);
     virtual void setReconnectConfig(config::EzyReconnectConfig* reconnectConfig);
     virtual void setHandlerManager(manager::EzyHandlerManager* handlerManager);
 };

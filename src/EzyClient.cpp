@@ -42,6 +42,7 @@ bool EzyClient::reconnect() {
 socket::EzySocketClient* EzyClient::newSocketClient() {
     auto socketClient = new socket::EzyTcpSocketClient();
     socketClient->setHandlerManager(mHandlerManager);
+    socketClient->setReconnectConfig(mConfig->getReconnect());
     return socketClient;
 }
 
@@ -53,7 +54,7 @@ void EzyClient::disconnect() {
 
 void EzyClient::processEvents() {
     if(mSocketClient)
-        mSocketClient->processMessage();
+        mSocketClient->processEventMessages();
 }
 
 void EzyClient::send(request::EzyRequest *request) {

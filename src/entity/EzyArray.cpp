@@ -60,7 +60,15 @@ void EzyArray::addItem(EzyValue* item){
 }
 
 EzyValue* EzyArray::getItem(int index){
-	return mData[index];
+	auto value = mData[index];
+    return value;
+}
+
+EzyValue* EzyArray::getItem(int index, EzyValue* defValue) {
+    if(index >= mData.size())
+        return defValue;
+    auto value = mData[index];
+    return value;
 }
 
 int EzyArray::size(){

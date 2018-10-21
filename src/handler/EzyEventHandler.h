@@ -63,4 +63,14 @@ protected:
     virtual void control(event::EzyDisconnectionEvent* event);
 };
 //==========================================================
+
+//==========================================================
+class EzyConnectionFailureHandler : public EzyAbstractEventHandler<event::EzyConnectionFailureEvent> {
+protected:
+    void process(event::EzyConnectionFailureEvent* event);
+protected:
+    virtual bool shouldReconnect(event::EzyConnectionFailureEvent* event);
+    virtual void control(event::EzyConnectionFailureEvent* event);
+};
+//==========================================================
 EZY_NAMESPACE_END_WITH

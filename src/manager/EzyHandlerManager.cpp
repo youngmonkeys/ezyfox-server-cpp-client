@@ -19,12 +19,16 @@ EzyHandlerManager::EzyHandlerManager(EzyClient* client) {
 handler::EzyEventHandlers* EzyHandlerManager::newEventHandlers() {
     auto handlers = new handler::EzyEventHandlers(mClient);
     handlers->addHandler(event::ConnectionSuccess, new handler::EzyConnectionSuccessHandler());
+    handlers->addHandler(event::ConnectionFailure, new handler::EzyConnectionFailureHandler());
+    handlers->addHandler(event::Disconnection, new handler::EzyDisconnectionHandler());
     return handlers;
 }
 
 handler::EzyDataHandlers* EzyHandlerManager::newDataHandlers(){
     auto handlers = new handler::EzyDataHandlers(mClient);
     handlers->addHandler(constant::Login, new handler::EzyLoginSuccessHandler());
+    handlers->addHandler(constant::AppAccess, new handler::EzyAccessAppHandler());
+    handlers->addHandler(constant::AppRequest, new handler::EzyAppResponseByStringHandler());
     return handlers;
 }
 

@@ -3,6 +3,7 @@
 #include "EzyTcpSocketClient.h"
 #include "../logger/EzyLogger.h"
 #include "../gc/EzyAutoReleasePool.h"
+#include "../constant/EzyConnectionFailedReason.h"
 
 EZY_NAMESPACE_START_WITH(socket)
 
@@ -143,13 +144,13 @@ void EzyTcpSocketClient::resetSocket() {
 	mSocket = SYS_SOCKET_INVALID;
 }
 
-void EzyTcpSocketClient::createAdapter() {
+void EzyTcpSocketClient::createAdapters() {
 	std::unique_lock<std::mutex> lk(mClientMutex);
 	mSocketReader = new EzyTcpSocketReader();
 	mSocketWriter = new EzyTcpSocketWriter();
 }
 
-void EzyTcpSocketClient::startAdapter(){
+void EzyTcpSocketClient::startAdapters(){
 	std::unique_lock<std::mutex> lk(mClientMutex);
 	((EzyTcpSocketWriter*)mSocketWriter)->mSocket = mSocket;
 	mSocketWriter->start();
@@ -158,7 +159,7 @@ void EzyTcpSocketClient::startAdapter(){
 }
 
 
-bool EzyTcpSocketClient::connectNow(){
+bool EzyTcpSocketClient::connectNow() {
 	addrinfo hints, *peer;
 	memset(&hints, 0, sizeof(struct addrinfo));
 #ifdef __linux
@@ -175,16 +176,17 @@ bool EzyTcpSocketClient::connectNow(){
 
 	char service[128];
 	sprintf(service, "%d", mPort);
-	if (int ret = getaddrinfo(mHost.c_str(), service, &hints, &peer) != 0){
+	if (int ret = getaddrinfo(mHost.c_str(), service, &hints, &peer) != 0) {
 #ifdef EZY_DEBUG
 		logger::log("getaddrinfo failure %d", ret);
 #endif
+        mConnectionFailedReason = constant::UnknownFailure;
 		return false;
 	}
 
-	for (auto tpeer = peer; tpeer; tpeer = tpeer->ai_next){
+	for (auto tpeer = peer; tpeer; tpeer = tpeer->ai_next) {
         mSocket = ::socket(tpeer->ai_family, tpeer->ai_socktype, tpeer->ai_protocol);
-		if (mSocket == SYS_SOCKET_INVALID){
+		if (mSocket == SYS_SOCKET_INVALID) {
 #ifdef EZY_DEBUG
 			logger::log("create socket failure");
 #endif
@@ -192,9 +194,9 @@ bool EzyTcpSocketClient::connectNow(){
 		}
 
 		int rs = connect(mSocket, tpeer->ai_addr, tpeer->ai_addrlen);
-		if (rs == 0){
+		if (rs == 0) {
 			std::unique_lock<std::mutex> lk(mClientMutex);
-			if (mSocketReader && mSocketWriter){
+			if (mSocketReader && mSocketWriter) {
 				freeaddrinfo(peer);
 				return true;
 			}
@@ -210,6 +212,7 @@ bool EzyTcpSocketClient::connectNow(){
 #ifdef EZY_DEBUG
 	logger::log("connection failure 3");
 #endif
+    mConnectionFailedReason = constant::UnknownFailure;
 	return false;
 }
 

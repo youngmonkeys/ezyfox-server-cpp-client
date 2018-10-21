@@ -92,6 +92,29 @@ bool EzyDisconnectionHandler::shouldReconnect(event::EzyDisconnectionEvent* even
 
 void EzyDisconnectionHandler::control(event::EzyDisconnectionEvent* event) {
 }
-//==========================================================
 
+//==========================================================
+void EzyConnectionFailureHandler::process(event::EzyConnectionFailureEvent* event) {
+    logger::log("connection failure, reason = %d", event->getReason());
+    auto config = mClient->getConfig();
+    auto reconnectConfig = config->getReconnect();
+    auto should = shouldReconnect(event);
+    auto mustReconnect = reconnectConfig->isEnable() && should;
+    auto reconnecting = false;
+    if (mustReconnect)
+        reconnecting = mClient->reconnect();
+    if (!reconnecting)
+    {
+        mClient->setStatus(constant::Failure);
+        control(event);
+    }
+}
+
+bool EzyConnectionFailureHandler::shouldReconnect(event::EzyConnectionFailureEvent* event) {
+    return true;
+}
+
+void EzyConnectionFailureHandler::control(event::EzyConnectionFailureEvent* event) {
+}
+//==========================================================
 EZY_NAMESPACE_END_WITH
