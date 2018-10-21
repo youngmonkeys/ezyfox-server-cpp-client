@@ -1,48 +1,79 @@
 #pragma once
 
-#include "EzyHeaders.h"
+#include <map>
+#include <mutex>
 #include "constant/EzyCommand.h"
-#include "handler/EzyEventHandlers.h"
-#include "request/EzyRequest.h"
-#include "request/EzyRequestDeliver.h"
-#include "request/EzyArrayRequestSerializer.h"
-#include "EzySocketKeyPair.h"
-#include "handler/EzyPingSchedule.h"
+#include "socket/EzySender.h"
+#include "constant/EzyConnectionStatus.h"
+
+EZY_NAMESPACE_START_WITH_ONLY(config)
+class EzyClientConfig;
+EZY_NAMESPACE_END_WITH
+
+EZY_NAMESPACE_START_WITH_ONLY(entity)
+class EzyZone;
+class EzyUser;
+class EzyApp;
+EZY_NAMESPACE_END_WITH
+
+EZY_NAMESPACE_START_WITH_ONLY(request)
+class EzyRequestSerializer;
+EZY_NAMESPACE_END_WITH
+
+EZY_NAMESPACE_START_WITH_ONLY(manager)
+class EzyHandlerManager;
+class EzyPingManager;
+EZY_NAMESPACE_END_WITH
+
+EZY_NAMESPACE_START_WITH_ONLY(socket)
+class EzySocketClient;
+class EzyPingSchedule;
+EZY_NAMESPACE_END_WITH
+
+EZY_NAMESPACE_START_WITH_ONLY(command)
+class EzySetup;
+EZY_NAMESPACE_END_WITH
 
 EZY_NAMESPACE_START
 
-class EzyClient : public request::EzyRequestDeliver {
+class EzyClientStatusAware {
+public:
+    virtual constant::EzyConnectionStatus getStatus() = 0;
+    virtual void setStatus(constant::EzyConnectionStatus status) = 0;
+};
+
+class EzyClient : public socket::EzySender, public EzyClientStatusAware {
 protected:
+    command::EzySetup* mSetup;
+    std::mutex mStatusMutex;
+    constant::EzyConnectionStatus mStatus;
     socket::EzySocketClient* mSocketClient;
-    handler::EzyEventHandlers* mEventHandlers;
-    request::EzyArrayRequestSerializer* mRequestSerializer;
-    
+    std::map<int, entity::EzyApp*> mAppsById;
+    request::EzyRequestSerializer* mRequestSerializer;
 protected:
-    EZY_SYNTHESIZE_BOOL_READONLY(Connected)
+    EZY_SYNTHESIZE(entity::EzyUser*, Me)
+    EZY_SYNTHESIZE(entity::EzyZone*, Zone)
+    EZY_SYNTHESIZE_READONLY(config::EzyClientConfig*, Config);
+    EZY_SYNTHESIZE_READONLY(manager::EzyPingManager*, PingManager);
+    EZY_SYNTHESIZE_READONLY(socket::EzyPingSchedule*, PingSchedule);
+    EZY_SYNTHESIZE_READONLY(manager::EzyHandlerManager*, HandlerManager);
     
 protected:
     socket::EzySocketClient* newSocketClient();
     
 public:
-    EzyClient();
+    EzyClient(config::EzyClientConfig* config);
     ~EzyClient();
-
-    template<class T>
-    void addEventHandler(event::EzyEventType eventType,
-                         handler::EzyEventHandler<T>* handler);
-    void handleEvent(event::EzyEvent* event);
-    
     void connect(std::string host, int port);
+    bool reconnect();
     void disconnect();
     void send(request::EzyRequest* request);
-    void processSocketEvent();
-    
+    command::EzySetup* setup();
+    void addApp(entity::EzyApp* app);
+    entity::EzyApp* getAppById(int appId);
+    constant::EzyConnectionStatus getStatus();
+    void setStatus(constant::EzyConnectionStatus status);
+    void processEvents();
 };
-
-template<class T>
-void EzyClient::addEventHandler(event::EzyEventType eventType,
-                                handler::EzyEventHandler<T> *handler) {
-    mEventHandlers->addEventHandler(eventType, handler);
-}
 
 EZY_NAMESPACE_END

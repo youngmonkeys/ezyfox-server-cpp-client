@@ -12,10 +12,9 @@
 #ifdef EZY_DEBUG
 #define MAX_LOG_LENGTH 16 * 1024 //16KB log
 
-EZY_NAMESPACE_START
-namespace logger {
+EZY_NAMESPACE_START_WITH_ONLY(logger)
 
-static void _log(const char *format, va_list args){
+static void _log(const char *format, va_list args) {
 	char* buf = new char[MAX_LOG_LENGTH];
 
 	vsnprintf(buf, MAX_LOG_LENGTH - 3, format, args);
@@ -26,9 +25,9 @@ static void _log(const char *format, va_list args){
 	delete[] buf;
 }
 
-void console(const char* buf){
+void console(const char* buf) {
 #if defined(ANDROID)
-	__android_log_print(ANDROID_LOG_DEBUG, "lobby-debug", "%s", buf);
+	__android_log_print(ANDROID_LOG_DEBUG, "debug", "%s", buf);
 #elif defined(_WIN32) || defined(WINRT)
 	int pos = 0;
 	int len = strlen(buf);
@@ -49,7 +48,7 @@ void console(const char* buf){
 
 		pos += bufferSize;
 		bufferSize = len - pos;
-		if (bufferSize > MAX_LOG_LENGTH){
+		if (bufferSize > MAX_LOG_LENGTH) {
 			bufferSize = MAX_LOG_LENGTH;
 		}
 	}
@@ -64,7 +63,7 @@ void console(const char* buf){
 #endif
 }
 
-void log(const char * format, ...){
+void log(const char * format, ...) {
 	va_list args;
 	va_start(args, format);
 	_log(format, args);
@@ -74,7 +73,7 @@ void log(const char * format, ...){
 void hex(const char* buf, int len) {
 	char* data = new char[len * 3 + 10];
 
-	for (int i = 0; i<len; i++){
+	for (int i = 0; i<len; i++) {
 		sprintf(&data[i * 3], "%02X ", (unsigned char)buf[i]);
 	}
 
@@ -83,25 +82,23 @@ void hex(const char* buf, int len) {
 	delete[]data;
 }
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH
 
 #else
-EZY_NAMESPACE_START
-namespace logger {
-    
-}
-void log(const char * format, ...){
+
+EZY_NAMESPACE_START_WITH_ONLY(logger)
+
+void log(const char * format, ...) {
 }
 
 void console(const char* log){
 }
 
-void hex(const char* buf, int len){
+void hex(const char* buf, int len) {
 }
-    
-}
-EZY_NAMESPACE_END
+
+EZY_NAMESPACE_END_WITH
+
 #endif
 
 

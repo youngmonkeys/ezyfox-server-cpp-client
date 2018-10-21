@@ -1,106 +1,124 @@
 #include "EzyRequest.h"
 
-#define EZY_IMPLEMENT_PARAMS_REQUEST_CLASS(className, command) \
-Ezy##className##Request::Ezy##className##Request(Ezy##className##RequestParams* params) :\
-EzyRequest(command, params) {\
-}\
-Ezy##className##Request* Ezy##className##Request::create(Ezy##className##RequestParams* params) {\
-    Ezy##className##Request* pRet = new Ezy##className##Request(params);\
-    pRet->autorelease();\
-    return pRet;\
-}
-
-#define EZY_IMPLEMENT_REQUEST_CLASS(className, command) \
-Ezy##className##Request::Ezy##className##Request() : EzyRequest(command, new EzyParams()) {\
+#define EZY_IMPLEMENT_REQUEST_CLASS(className) \
+Ezy##className##Request::Ezy##className##Request() : EzyRequest() {\
 }\
 Ezy##className##Request* Ezy##className##Request::create() {\
-Ezy##className##Request* pRet = new Ezy##className##Request();\
+    Ezy##className##Request* pRet = new Ezy##className##Request();\
     pRet->autorelease();\
     return pRet;\
 }\
-
-EZY_NAMESPACE_START
-namespace request {
-    
-//=======================================================
-EzyParams::~EzyParams() {
+constant::EzyCommand Ezy##className##Request::getCommand() {\
+    return constant::className;\
 }
 
-entity::EzyArray* EzyParams::serialize() {
-    return new entity::EzyArray();
+#define EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(className) \
+Ezy##className##Request* Ezy##className##Request::create() {\
+    Ezy##className##Request* pRet = new Ezy##className##Request();\
+    pRet->autorelease();\
+    return pRet;\
+}\
+constant::EzyCommand Ezy##className##Request::getCommand() {\
+    return constant::className;\
 }
-    
+
+EZY_NAMESPACE_START_WITH(request)
+
 //=======================================================
-    
-EzyRequest::EzyRequest(command::EzyCommand cmd, EzyParams* params) {
-    this->mCommand = cmd;
-    this->mParams = params;
-}
-    
-EzyRequest::~EzyRequest() {
-    EZY_SAFE_DELETE(mParams);
-}
-    
-EzyRequest* EzyRequest::create(command::EzyCommand cmd, EzyParams* params) {
-    auto pRet = new EzyRequest(cmd, params);
-    pRet->autorelease();
-    return pRet;
+
+EZY_IMPLEMENT_REQUEST_CLASS(Ping)
+
+entity::EzyArray* EzyRequest::serialize() {
+    return entity::EzyArray::create();
 }
 
 //=======================================================
-    
-EZY_IMPLEMENT_REQUEST_CLASS(Ping, command::Ping);
-    
-//=======================================================
-    
-std::string EzyHandshakeRequestParams::getClientType() {
-    return "C++";
-}
-    
-std::string EzyHandshakeRequestParams::getClientVersion() {
-    return "1.0.0";
-}
-    
-entity::EzyArray* EzyHandshakeRequestParams::serialize() {
+
+entity::EzyArray* EzyHandshakeRequest::serialize() {
     auto array = new entity::EzyArray();
     array->addString(mClientId);
     array->addString(mClientKey);
-    array->addString(mReconnectToken);
-    array->addString(getClientType());
-    array->addString(getClientVersion());
+    array->addString(mClientType);
+    array->addString(mClientVersion);
+    array->addBool(mEnableEncryption);
+    array->addString(mToken);
     return array;
 }
-    
-EZY_IMPLEMENT_PARAMS_REQUEST_CLASS(Handshake, command::Handshake);
-    
+
+EZY_IMPLEMENT_REQUEST_CLASS(Handshake)
+
 //=======================================================
 
-EzyLoginRequestParams::~EzyLoginRequestParams() {
+EzyLoginRequest::EzyLoginRequest() {
+    this->mPassword = "";
+    this->mData = 0;
 }
-    
-entity::EzyArray* EzyLoginRequestParams::serialize() {
+
+entity::EzyArray* EzyLoginRequest::serialize() {
     auto array = new entity::EzyArray();
+    array->addString(mZoneName);
     array->addString(mUsername);
     array->addString(mPassword);
     array->addArray(mData);
     return array;
 }
 
-EZY_IMPLEMENT_PARAMS_REQUEST_CLASS(Login, command::Login)
-    
+EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(Login)
+
 //=======================================================
 
-EzyAccessAppRequestParams::~EzyAccessAppRequestParams() {
-}
-    
-entity::EzyArray* EzyAccessAppRequestParams::serialize() {
+entity::EzyArray* EzyAppAccessRequest::serialize() {
     auto array = new entity::EzyArray();
     array->addString(mAppName);
     array->addItem(mData);
     return array;
 }
-    
-EZY_IMPLEMENT_PARAMS_REQUEST_CLASS(AccessApp, command::AppAccess)
-    
+
+EZY_IMPLEMENT_REQUEST_CLASS(AppAccess)
+
+//=======================================================
+
+EzyAppRequestRequest::EzyAppRequestRequest() {
+    this->mData = 0;
 }
-EZY_NAMESPACE_END
+
+entity::EzyArray* EzyAppRequestRequest::serialize() {
+    auto array = new entity::EzyArray();
+    array->addInt(mAppId);
+    array->addItem(mData);
+    return array;
+}
+
+EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(AppRequest)
+
+//=======================================================
+
+EzyPluginRequestByIdRequest::EzyPluginRequestByIdRequest() {
+    this->mData = 0;
+}
+
+entity::EzyArray* EzyPluginRequestByIdRequest::serialize() {
+    auto array = new entity::EzyArray();
+    array->addInt(mPluginId);
+    array->addItem(mData);
+    return array;
+}
+
+EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(PluginRequestById)
+
+//=======================================================
+
+EzyPluginRequestByNameRequest::EzyPluginRequestByNameRequest() {
+    this->mData = 0;
+}
+
+entity::EzyArray* EzyPluginRequestByNameRequest::serialize() {
+    auto array = new entity::EzyArray();
+    array->addString(mPluginName);
+    array->addItem(mData);
+    return array;
+}
+
+EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(PluginRequestByName)
+
+EZY_NAMESPACE_END_WITH

@@ -1,9 +1,9 @@
 #pragma once
 
+#include <string>
 #include "../EzyMacro.h"
 
-EZY_NAMESPACE_START
-namespace command {
+EZY_NAMESPACE_START_WITH_ONLY(constant)
 
 enum EzyCommand {
     Error = 10,
@@ -11,16 +11,17 @@ enum EzyCommand {
     Ping = 12,
     Pong = 13,
     Disconnect = 14,
-    PluginRequest = 15,
     Login = 20,
     LoginError = 21,
-    Logout = 22,
     AppAccess = 30,
     AppRequest = 31,
-    AppJoined = 32,
     AppExit = 33,
-    AppAccessError = 34
+    AppAccessError = 34,
+    PluginInfo = 40,
+    PluginRequestByName = 41,
+    PluginRequestById = 42
 };
 
-}
-EZY_NAMESPACE_END
+std::string getCommandName(int command);
+
+EZY_NAMESPACE_END_WITH

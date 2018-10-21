@@ -4,8 +4,7 @@
 
 #define MAX_SMALL_MESSAGE_SIZE 65535
 
-EZY_NAMESPACE_START
-namespace codec {
+EZY_NAMESPACE_START_WITH(codec)
 
 class EzyMessageHeader : public base::EzyRef {
 protected:
@@ -25,5 +24,4 @@ public:
     static EzyMessageHeader* create(uint32_t dataSize);
 };
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

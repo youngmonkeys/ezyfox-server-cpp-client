@@ -14,6 +14,29 @@ namespace client {\
 }\
 }
 
+
+#define EZY_NAMESPACE_START_WITH(package) \
+using namespace com::tvd12::ezyfoxserver::client; \
+namespace com {\
+namespace tvd12 {\
+namespace ezyfoxserver {\
+namespace client {\
+namespace package {
+
+#define EZY_NAMESPACE_START_WITH_ONLY(package) \
+namespace com {\
+namespace tvd12 {\
+namespace ezyfoxserver {\
+namespace client {\
+namespace package {
+
+#define EZY_NAMESPACE_END_WITH \
+}\
+}\
+}\
+}\
+}
+
 //=========================================
 #define EZY_PROPERTY_READONLY(varType, varName)\
 protected:\
@@ -85,6 +108,13 @@ public:\
     virtual void set##varName(varType value);
 
 //=========================================
+#define EZY_SYNTHESIZE_SET(varType, varName)\
+protected:\
+    varType m##varName;\
+public:\
+    virtual void set##varName(varType value){ m##varName = value; }
+
+//=========================================
 #define EZY_SYNTHESIZE_PASS_BY_REF(varType, varName)\
 protected:\
     varType m##varName;\
@@ -152,6 +182,10 @@ public: \
         return &sInstance; \
     } \
 private: \
-    className(const className &); \
-    void operator = (const className &);
+    className(); \
+public: \
+    className(const className&) = delete; \
+    void operator = (const className &) = delete;
 
+#define EZY_FOREACH_MAP(map)\
+for(auto it = map.begin() ; it != map.end() ; ++it)

@@ -4,8 +4,7 @@
 #include "EzyString.h"
 #include "../logger/EzyLogger.h"
 
-EZY_NAMESPACE_START
-namespace entity {
+EZY_NAMESPACE_START_WITH(entity)
 
 EzyArray::EzyArray() {
 	mValueType = EzyValueType::TypeArray;
@@ -61,7 +60,15 @@ void EzyArray::addItem(EzyValue* item){
 }
 
 EzyValue* EzyArray::getItem(int index){
-	return mData[index];
+	auto value = mData[index];
+    return value;
+}
+
+EzyValue* EzyArray::getItem(int index, EzyValue* defValue) {
+    if(index >= mData.size())
+        return defValue;
+    auto value = mData[index];
+    return value;
 }
 
 int EzyArray::size(){
@@ -174,5 +181,4 @@ EzyArray* EzyArray::getArray(int index){
 	return ((EzyArray*)getItem(index));
 }
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

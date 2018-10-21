@@ -1,8 +1,7 @@
 #include <iomanip>
 #include "EzyPrimitive.h"
 
-EZY_NAMESPACE_START
-namespace entity {
+EZY_NAMESPACE_START_WITH(entity)
 
 inline std::string _value_escape_json(const std::string &s) {
 	std::ostringstream o;
@@ -165,5 +164,4 @@ uint64_t EzyPrimitive::getUInt() {
 	return data.ui64Value;
 }
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

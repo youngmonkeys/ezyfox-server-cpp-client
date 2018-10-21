@@ -3,57 +3,69 @@
 #include "EzySocketWriter.h"
 #include "EzySocketReader.h"
 
-EZY_NAMESPACE_START
-namespace socket {
+EZY_NAMESPACE_START_WITH_ONLY(config)
+class EzyReconnectConfig;
+EZY_NAMESPACE_END_WITH
+
+EZY_NAMESPACE_START_WITH_ONLY(event)
+class EzyEvent;
+EZY_NAMESPACE_END_WITH
+
+EZY_NAMESPACE_START_WITH_ONLY(manager)
+class EzyHandlerManager;
+EZY_NAMESPACE_END_WITH
+
+EZY_NAMESPACE_START_WITH_ONLY(handler)
+class EzyEventHandlers;
+class EzyDataHandlers;
+EZY_NAMESPACE_END_WITH
+
+EZY_NAMESPACE_START_WITH(socket)
 
 class EzySocketClient : public base::EzyRef {
 protected:
     std::string mHost;
     int mPort;
     long long mConnectTime;
-    
+    int mReconnectCount;
+    int mConnectionFailedReason;
     std::mutex mClientMutex;
     
+    gc::EzyReleasePool* mReleasePool;
     EzySocketWriter* mSocketWriter;
     EzySocketReader* mSocketReader;
-    EzySocketClientStatus mClientStatus;
+    EzySocketEventQueue* mSocketEventQueue;
+    handler::EzyEventHandlers* mEventHandlers;
+    handler::EzyDataHandlers* mDataHandlers;
+    manager::EzyHandlerManager* mHandlerManager;
+    config::EzyReconnectConfig* mReconnectConfig;
+    std::vector<event::EzyEvent*> mLocalEventQueue;
     
-    gc::EzyReleasePool* mReleasePool;
-    
-    std::vector<EzySocketStatusData> mStatusBuffer;
-    
-    EzySocketDataHandler *mDataHandler;
-    EzySocketStatusHandler *mStatusHandler;
-    
-    virtual void processEvent();
-    virtual void processRecvMessage();
-    virtual void clearAdapter();
+protected:
+    virtual bool connectNow();
+    virtual void connect0(long sleepTime);
+    virtual void connect1(long sleepTime);
+    virtual void processEvents();
+    virtual void clearAdapters();
     virtual void resetSocket();
-    virtual void updateConnection();
-    virtual void startAdapter();
-    
-    virtual void createAdapter();
-    virtual bool connectThread();
-    virtual void processSocketError();
+    virtual void startAdapters();
+    virtual void createAdapters();
+    virtual void stopAdapter(EzySocketAdapter* adapter);
+    virtual void clearAdapter(EzySocketAdapter* adapter);
+    virtual void processReceivedMessages();
+    virtual void processReceivedMessage(EzySocketData* message);
 public:
     EzySocketClient();
     virtual ~EzySocketClient();
-    
     virtual void connectTo(const std::string& host, int port);
-    
+    virtual bool reconnect();
     virtual void closeClient();
     virtual void closeSocket();
-    
-    virtual EzySocketStatusType getStatus();
-    virtual void setStatus(EzySocketStatusType status, bool event = true);
-    
-    virtual void sendMessage(EzySocketData* data);
-    
-    virtual void processMessage();
-    
-    virtual void setDataHandler(EzySocketDataHandler* handler);
-    virtual void setStatusHandler(EzySocketStatusHandler* handler);
+    virtual void sendMessage(EzySocketData* message);
+    virtual void processEventMessages();
+    virtual void onDisconnected(int reason);
+    virtual void setReconnectConfig(config::EzyReconnectConfig* reconnectConfig);
+    virtual void setHandlerManager(manager::EzyHandlerManager* handlerManager);
 };
-    
-}
-EZY_NAMESPACE_END
+
+EZY_NAMESPACE_END_WITH

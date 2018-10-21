@@ -3,8 +3,7 @@
 #include "EzyValue.h"
 #include "../codec/EzyDataEncoder.h"
 
-EZY_NAMESPACE_START
-namespace entity {
+EZY_NAMESPACE_START_WITH(entity)
 
 class EzyPrimitive : public EzyValue {
 	union
@@ -37,5 +36,4 @@ public:
 	uint64_t getUInt();
 };
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

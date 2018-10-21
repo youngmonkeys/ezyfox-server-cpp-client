@@ -6,8 +6,7 @@
 
 using namespace CryptoPP;
 
-EZY_NAMESPACE_START
-namespace socket {
+EZY_NAMESPACE_START_WITH(security)
 
 EzyKeyPair::EzyKeyPair(std::string privateKey, std::string publicKey) {
     this->mPrivateKey = privateKey;
@@ -32,5 +31,4 @@ EzyKeyPair* EzyRsaKeyPairGentor::generate(int keySize) {
     return pRet;
 }
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

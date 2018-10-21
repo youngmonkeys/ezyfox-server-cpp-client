@@ -2,29 +2,27 @@
 
 #include <map>
 #include "../EzyMacro.h"
-#include "EzyEvent.h"
-#include "EzyEventHandler.h"
+#include "../event/EzyEvent.h"
+#include "../event/EzyEventType.h"
 
 EZY_NAMESPACE_START
-namespace handler {
+class EzyClient;
+EZY_NAMESPACE_END
+
+EZY_NAMESPACE_START_WITH(handler)
+
+class EzyEventHandler;
 
 class EzyEventHandlers {
 protected:
-    std::map<event::EzyEventType, EzyEventHandler<event::EzyEvent>*> handlers;
+    EzyClient* mClient;
+    std::map<event::EzyEventType, EzyEventHandler*> mHandlers;
 public:
-    EzyEventHandlers();
+    EzyEventHandlers(EzyClient* mClient);
     ~EzyEventHandlers();
-    
-    void handleEvent(event::EzyEvent* event);
-    
-    template<class T>
-    void addEventHandler(event::EzyEventType eventType, EzyEventHandler<T>* handler);
+    void handle(event::EzyEvent* event);
+    EzyEventHandler* getHandler(event::EzyEventType eventType);
+    void addHandler(event::EzyEventType eventType, EzyEventHandler* handler);
 };
-    
-template<class T>
-void EzyEventHandlers::addEventHandler(event::EzyEventType eventType, EzyEventHandler<T> *handler) {
-    handlers[eventType] = (EzyEventHandler<event::EzyEvent>*)handler;
-}
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

@@ -3,8 +3,7 @@
 #include "EzyValue.h"
 #include "../codec/EzyDataEncoder.h"
 
-EZY_NAMESPACE_START
-namespace entity {
+EZY_NAMESPACE_START_WITH(entity)
 
 class EzyArray : public EzyValue {
 protected:
@@ -24,6 +23,7 @@ public:
 
 	void addItem(EzyValue* item);
 	EzyValue* getItem(int index);
+    EzyValue* getItem(int index, EzyValue* defValue);
 
 	void addBool(bool value);
 	void addFloat(float value);
@@ -42,11 +42,8 @@ public:
 	std::string getString(int index);
 	EzyObject* getObject(int index);
 	EzyArray* getArray(int index);
-    template <class T>
-    T getValue(int index);
 
 	static EzyArray* create();
 };
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

@@ -1,16 +1,15 @@
 #pragma once
 
 #include "EzyRequest.h"
-#include "../io/EzyArrayDataSerializable.h"
+#include "../entity/EzyArray.h"
 
-EZY_NAMESPACE_START
-namespace request {
- 
-template <class T>
+EZY_NAMESPACE_START_WITH(request)
+
+class EzyRequest;
+
 class EzyRequestSerializer {
 public:
-    virtual T* serialize(EzyRequest* request) = 0;
+    virtual entity::EzyArray* serialize(EzyRequest* request);
 };
-    
-}
-EZY_NAMESPACE_END
+
+EZY_NAMESPACE_END_WITH

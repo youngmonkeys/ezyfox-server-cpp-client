@@ -4,8 +4,7 @@
 #include "EzyObject.h"
 #include "EzyString.h"
 
-EZY_NAMESPACE_START
-namespace codec {
+EZY_NAMESPACE_START_WITH(codec)
 
 EzyArrayBuffer::EzyArrayBuffer(int type, int size){
 	this->mSize = size;
@@ -98,12 +97,12 @@ void EzyDataDecoder::addData(const std::vector<char> data){
 }
 
 /****/
-inline void __swap_bytes(char* bytes, int size){
-	for (int i = 0, j = size - 1; i < j; i++, j--){
-		char c = bytes[i];
-		bytes[i] = bytes[j];
-		bytes[j] = c;
-	}
+inline void __swapBytes(char* bytes, int size){
+    for (int i = 0, j = size - 1; i < j; i++, j--){
+        char c = bytes[i];
+        bytes[i] = bytes[j];
+        bytes[j] = c;
+    }
 }
 
 uint8_t	EzyDataDecoder::readUInt8(const char* p){
@@ -113,21 +112,21 @@ uint8_t	EzyDataDecoder::readUInt8(const char* p){
 uint16_t EzyDataDecoder::readUInt16(const char* p){
 	uint16_t pret;
 	memcpy(&pret, p, 2);
-	__swap_bytes((char*)&pret, 2);
+	__swapBytes((char*)&pret, 2);
 	return pret;
 }
 
 uint32_t EzyDataDecoder::readUInt32(const char* p){
 	uint32_t pret;
 	memcpy(&pret, p, 4);
-	__swap_bytes((char*)&pret, 4);
+	__swapBytes((char*)&pret, 4);
 	return pret;
 }
 
 uint64_t EzyDataDecoder::readUInt64(const char* p){
 	uint64_t pret;
 	memcpy(&pret, p, 8);
-	__swap_bytes((char*)&pret, 8);
+	__swapBytes((char*)&pret, 8);
 	return pret;
 }
 
@@ -138,35 +137,35 @@ int8_t	EzyDataDecoder::readInt8(const char* p){
 int16_t	EzyDataDecoder::readInt16(const char* p){
 	int16_t pret;
 	memcpy(&pret, p, 2);
-	__swap_bytes((char*)&pret, 2);
+	__swapBytes((char*)&pret, 2);
 	return pret;
 }
 
 int32_t	EzyDataDecoder::readInt32(const char* p){
 	int32_t pret;
 	memcpy(&pret, p, 4);
-	__swap_bytes((char*)&pret, 4);
+	__swapBytes((char*)&pret, 4);
 	return pret;
 }
 
 int64_t	EzyDataDecoder::readInt64(const char* p){
 	int64_t pret;
 	memcpy(&pret, p, 8);
-	__swap_bytes((char*)&pret, 8);
+	__swapBytes((char*)&pret, 8);
 	return pret;
 }
 
 float	EzyDataDecoder::readFloat(const char* p){
 	float pret;
 	memcpy(&pret, p, 4);
-	__swap_bytes((char*)&pret, 4);
+	__swapBytes((char*)&pret, 4);
 	return pret;
 }
 
 double	EzyDataDecoder::readDouble(const char* p){
 	double pret;
 	memcpy(&pret, p, 8);
-	__swap_bytes((char*)&pret, 8);
+	__swapBytes((char*)&pret, 8);
 	return pret;
 }
 
@@ -451,7 +450,7 @@ void EzyDataDecoder::onReadValue(entity::EzyValue* object){
 	if (mStack.empty()){
 		//call obj
 		if (mDelegate){
-			mDelegate->onRecvMessage(object);
+			mDelegate->onReceivedMessage(object);
 		}
 	}
 	else{
@@ -545,5 +544,4 @@ void EzyDataDecoder::onReadArray(uint32_t size){
 	}
 }
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

@@ -2,36 +2,36 @@
 #include "../logger/EzyLogger.h"
 #include "../entity/EzyJson.h"
 
-EZY_NAMESPACE_START
-namespace socket {
+EZY_NAMESPACE_START_WITH(socket)
 
 EzySocketReader::EzySocketReader(){
     mSocketPool = new EzySocketPool();
+    mMessageHeader = new codec::EzyMessageHeader();
     mDecoder = new codec::EzyDataDecoder();
     mDecoder->setDelegate(this);
-    mMessageHeader = new codec::EzyMessageHeader();
 }
 
 EzySocketReader::~EzySocketReader(){
     EZY_SAFE_DELETE(mDecoder)
+    EZY_SAFE_DELETE(mMessageHeader);
 }
 
-void EzySocketReader::updateThread(){
+void EzySocketReader::run(){
 #ifdef USE_MESSAGE_HEADER
     mDecodeState = codec::prepareMessage;
     mDataSize = 0;
     mByteBuffer.reserve(100 * 1024); // 100KB RAM
 #endif
-    EzySocketAdapter::updateThread();
+    EzySocketAdapter::run();
 }
 
-void EzySocketReader::recvData(const char* data, size_t size){
+void EzySocketReader::acceptData(const char* data, size_t size){
     if (size <= 0){
         return;
     }
 #ifdef USE_MESSAGE_HEADER
     mByteBuffer.insert(mByteBuffer.end(), data, data + size);
-    onRecvData();
+    onDataReceived();
 #else
     mDecoder->addData(data, size);
 #endif
@@ -39,8 +39,8 @@ void EzySocketReader::recvData(const char* data, size_t size){
 
 
 #ifdef USE_MESSAGE_HEADER
-void EzySocketReader::onRecvData(){
-    if (mByteBuffer.size() <= 0){
+void EzySocketReader::onDataReceived() {
+    if (mByteBuffer.size() <= 0) {
         return;
     }
     switch (mDecodeState) {
@@ -55,7 +55,7 @@ void EzySocketReader::onRecvData(){
             break;
         default:
             mDecodeState = codec::readMessageHeader;
-            onRecvData();
+            onDataReceived();
             break;
     }
 }
@@ -64,9 +64,10 @@ void EzySocketReader::onUpdateDataHeader() {
     if(mByteBuffer.size() >= 1) {
         char headerByte;
         memcpy(&headerByte, mByteBuffer.data(), sizeof(headerByte));
+        mMessageHeader->parse(headerByte);
         mByteBuffer.erase(mByteBuffer.begin(), mByteBuffer.begin() + 1);
         mDecodeState = codec::readMessageSize;
-        onRecvData();
+        onDataReceived();
     }
 }
     
@@ -86,26 +87,26 @@ void EzySocketReader::onUpdateDataSize() {
         }
         mByteBuffer.erase(mByteBuffer.begin(), mByteBuffer.begin() + dataSizeLength);
         mDecodeState = codec::readMessageContent;
-        onRecvData();
+        onDataReceived();
     }
 }
 
 void EzySocketReader::onUpdateData() {
-    if (mByteBuffer.size() >= mDataSize){
+    if (mByteBuffer.size() >= mDataSize) {
         mDecoder->addData(mByteBuffer.data(), mDataSize);
         mByteBuffer.erase(mByteBuffer.begin(), mByteBuffer.begin() + mDataSize);
         mDecodeState = codec::prepareMessage;
-        onRecvData();
+        onDataReceived();
     }
 }
 #endif
 
-void EzySocketReader::onRecvMessage(entity::EzyValue* value){
+void EzySocketReader::onReceivedMessage(entity::EzyValue* value){
     if (!value){
 #ifdef EZY_DEBUG
         logger::log("error parse data");
 #endif
-        setRunning(false);
+        setActive(false);
         return;
     }
     
@@ -118,5 +119,4 @@ void EzySocketReader::onRecvMessage(entity::EzyValue* value){
     pushMessage(value);
 }
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

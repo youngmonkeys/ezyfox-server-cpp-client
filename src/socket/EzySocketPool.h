@@ -3,8 +3,7 @@
 #include <queue>
 #include "EzySocketCore.h"
 
-EZY_NAMESPACE_START
-namespace socket {
+EZY_NAMESPACE_START_WITH(socket)
 
 class EzySocketPool {
 protected:
@@ -21,5 +20,4 @@ public:
     virtual void clear();
 };
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

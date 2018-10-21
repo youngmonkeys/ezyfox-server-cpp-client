@@ -1,10 +1,13 @@
 #pragma once
 
+#include <vector>
 #include "../EzyMacro.h"
-#include "../base/EzyRef.h"
 
-EZY_NAMESPACE_START
-namespace gc {
+EZY_NAMESPACE_START_WITH_ONLY(base)
+class EzyRef;
+EZY_NAMESPACE_END_WITH
+
+EZY_NAMESPACE_START_WITH(gc)
 
 class EzyReleasePool {
     std::vector<base::EzyRef*> mObjects;
@@ -15,5 +18,4 @@ public:
     virtual void releaseAll();
 };
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

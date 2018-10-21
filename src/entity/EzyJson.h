@@ -3,8 +3,7 @@
 #include "EzyValue.h"
 #include "../codec/EzyDataEncoder.h"
 
-EZY_NAMESPACE_START
-namespace entity {
+EZY_NAMESPACE_START_WITH(entity)
 
 class EzyJson : public EzyValue {
     EzyValue* mValue;
@@ -27,5 +26,4 @@ public:
 	static EzyJson* create(const std::string& json);
 };
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

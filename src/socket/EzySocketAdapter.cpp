@@ -7,11 +7,10 @@
 #include "../entity/EzyObject.h"
 #include "../gc/EzyAutoReleasePool.h"
 
-EZY_NAMESPACE_START
-namespace socket {
+EZY_NAMESPACE_START_WITH(socket)
 
 EzySocketAdapter::EzySocketAdapter() {
-	mRunning = false;
+	mActive = false;
 	mSocketPool = 0;
 }
 
@@ -19,33 +18,33 @@ EzySocketAdapter::~EzySocketAdapter() {
     EZY_SAFE_DELETE(mSocketPool)
 }
 
-void EzySocketAdapter::updateThread(){
+void EzySocketAdapter::run() {
 	this->update();
     gc::EzyAutoReleasePool::getInstance()->removePool();
 	this->release();
 }
 
-bool EzySocketAdapter::isRunning() {
+bool EzySocketAdapter::isActive() {
 	std::unique_lock<std::mutex> lk(mMutex);
-	return mRunning;
+	return mActive;
 }
 
-void EzySocketAdapter::setRunning(bool running) {
+void EzySocketAdapter::setActive(bool active) {
 	std::unique_lock<std::mutex> lk(mMutex);
-	this->mRunning = running;
+	mActive = active;
 }
 
 void EzySocketAdapter::start() {
-	if (!isRunning()){
-		this->setRunning(true);
-		this->retain();
-		std::thread newThread(&EzySocketAdapter::updateThread, this);
+	if (!isActive()){
+		setActive(true);
+		retain();
+		std::thread newThread(&EzySocketAdapter::run, this);
 		newThread.detach();
 	}
 }
 
 void EzySocketAdapter::stop(){
-	this->setRunning(false);
+	setActive(false);
 	mSocketPool->clear();
 }
 
@@ -60,5 +59,4 @@ EzySocketData* EzySocketAdapter::popMessage(){
 	return mSocketPool->pop();
 }
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

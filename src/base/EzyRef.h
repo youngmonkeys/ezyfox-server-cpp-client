@@ -1,12 +1,9 @@
 #pragma once
 
 #include <mutex>
-#include <vector>
-#include <map>
 #include "../EzyMacro.h"
 
-EZY_NAMESPACE_START
-namespace base {
+EZY_NAMESPACE_START_WITH_ONLY(base)
 
 class EzyRef {
 protected:
@@ -20,5 +17,4 @@ public:
 	virtual void autorelease();
 };
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH

@@ -3,8 +3,7 @@
 #include "EzyPrimitive.h"
 #include "EzyString.h"
 
-EZY_NAMESPACE_START
-namespace entity {
+EZY_NAMESPACE_START_WITH(entity)
 
 EzyObject::EzyObject() {
 	mValueType = EzyValueType::TypeDict;
@@ -14,16 +13,16 @@ EzyObject::~EzyObject() {
 	this->clear();
 }
 
-EzyObject* EzyObject::create(){
+EzyObject* EzyObject::create() {
 	auto value = new EzyObject();
 	value->autorelease();
 	return value;
 }
 
-void EzyObject::writeToBuffer(codec::EzyDataEncoder* encoder){
+void EzyObject::writeToBuffer(codec::EzyDataEncoder* encoder) {
 	encoder->writeMap((uint32_t)mData.size());
 	if (mData.size() > 0){
-		for (auto it = mData.begin(); it != mData.end(); it++){
+		for (auto it = mData.begin(); it != mData.end(); it++) {
 			encoder->writeString(it->first);
 			it->second->writeToBuffer(encoder);
 		}
@@ -31,13 +30,13 @@ void EzyObject::writeToBuffer(codec::EzyDataEncoder* encoder){
 }
 
 #ifdef EZY_DEBUG
-void EzyObject::printToOutStream(std::ostringstream& outStream, int padding){
+void EzyObject::printToOutStream(std::ostringstream& outStream, int padding) {
 	outStream << "[Object](" << mData.size() << ")" << std::endl;
 	refreshLogBuffer(outStream);
 
 	this->printPadding(outStream, padding);
 	outStream << "{" << std::endl;
-	for (auto it = mData.begin(); it != mData.end(); it++){
+	for (auto it = mData.begin(); it != mData.end(); it++) {
 		this->printPadding(outStream, padding + 1);
 		outStream << it->first << ":";
 		it->second->printToOutStream(outStream, padding + 1);
@@ -49,9 +48,9 @@ void EzyObject::printToOutStream(std::ostringstream& outStream, int padding){
 }
 #endif
 
-void EzyObject::toValue(rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator){
+void EzyObject::toValue(rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator) {
 	value.SetObject();
-	for (auto it = mData.begin(); it != mData.end(); it++){
+	for (auto it = mData.begin(); it != mData.end(); it++) {
 		rapidjson::Value key(it->first, allocator);
 
 		rapidjson::Value obj;
@@ -61,9 +60,9 @@ void EzyObject::toValue(rapidjson::Value& value, rapidjson::Document::AllocatorT
 	}
 }
 
-void EzyObject::addItem(const std::string& key, EzyValue* item){
+void EzyObject::addItem(const std::string& key, EzyValue* item) {
 	auto it = mData.find(key);
-	if (it != mData.end()){
+	if (it != mData.end()) {
 		it->second->release();
 		mData.erase(it);
 	}
@@ -72,7 +71,7 @@ void EzyObject::addItem(const std::string& key, EzyValue* item){
 	item->retain();
 }
 
-EzyValue* EzyObject::getItem(const std::string& key){
+EzyValue* EzyObject::getItem(const std::string& key) {
 	auto it = mData.find(key);
 	if (it != mData.end()){
 		return it->second;
@@ -80,7 +79,7 @@ EzyValue* EzyObject::getItem(const std::string& key){
 	return 0;
 }
 
-bool EzyObject::isExistKey(const std::string& key){
+bool EzyObject::isExistKey(const std::string& key) {
 	auto it = mData.find(key);
 	if (it != mData.end()){
 		return true;
@@ -89,7 +88,7 @@ bool EzyObject::isExistKey(const std::string& key){
 }
 
 void EzyObject::clear(){
-	for (auto it = mData.begin(); it != mData.end(); it++){
+	for (auto it = mData.begin(); it != mData.end(); it++) {
 		it->second->release();
 	}
 	mData.clear();
@@ -126,7 +125,7 @@ double EzyObject::getDouble(const std::string& key, double defaultValue){
 
 int64_t EzyObject::getInt(const std::string& key, int64_t defaultValue){
 	auto item = this->getItem(key);
-	if (item){
+	if (item) {
 		return ((EzyPrimitive*)item)->getInt();
 	}
 	return defaultValue;
@@ -141,7 +140,7 @@ uint64_t EzyObject::getUInt(const std::string& key, uint64_t defaultValue){
 	return defaultValue;
 }
 
-const std::string& EzyObject::getString(const std::string& key, const std::string& defaultValue){
+const std::string& EzyObject::getString(const std::string& key, const std::string& defaultValue) {
 	auto item = this->getItem(key);
 	if (item){
 		return ((EzyString*)item)->getString();
@@ -149,7 +148,7 @@ const std::string& EzyObject::getString(const std::string& key, const std::strin
 	return defaultValue;
 }
 
-EzyObject* EzyObject::getObject(const std::string& key, EzyObject* defaultValue){
+EzyObject* EzyObject::getObject(const std::string& key, EzyObject* defaultValue) {
 	auto item = this->getItem(key);
 	if (item){
 		return ((EzyObject*)item);
@@ -157,7 +156,7 @@ EzyObject* EzyObject::getObject(const std::string& key, EzyObject* defaultValue)
 	return defaultValue;
 }
 
-EzyArray* EzyObject::getArray(const std::string& key, EzyArray* defaultValue){
+EzyArray* EzyObject::getArray(const std::string& key, EzyArray* defaultValue) {
 	auto item = this->getItem(key);
 	if (item){
 		return ((EzyArray*)item);
@@ -165,50 +164,50 @@ EzyArray* EzyObject::getArray(const std::string& key, EzyArray* defaultValue){
 	return defaultValue;
 }
 
-void EzyObject::setBool(const std::string& key, bool value){
+void EzyObject::setBool(const std::string& key, bool value) {
 	auto item = new EzyPrimitive();
 	item->setBool(value);
 	this->addItem(key, item);
 	item->release();
 }
 
-void EzyObject::setFloat(const std::string& key, float value){
+void EzyObject::setFloat(const std::string& key, float value) {
 	auto item = new EzyPrimitive();
 	item->setFloat(value);
 	this->addItem(key, item);
 	item->release();
 }
 
-void EzyObject::setDouble(const std::string& key, double value){
+void EzyObject::setDouble(const std::string& key, double value) {
 	auto item = new EzyPrimitive();
 	item->setDouble(value);
 	this->addItem(key, item);
 	item->release();
 }
 
-void EzyObject::setInt(const std::string& key, int64_t value){
+void EzyObject::setInt(const std::string& key, int64_t value) {
 	auto item = new EzyPrimitive();
 	item->setInt(value);
 	this->addItem(key, item);
 	item->release();
 }
 
-void EzyObject::setUInt(const std::string& key, uint64_t value){
+void EzyObject::setUInt(const std::string& key, uint64_t value) {
 	auto item = new EzyPrimitive();
 	item->setUInt(value);
 	this->addItem(key, item);
 	item->release();
 }
 
-void EzyObject::setString(const std::string& key, const std::string& value){
+void EzyObject::setString(const std::string& key, const std::string& value) {
 	auto item = new EzyString();
 	item->setString(value);
 	this->addItem(key, item);
 	item->release();
 }
 
-EzyObject* EzyObject::setObject(const std::string& key, EzyObject* value){
-	if (value){
+EzyObject* EzyObject::setObject(const std::string& key, EzyObject* value) {
+	if (value) {
 		this->addItem(key, value);
 	}
 	else{
@@ -219,8 +218,8 @@ EzyObject* EzyObject::setObject(const std::string& key, EzyObject* value){
 	return value;
 }
 
-EzyArray* EzyObject::setArray(const std::string& key, EzyArray* value){
-	if (value){
+EzyArray* EzyObject::setArray(const std::string& key, EzyArray* value) {
+	if (value) {
 		this->addItem(key, value);
 	}
 	else{
@@ -231,5 +230,4 @@ EzyArray* EzyObject::setArray(const std::string& key, EzyArray* value){
 	return value;
 }
 
-}
-EZY_NAMESPACE_END
+EZY_NAMESPACE_END_WITH
