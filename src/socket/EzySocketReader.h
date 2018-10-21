@@ -21,7 +21,7 @@ protected:
     
     codec::EzyDataDecoder* mDecoder;
     virtual void acceptData(const char* data, size_t size);
-    virtual void onRecvMessage(entity::EzyValue* value);
+    virtual void onReceivedMessage(entity::EzyValue* value);
 public:
     EzySocketReader();
     virtual ~EzySocketReader();

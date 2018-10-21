@@ -19,10 +19,13 @@ EzyEventHandlers::~EzyEventHandlers() {
 void EzyEventHandlers::handle(event::EzyEvent *event) {
     auto eventType = event->getType();
     auto hanlder = mHandlers[eventType];
-    if(hanlder)
+    if(hanlder) {
         hanlder->handle(event);
-    else
-        logger::log("has no handler for event type: %d", eventType);
+    }
+    else {
+        auto eventTypeName = event::getEventTypeName(eventType);
+        logger::log("has no handler for event type: %s", eventTypeName.c_str());
+    }
 }
 
 EzyEventHandler* EzyEventHandlers::getHandler(event::EzyEventType eventType) {

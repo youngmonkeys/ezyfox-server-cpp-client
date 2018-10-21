@@ -2,7 +2,7 @@
 
 #include "../EzyMacro.h"
 
-EZY_NAMESPACE_START_WITH(constant)
+EZY_NAMESPACE_START_WITH_ONLY(constant)
 
 enum EzyConnectionStatus
 {

@@ -36,6 +36,7 @@ protected:
     handler::EzyDataHandlers* newDataHandlers();
 public:
     EzyHandlerManager(EzyClient* client);
+    ~EzyHandlerManager();
     handler::EzyDataHandler* getDataHandler(constant::EzyCommand cmd);
     handler::EzyEventHandler* getEventHandler(event::EzyEventType eventType);
     handler::EzyAppDataHandlers* getAppDataHandlers(std::string appName);

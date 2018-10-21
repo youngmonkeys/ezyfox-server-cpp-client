@@ -12,7 +12,7 @@ EzySetup::EzySetup(manager::EzyHandlerManager* handlerManager) {
 }
 
 EzySetup::~EzySetup() {
-    this->mHandlerManager = nullptr;
+    this->mHandlerManager = 0;
     EZY_FOREACH_MAP(mAppSetups) {
         EZY_SAFE_DELETE(it->second);
     }
@@ -47,8 +47,8 @@ EzyAppSetup::EzyAppSetup(handler::EzyAppDataHandlers* dataHandlers, EzySetup* pa
 }
 
 EzyAppSetup::~EzyAppSetup() {
-    this->mParent = nullptr;
-    this->mDataHandlers = nullptr;
+    this->mParent = 0;
+    this->mDataHandlers = 0;
 }
 
 EzyAppSetup* EzyAppSetup::addDataHandler(int cmd, handler::EzyAppDataHandler* dataHandler) {

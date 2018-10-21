@@ -34,7 +34,7 @@ protected:
     gc::EzyReleasePool* mReleasePool;
     EzySocketWriter* mSocketWriter;
     EzySocketReader* mSocketReader;
-    EzySocketEventQueue mSocketEventQueue;
+    EzySocketEventQueue* mSocketEventQueue;
     handler::EzyEventHandlers* mEventHandlers;
     handler::EzyDataHandlers* mDataHandlers;
     manager::EzyHandlerManager* mHandlerManager;
@@ -44,6 +44,7 @@ protected:
 protected:
     virtual bool connectNow();
     virtual void connect0(long sleepTime);
+    virtual void connect1(long sleepTime);
     virtual void processEvents();
     virtual void clearAdapters();
     virtual void resetSocket();

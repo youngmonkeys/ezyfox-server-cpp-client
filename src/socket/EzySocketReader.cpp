@@ -13,6 +13,7 @@ EzySocketReader::EzySocketReader(){
 
 EzySocketReader::~EzySocketReader(){
     EZY_SAFE_DELETE(mDecoder)
+    EZY_SAFE_DELETE(mMessageHeader);
 }
 
 void EzySocketReader::run(){
@@ -100,7 +101,7 @@ void EzySocketReader::onUpdateData() {
 }
 #endif
 
-void EzySocketReader::onRecvMessage(entity::EzyValue* value){
+void EzySocketReader::onReceivedMessage(entity::EzyValue* value){
     if (!value){
 #ifdef EZY_DEBUG
         logger::log("error parse data");

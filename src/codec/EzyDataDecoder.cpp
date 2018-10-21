@@ -450,7 +450,7 @@ void EzyDataDecoder::onReadValue(entity::EzyValue* object){
 	if (mStack.empty()){
 		//call obj
 		if (mDelegate){
-			mDelegate->onRecvMessage(object);
+			mDelegate->onReceivedMessage(object);
 		}
 	}
 	else{

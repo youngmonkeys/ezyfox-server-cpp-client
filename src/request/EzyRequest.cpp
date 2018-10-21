@@ -51,7 +51,7 @@ EZY_IMPLEMENT_REQUEST_CLASS(Handshake)
 
 EzyLoginRequest::EzyLoginRequest() {
     this->mPassword = "";
-    this->mData = nullptr;
+    this->mData = 0;
 }
 
 entity::EzyArray* EzyLoginRequest::serialize() {
@@ -79,7 +79,7 @@ EZY_IMPLEMENT_REQUEST_CLASS(AppAccess)
 //=======================================================
 
 EzyAppRequestRequest::EzyAppRequestRequest() {
-    this->mData = nullptr;
+    this->mData = 0;
 }
 
 entity::EzyArray* EzyAppRequestRequest::serialize() {
@@ -94,7 +94,7 @@ EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(AppRequest)
 //=======================================================
 
 EzyPluginRequestByIdRequest::EzyPluginRequestByIdRequest() {
-    this->mData = nullptr;
+    this->mData = 0;
 }
 
 entity::EzyArray* EzyPluginRequestByIdRequest::serialize() {
@@ -109,7 +109,7 @@ EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(PluginRequestById)
 //=======================================================
 
 EzyPluginRequestByNameRequest::EzyPluginRequestByNameRequest() {
-    this->mData = nullptr;
+    this->mData = 0;
 }
 
 entity::EzyArray* EzyPluginRequestByNameRequest::serialize() {

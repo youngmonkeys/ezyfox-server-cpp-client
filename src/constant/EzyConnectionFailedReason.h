@@ -1,8 +1,9 @@
 #pragma once
 
+#include <string>
 #include "../EzyMacro.h"
 
-EZY_NAMESPACE_START_WITH(constant)
+EZY_NAMESPACE_START_WITH_ONLY(constant)
 
 enum EzyConnectionFailedReason {
     TimeOut = 0,
@@ -11,5 +12,7 @@ enum EzyConnectionFailedReason {
     ConnectionRefused = 3,
     UnknownFailure = 4
 };
+
+std::string getConnectionFailedReasonName(int reason);
 
 EZY_NAMESPACE_END_WITH

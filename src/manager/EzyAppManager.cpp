@@ -19,7 +19,7 @@ void EzyAppManager::addApp(entity::EzyApp* app) {
 }
 
 entity::EzyApp* EzyAppManager::getApp() {
-    auto app = (entity::EzyApp*)nullptr;
+    auto app = (entity::EzyApp*)0;
     if(mAppList.size() > 0)
         app = mAppList[0];
     if(!app)

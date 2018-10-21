@@ -32,7 +32,7 @@ public:
 
 class EzyDataDecoderDelegate {
 public:
-    virtual void onRecvMessage(entity::EzyValue* value) = 0;
+    virtual void onReceivedMessage(entity::EzyValue* value) = 0;
 };
 
 class EzyDataDecoder {

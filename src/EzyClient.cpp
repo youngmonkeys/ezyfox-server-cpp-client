@@ -24,6 +24,12 @@ EzyClient::EzyClient(config::EzyClientConfig* config) {
 
 EzyClient::~EzyClient() {
     EZY_SAFE_DELETE(mConfig);
+    EZY_SAFE_DELETE(mSetup);
+    EZY_SAFE_DELETE(mRequestSerializer);
+    EZY_SAFE_DELETE(mSocketClient);
+    EZY_SAFE_DELETE(mHandlerManager);
+    EZY_SAFE_DELETE(mPingManager);
+    EZY_SAFE_DELETE(mPingSchedule);
 }
 
 void EzyClient::connect(std::string host, int port) {

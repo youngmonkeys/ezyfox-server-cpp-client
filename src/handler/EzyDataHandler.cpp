@@ -12,6 +12,7 @@
 EZY_NAMESPACE_START_WITH(handler)
 
 EzyDataHandler::~EzyDataHandler() {
+    this->mClient = 0;
 }
 
 void EzyDataHandler::setClient(EzyClient *client) {

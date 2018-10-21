@@ -1,13 +1,15 @@
-#include "EzyEventHandler.h"
 #include "../constant/EzyConnectionStatus.h"
+#include "../constant/EzyConnectionFailedReason.h"
 #include "../request/EzyRequest.h"
 #include "../logger/EzyLogger.h"
-#include "../EzyClient.h"
 #include "../config/EzyClientConfig.h"
+#include "../EzyClient.h"
+#include "EzyEventHandler.h"
 
 EZY_NAMESPACE_START_WITH(handler)
 
 EzyEventHandler::~EzyEventHandler() {
+    this->mClient = 0;
 }
 
 void EzyEventHandler::setClient(EzyClient* client) {
@@ -95,7 +97,8 @@ void EzyDisconnectionHandler::control(event::EzyDisconnectionEvent* event) {
 
 //==========================================================
 void EzyConnectionFailureHandler::process(event::EzyConnectionFailureEvent* event) {
-    logger::log("connection failure, reason = %d", event->getReason());
+    auto reasonName = constant::getConnectionFailedReasonName(event->getReason());
+    logger::log("connection failure, reason = %s", reasonName.c_str());
     auto config = mClient->getConfig();
     auto reconnectConfig = config->getReconnect();
     auto should = shouldReconnect(event);

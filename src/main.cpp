@@ -8,7 +8,7 @@ using namespace EZY_NAMESPACE;
 class ExHandshakeHandler : public handler::EzyHandshakeHandler {
 protected:
     request::EzyRequest* getLoginRequest() {
-        auto request = new request::EzyLoginRequest();
+        auto request = request::EzyLoginRequest::create();
         request->setZoneName("freechat");
         request->setUsername("DungTV");
         request->setPassword("123456");
@@ -19,7 +19,7 @@ protected:
 class ExLoginSuccessHandler : public handler::EzyLoginSuccessHandler {
 protected:
     void handleLoginSuccess(entity::EzyValue* responseData) {
-        auto request = new request::EzyAppAccessRequest();
+        auto request = request::EzyAppAccessRequest::create();
         request->setAppName("freechat");
         request->setData(new entity::EzyArray());
         mClient->send(request);
@@ -34,12 +34,15 @@ int main(int argc, const char * argv[]) {
     setup->addEventHandler(event::ConnectionSuccess, new handler::EzyConnectionSuccessHandler());
     setup->addDataHandler(constant::Handshake, new ExHandshakeHandler());
     setup->addDataHandler(constant::Login, new ExLoginSuccessHandler());
-    std::cout << "start client";
+    logger::log("start client");
     client->connect("127.0.0.1", 3005);
     do {
         client->processEvents();
         std::this_thread::sleep_for(std::chrono::milliseconds(3));
     } while(true);
+//    std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+//    EZY_SAFE_DELETE(client);
+//    while (1);
 //    logger::log("shutdown client");
     return 0;
 }

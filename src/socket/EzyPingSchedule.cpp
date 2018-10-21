@@ -8,13 +8,15 @@ EZY_NAMESPACE_START_WITH(socket)
 
 EzyPingSchedule::EzyPingSchedule(EzyClient* client) {
     this->mActive = false;
-    this->mThread = nullptr;
+    this->mThread = 0;
     this->mClient = client;
     this->mPingManager = client->getPingManager();
 }
 
 EzyPingSchedule::~EzyPingSchedule() {
     stop();
+    this->mClient = 0;
+    this->mPingManager = 0;
 }
 
 void EzyPingSchedule::start() {
@@ -34,7 +36,7 @@ void EzyPingSchedule::loop() {
     while (mActive) {
         sendPingRequest();
         auto period = mPingManager->getPingPeriod();
-        std::this_thread::sleep_for(std::chrono::seconds(period));
+        std::this_thread::sleep_for(std::chrono::milliseconds(period));
     }
 }
 

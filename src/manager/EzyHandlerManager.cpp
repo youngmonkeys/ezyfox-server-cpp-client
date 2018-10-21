@@ -16,6 +16,15 @@ EzyHandlerManager::EzyHandlerManager(EzyClient* client) {
     this->mDataHandlers = new handler::EzyDataHandlers(client);
 }
 
+EzyHandlerManager::~EzyHandlerManager() {
+    this->mClient = 0;
+    EZY_SAFE_DELETE(mEventHandlers);
+    EZY_SAFE_DELETE(mDataHandlers);
+    EZY_FOREACH_MAP(mAppDataHandlerss)
+        EZY_SAFE_DELETE(it->second);
+    mAppDataHandlerss.clear();
+}
+
 handler::EzyEventHandlers* EzyHandlerManager::newEventHandlers() {
     auto handlers = new handler::EzyEventHandlers(mClient);
     handlers->addHandler(event::ConnectionSuccess, new handler::EzyConnectionSuccessHandler());

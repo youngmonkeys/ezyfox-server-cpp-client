@@ -17,7 +17,7 @@ EzyAppDataHandlers::~EzyAppDataHandlers() {
 
 void EzyAppDataHandlers::handleByInt(entity::EzyApp* app, entity::EzyArray* data) {
     auto cmd = (int)data->getInt(0);
-    auto responseData = data->getItem(1, nullptr);
+    auto responseData = data->getItem(1, 0);
     auto handler = mHandlersByInt[cmd];
     if(handler)
         handler->handle(app, responseData);
@@ -28,7 +28,7 @@ void EzyAppDataHandlers::handleByInt(entity::EzyApp* app, entity::EzyArray* data
 
 void EzyAppDataHandlers::handleByString(entity::EzyApp* app, entity::EzyArray* data) {
     auto cmd = data->getString(0);
-    auto responseData = data->getItem(1, nullptr);
+    auto responseData = data->getItem(1, 0);
     auto handler = mHandlersByString[cmd];
     if(handler)
         handler->handle(app, responseData);

@@ -207,11 +207,8 @@ bool EzyTcpSocketClient::connectNow() {
 		close(mSocket);
 #endif	
 	}
-
+    
 	freeaddrinfo(peer);
-#ifdef EZY_DEBUG
-	logger::log("connection failure 3");
-#endif
     mConnectionFailedReason = constant::UnknownFailure;
 	return false;
 }

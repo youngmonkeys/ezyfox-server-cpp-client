@@ -27,7 +27,7 @@ static void _log(const char *format, va_list args) {
 
 void console(const char* buf) {
 #if defined(ANDROID)
-	__android_log_print(ANDROID_LOG_DEBUG, "lobby-debug", "%s", buf);
+	__android_log_print(ANDROID_LOG_DEBUG, "debug", "%s", buf);
 #elif defined(_WIN32) || defined(WINRT)
 	int pos = 0;
 	int len = strlen(buf);
@@ -48,7 +48,7 @@ void console(const char* buf) {
 
 		pos += bufferSize;
 		bufferSize = len - pos;
-		if (bufferSize > MAX_LOG_LENGTH){
+		if (bufferSize > MAX_LOG_LENGTH) {
 			bufferSize = MAX_LOG_LENGTH;
 		}
 	}
@@ -73,7 +73,7 @@ void log(const char * format, ...) {
 void hex(const char* buf, int len) {
 	char* data = new char[len * 3 + 10];
 
-	for (int i = 0; i<len; i++){
+	for (int i = 0; i<len; i++) {
 		sprintf(&data[i * 3], "%02X ", (unsigned char)buf[i]);
 	}
 
@@ -85,9 +85,9 @@ void hex(const char* buf, int len) {
 EZY_NAMESPACE_END_WITH
 
 #else
+
 EZY_NAMESPACE_START_WITH_ONLY(logger)
-    
-}
+
 void log(const char * format, ...) {
 }
 
@@ -98,6 +98,7 @@ void hex(const char* buf, int len) {
 }
 
 EZY_NAMESPACE_END_WITH
+
 #endif
 
 
