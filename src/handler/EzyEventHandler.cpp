@@ -1,5 +1,6 @@
 #include "../constant/EzyConnectionStatus.h"
 #include "../constant/EzyConnectionFailedReason.h"
+#include "../constant/EzyDisconnectReason.h"
 #include "../request/EzyRequest.h"
 #include "../logger/EzyLogger.h"
 #include "../config/EzyClientConfig.h"
@@ -69,7 +70,8 @@ std::string EzyConnectionSuccessHandler::getStoredToken() {
 
 //==========================================================
 void EzyDisconnectionHandler::process(event::EzyDisconnectionEvent* event) {
-    logger::log("handle disconnection, reason = %d", event->getReason());
+    auto reasonName = constant::getDisconnectReasonName(event->getReason());
+    logger::log("handle disconnection, reason = %s", reasonName.c_str());
     preHandle(event);
     auto config = mClient->getConfig();
     auto reconnectConfig = config->getReconnect();

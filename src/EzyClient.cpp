@@ -1,6 +1,8 @@
 #include <thread>
 #include <chrono>
 #include "EzyClient.h"
+#include "entity/EzyZone.h"
+#include "entity/EzyUser.h"
 #include "entity/EzyApp.h"
 #include "command/EzySetup.h"
 #include "logger/EzyLogger.h"
@@ -14,6 +16,8 @@
 EZY_NAMESPACE_START
 
 EzyClient::EzyClient(config::EzyClientConfig* config) {
+    mZone = 0;
+    mMe = 0;
     mConfig = config;
     mPingManager = new manager::EzyPingManager();
     mPingSchedule = new socket::EzyPingSchedule(this);
@@ -25,6 +29,7 @@ EzyClient::EzyClient(config::EzyClientConfig* config) {
 }
 
 EzyClient::~EzyClient() {
+    mAppsById.clear();
     EZY_SAFE_DELETE(mConfig);
     EZY_SAFE_DELETE(mSetup);
     EZY_SAFE_DELETE(mRequestSerializer);
@@ -32,22 +37,33 @@ EzyClient::~EzyClient() {
     EZY_SAFE_DELETE(mHandlerManager);
     EZY_SAFE_DELETE(mPingManager);
     EZY_SAFE_DELETE(mPingSchedule);
+    EZY_SAFE_DELETE(mZone);
+    EZY_SAFE_DELETE(mMe);
 }
 
 void EzyClient::connect(std::string host, int port) {
+    preconnect();
     mSocketClient = newSocketClient();
     mSocketClient->connectTo(host, port);
 }
 
 bool EzyClient::reconnect() {
-    bool success = mSocketClient->reconnect();
+    this->preconnect();
+    auto success = mSocketClient->reconnect();
     if (success)
         setStatus(constant::Reconnecting);
     return success;
 }
 
+void EzyClient::preconnect() {
+    EZY_SAFE_DELETE(mZone);
+    EZY_SAFE_DELETE(mMe);
+}
+
 socket::EzySocketClient* EzyClient::newSocketClient() {
     auto socketClient = new socket::EzyTcpSocketClient();
+    socketClient->setPingSchedule(mPingSchedule);
+    socketClient->setPingManager(mPingManager);
     socketClient->setHandlerManager(mHandlerManager);
     socketClient->setReconnectConfig(mConfig->getReconnect());
     socketClient->setUnloggableCommands(mUnloggableCommands);

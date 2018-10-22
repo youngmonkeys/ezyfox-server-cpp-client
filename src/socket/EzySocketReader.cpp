@@ -1,4 +1,5 @@
 #include "EzySocketReader.h"
+#include "EzySocketClient.h"
 #include "../logger/EzyLogger.h"
 #include "../entity/EzyJson.h"
 
@@ -9,9 +10,11 @@ EzySocketReader::EzySocketReader() {
     mMessageHeader = new codec::EzyMessageHeader();
     mDecoder = new codec::EzyDataDecoder();
     mDecoder->setDelegate(this);
+    mSocketDelegate = 0;
 }
 
 EzySocketReader::~EzySocketReader() {
+    mSocketDelegate = 0;
     EZY_SAFE_DELETE(mDecoder)
     EZY_SAFE_DELETE(mMessageHeader);
 }

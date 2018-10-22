@@ -14,15 +14,17 @@ EZY_NAMESPACE_END_WITH
 EZY_NAMESPACE_START_WITH_ONLY(socket)
 
 class EzySender;
+class EzySocketEventQueue;
 
 class EzyPingSchedule {
 protected:
-    
     bool mActive;
     EzyClient* mClient;
     std::thread* mThread;
     manager::EzyPingManager* mPingManager;
-    
+protected:
+    EZY_SYNTHESIZE_WRITEONLY(socket::EzySocketEventQueue*, SocketEventQueue);
+protected:
     void loop();
     void sendPingRequest();
 public:

@@ -2,7 +2,7 @@
 
 #define EZY_IMPLEMENT_EVENT_CLASS(className, eventType)\
 Ezy##className##Event* Ezy##className##Event::create() {\
-    Ezy##className##Event* pRet = new Ezy##className##Event();\
+    auto pRet = new Ezy##className##Event();\
     return pRet;\
 }\
 EzyEventType Ezy##className##Event::getType() {\

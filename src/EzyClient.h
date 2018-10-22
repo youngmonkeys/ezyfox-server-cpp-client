@@ -60,6 +60,7 @@ protected:
     EZY_SYNTHESIZE_READONLY(socket::EzyPingSchedule*, PingSchedule);
     EZY_SYNTHESIZE_READONLY(manager::EzyHandlerManager*, HandlerManager);
 protected:
+    void preconnect();
     socket::EzySocketClient* newSocketClient();
     void printSentData(int cmd, entity::EzyArray* data);
 public:

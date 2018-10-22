@@ -10,9 +10,8 @@ EzyEventHandlers::EzyEventHandlers(EzyClient* client) {
 }
 
 EzyEventHandlers::~EzyEventHandlers() {
-    EZY_FOREACH_MAP(mHandlers) {
+    EZY_FOREACH_MAP(mHandlers)
         EZY_SAFE_DELETE(it->second);
-    }
     mHandlers.clear();
 }
     

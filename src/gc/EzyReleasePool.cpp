@@ -4,7 +4,6 @@
 EZY_NAMESPACE_START_WITH(gc)
     
 EzyReleasePool::EzyReleasePool() {
-    
 }
     
 EzyReleasePool::~EzyReleasePool() {

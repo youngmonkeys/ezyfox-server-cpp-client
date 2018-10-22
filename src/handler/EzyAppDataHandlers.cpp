@@ -5,12 +5,10 @@
 EZY_NAMESPACE_START_WITH(handler)
 
 EzyAppDataHandlers::~EzyAppDataHandlers() {
-        EZY_FOREACH_MAP(mHandlersByInt) {
+        EZY_FOREACH_MAP(mHandlersByInt)
             EZY_SAFE_DELETE(it->second);
-        }
-        EZY_FOREACH_MAP(mHandlersByString) {
+        EZY_FOREACH_MAP(mHandlersByString)
             EZY_SAFE_DELETE(it->second);
-        }
         mHandlersByInt.clear();
         mHandlersByString.clear();
 }

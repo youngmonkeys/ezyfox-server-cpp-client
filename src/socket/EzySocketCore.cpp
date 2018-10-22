@@ -27,11 +27,7 @@ void EzySocketEventQueue::popAll(std::vector<event::EzyEvent*> &buffer) {
 
 void EzySocketEventQueue::clear() {
 	std::unique_lock<std::mutex> lk(mMutex);
-    for(int i = 0 ; i < mEvents.size() ; i++) {
-        auto event = mEvents[i];
-        EZY_SAFE_DELETE(event);
-    }
-    mEvents.clear();
+    EZY_SAFE_DELETE_VECTOR(mEvents);
 }
 
 EZY_NAMESPACE_END_WITH

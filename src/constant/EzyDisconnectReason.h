@@ -1,8 +1,9 @@
 #pragma once
 
+#include <string>
 #include "../EzyMacro.h"
 
-EZY_NAMESPACE_START_WITH(constant)
+EZY_NAMESPACE_START_WITH_ONLY(constant)
 
 enum EzyDisconnectReason
 {
@@ -17,5 +18,7 @@ enum EzyDisconnectReason
     ServerError = 8,
     ServerNotResponding = 400
 };
+
+std::string getDisconnectReasonName(int reason);
 
 EZY_NAMESPACE_END_WITH

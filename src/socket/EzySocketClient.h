@@ -14,6 +14,7 @@ EZY_NAMESPACE_END_WITH
 
 EZY_NAMESPACE_START_WITH_ONLY(manager)
 class EzyHandlerManager;
+class EzyPingManager;
 EZY_NAMESPACE_END_WITH
 
 EZY_NAMESPACE_START_WITH_ONLY(handler)
@@ -23,18 +24,37 @@ EZY_NAMESPACE_END_WITH
 
 EZY_NAMESPACE_START_WITH(socket)
 
-class EzySocketClient : public base::EzyRef {
+class EzyPingSchedule;
+
+enum EzySocketStatus {
+    SocketNotConnect = 1,
+    SocketConnecting,
+    SocketConnected,
+    SocketDisconnected,
+    SocketReconnecting,
+    SocketDestroyed
+};
+
+class EzySocketDelegate {
+public:
+    virtual void onDisconnected(int reason) = 0;
+};
+
+class EzySocketClient : public base::EzyRef, public EzySocketDelegate {
 protected:
     std::string mHost;
     int mPort;
     long long mConnectTime;
     int mReconnectCount;
     int mConnectionFailedReason;
+    EzySocketStatus mStatus;
     std::mutex mClientMutex;
+    std::mutex mStatusMutex;
     
     gc::EzyReleasePool* mReleasePool;
     EzySocketWriter* mSocketWriter;
     EzySocketReader* mSocketReader;
+    EzyPingSchedule* mPingSchedule;
     EzySocketEventQueue* mSocketEventQueue;
     handler::EzyEventHandlers* mEventHandlers;
     handler::EzyDataHandlers* mDataHandlers;
@@ -42,6 +62,7 @@ protected:
     std::vector<event::EzyEvent*> mLocalEventQueue;
 protected:
     EZY_SYNTHESIZE_WRITEONLY(std::set<int>, UnloggableCommands);
+    EZY_SYNTHESIZE_WRITEONLY(manager::EzyPingManager*, PingManager);
     EZY_SYNTHESIZE_WRITEONLY(config::EzyReconnectConfig*, ReconnectConfig);
 protected:
     virtual bool connectNow();
@@ -57,6 +78,9 @@ protected:
     virtual void processReceivedMessages();
     virtual void processReceivedMessage(EzySocketData* message);
 protected:
+    virtual void setStatus(EzySocketStatus value);
+    virtual EzySocketStatus getStatus();
+protected:
     virtual void printReceivedData(int cmd, entity::EzyArray* data);
 public:
     EzySocketClient();
@@ -68,6 +92,7 @@ public:
     virtual void sendMessage(EzySocketData* message);
     virtual void processEventMessages();
     virtual void onDisconnected(int reason);
+    virtual void setPingSchedule(EzyPingSchedule* pingSchedule);
     virtual void setHandlerManager(manager::EzyHandlerManager* handlerManager);
 };
 

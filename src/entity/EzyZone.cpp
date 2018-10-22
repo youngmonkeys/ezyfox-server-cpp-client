@@ -14,6 +14,7 @@ EzyZone::EzyZone(EzyClient* client, int identifier, std::string name) {
 }
 
 EzyZone::~EzyZone() {
+    this->mClient = 0;
     EZY_SAFE_DELETE(mAppManager);
     EZY_SAFE_DELETE(mPluginManager);
 }
