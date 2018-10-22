@@ -15,6 +15,7 @@ EzySocketAdapter::EzySocketAdapter() {
 }
 
 EzySocketAdapter::~EzySocketAdapter() {
+    mActive = false;
     EZY_SAFE_DELETE(mSocketPool)
 }
 

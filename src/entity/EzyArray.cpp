@@ -181,4 +181,11 @@ EzyArray* EzyArray::getArray(int index){
 	return ((EzyArray*)getItem(index));
 }
 
+EzyArray* EzyArray::getArray(int index, EzyArray* defValue) {
+    if(index >= mData.size())
+        return defValue;
+    auto answer = ((EzyArray*)getItem(index));
+    return answer;
+}
+
 EZY_NAMESPACE_END_WITH

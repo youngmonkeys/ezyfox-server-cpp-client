@@ -2,12 +2,10 @@
 
 EZY_NAMESPACE_START_WITH(request)
 
-entity::EzyArray* EzyRequestSerializer::serialize(EzyRequest *request) {
+entity::EzyArray* EzyRequestSerializer::serialize(int cmd, entity::EzyArray* data) {
     auto array = new entity::EzyArray();
-    auto command = request->getCommand();
-    auto params = request->serialize();
-    array->addInt(command);
-    array->addItem(params);
+    array->addInt(cmd);
+    array->addItem(data);
     return array;
 }
 

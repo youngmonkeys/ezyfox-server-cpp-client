@@ -8,8 +8,8 @@ EZY_NAMESPACE_START_WITH(socket)
 class EzySocketReader : public EzySocketAdapter, public codec::EzyDataDecoderDelegate {
 protected:
 #ifdef USE_MESSAGE_HEADER
-    std::vector<char> mByteBuffer;
     int mDataSize;
+    std::vector<char> mByteBuffer;
     codec::EzyDecodeState mDecodeState;
     codec::EzyMessageHeader* mMessageHeader;
     

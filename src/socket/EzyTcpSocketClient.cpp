@@ -31,15 +31,14 @@ void EzyTcpSocketWriter::update(){
 
 			while (true) {
 				rs = send(mSocket, sendBuffer.data() + sentData, sendBuffer.size() - sentData, 0);
-				//rs = write(mSocket, senderBuffer.data(), senderBuffer.size());
-				if (rs > 0){
+				if (rs > 0) {
 					sentData += rs;
-					if (sentData < sendBuffer.size()){
+					if (sentData < sendBuffer.size()) {
 						continue;
 					}
 					break;
 				}
-				else if (rs == 0){
+				else if (rs == 0) {
 #ifdef EZY_DEBUG
                     logger::log("server shutdown[2]");
 #endif
@@ -82,10 +81,7 @@ void EzyTcpSocketReader::update() {
 			break;
 		}
 		rs = recv(mSocket, dataBuffer, BUFFER_SIZE, 0);
-		if (rs > 0){
-#ifdef EZY_DEBUG
-			logger::log("recvdata: %d",rs);
-#endif
+		if (rs > 0) {
 			acceptData(dataBuffer, rs);
 		}
 		else if (rs == 0){

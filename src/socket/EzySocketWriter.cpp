@@ -32,13 +32,6 @@ void EzySocketWriter::toBufferData(EzySocketData* data){
     }
     mEncoder->insertHeader(header);
 #endif
-    
-#ifdef EZY_DEBUG
-    logger::console("\n----------------\n");
-    logger::console("[SEND] <==\n");
-    data->printDebug();
-    logger::console("\n----------------\n");
-#endif
 }
 
 EZY_NAMESPACE_END_WITH

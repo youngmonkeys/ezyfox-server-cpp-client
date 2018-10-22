@@ -42,6 +42,7 @@ public:
 	std::string getString(int index);
 	EzyObject* getObject(int index);
 	EzyArray* getArray(int index);
+    EzyArray* getArray(int index, EzyArray* defValue);
 
 	static EzyArray* create();
 };

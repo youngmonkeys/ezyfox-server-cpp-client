@@ -13,7 +13,7 @@ EZY_NAMESPACE_START_WITH(manager)
 EzyHandlerManager::EzyHandlerManager(EzyClient* client) {
     this->mClient = client;
     this->mEventHandlers = newEventHandlers();
-    this->mDataHandlers = new handler::EzyDataHandlers(client);
+    this->mDataHandlers = newDataHandlers();
 }
 
 EzyHandlerManager::~EzyHandlerManager() {
@@ -35,6 +35,7 @@ handler::EzyEventHandlers* EzyHandlerManager::newEventHandlers() {
 
 handler::EzyDataHandlers* EzyHandlerManager::newDataHandlers(){
     auto handlers = new handler::EzyDataHandlers(mClient);
+    handlers->addHandler(constant::Pong, new handler::EzyPongHandler());
     handlers->addHandler(constant::Login, new handler::EzyLoginSuccessHandler());
     handlers->addHandler(constant::AppAccess, new handler::EzyAccessAppHandler());
     handlers->addHandler(constant::AppRequest, new handler::EzyAppResponseByStringHandler());

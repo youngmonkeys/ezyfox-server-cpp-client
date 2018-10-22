@@ -20,6 +20,11 @@ void EzyDataHandler::setClient(EzyClient *client) {
 }
 
 //===============================================
+
+void EzyPongHandler::handle(entity::EzyArray *data) {
+}
+
+//===============================================
 void EzyHandshakeHandler::handle(entity::EzyArray* data) {
     mPingSchedule->start();
     handleLogin(data);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <set>
 #include "EzySocketWriter.h"
 #include "EzySocketReader.h"
 
@@ -38,9 +39,10 @@ protected:
     handler::EzyEventHandlers* mEventHandlers;
     handler::EzyDataHandlers* mDataHandlers;
     manager::EzyHandlerManager* mHandlerManager;
-    config::EzyReconnectConfig* mReconnectConfig;
     std::vector<event::EzyEvent*> mLocalEventQueue;
-    
+protected:
+    EZY_SYNTHESIZE_WRITEONLY(std::set<int>, UnloggableCommands);
+    EZY_SYNTHESIZE_WRITEONLY(config::EzyReconnectConfig*, ReconnectConfig);
 protected:
     virtual bool connectNow();
     virtual void connect0(long sleepTime);
@@ -54,6 +56,8 @@ protected:
     virtual void clearAdapter(EzySocketAdapter* adapter);
     virtual void processReceivedMessages();
     virtual void processReceivedMessage(EzySocketData* message);
+protected:
+    virtual void printReceivedData(int cmd, entity::EzyArray* data);
 public:
     EzySocketClient();
     virtual ~EzySocketClient();
@@ -64,7 +68,6 @@ public:
     virtual void sendMessage(EzySocketData* message);
     virtual void processEventMessages();
     virtual void onDisconnected(int reason);
-    virtual void setReconnectConfig(config::EzyReconnectConfig* reconnectConfig);
     virtual void setHandlerManager(manager::EzyHandlerManager* handlerManager);
 };
 

@@ -37,6 +37,13 @@ public:
 
 //===============================================
 
+class EzyPongHandler : public EzyDataHandler {
+public:
+    void handle(entity::EzyArray* data);
+};
+
+//===============================================
+
 class EzyHandshakeHandler : public EzyDataHandler {
 protected:
     socket::EzyPingSchedule* mPingSchedule;

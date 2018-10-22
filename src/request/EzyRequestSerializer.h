@@ -9,7 +9,7 @@ class EzyRequest;
 
 class EzyRequestSerializer {
 public:
-    virtual entity::EzyArray* serialize(EzyRequest* request);
+    virtual entity::EzyArray* serialize(int cmd, entity::EzyArray* data);
 };
 
 EZY_NAMESPACE_END_WITH

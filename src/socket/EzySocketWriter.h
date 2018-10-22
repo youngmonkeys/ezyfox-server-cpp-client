@@ -7,6 +7,7 @@ EZY_NAMESPACE_START_WITH(socket)
 class EzySocketWriter : public EzySocketAdapter {
 protected:
     codec::EzyDataEncoder* mEncoder;
+protected:
     void toBufferData(EzySocketData* data);
 public:
     EzySocketWriter();

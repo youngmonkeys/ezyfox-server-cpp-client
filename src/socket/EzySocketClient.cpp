@@ -28,12 +28,9 @@ EzySocketClient::EzySocketClient() {
 EzySocketClient::~EzySocketClient() {
     closeSocket();
     clearAdapters();
+    mReconnectConfig = 0;
     mLocalEventQueue.clear();
     EZY_SAFE_DELETE(mSocketEventQueue);
-}
-
-void EzySocketClient::setReconnectConfig(config::EzyReconnectConfig *reconnectConfig) {
-    mReconnectConfig = reconnectConfig;
 }
 
 void EzySocketClient::setHandlerManager(manager::EzyHandlerManager* handlerManager) {
@@ -145,8 +142,9 @@ void EzySocketClient::processReceivedMessages() {
 void EzySocketClient::processReceivedMessage(EzySocketData* message) {
     auto array = (entity::EzyArray*)message;
     auto cmdId = array->getInt(0);
-    auto data = array->getArray(1);
+    auto data = array->getArray(1, 0);
     auto cmd = (constant::EzyCommand)cmdId;
+    printReceivedData(cmd, data);
     if(cmd == constant::Disconnect) {
         auto reasonId = data->getInt(0);
         onDisconnected((int)reasonId);
@@ -154,6 +152,26 @@ void EzySocketClient::processReceivedMessage(EzySocketData* message) {
     else {
         mDataHandlers->handle(cmd, data);
     }
+}
+
+void EzySocketClient::printReceivedData(int cmd, entity::EzyArray* data) {
+#ifdef EZY_DEBUG
+    if(mUnloggableCommands.count(cmd) > 0)
+        return;
+    auto cmdName = constant::getCommandName(cmd);
+    std::ostringstream stream;
+    stream << "\n-------------------\n";
+    stream << "[RECV] <== \n";
+    stream << "command: ";
+    stream << cmdName;
+    stream << ", data:\n";
+    logger::console(stream.str().c_str());
+    stream.str("");
+    stream.clear();
+    if(data)
+        data->printDebug();
+    logger::console("\n-------------------\n");
+#endif
 }
 
 void EzySocketClient::onDisconnected(int reason) {

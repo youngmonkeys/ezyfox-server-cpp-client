@@ -102,20 +102,13 @@ void EzySocketReader::onUpdateData() {
 #endif
 
 void EzySocketReader::onReceivedMessage(entity::EzyValue* value){
-    if (!value){
+    if (!value) {
 #ifdef EZY_DEBUG
         logger::log("error parse data");
 #endif
         setActive(false);
         return;
     }
-    
-#ifdef EZY_DEBUG
-    logger::console("\n-------------------\n");
-    logger::console("[RECV] ==>\n");
-    value->printDebug();
-    logger::console("\n-------------------\n");
-#endif
     pushMessage(value);
 }
 
