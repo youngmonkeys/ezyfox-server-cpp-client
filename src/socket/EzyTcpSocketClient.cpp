@@ -13,7 +13,7 @@ EzyTcpSocketWriter::EzyTcpSocketWriter() {
 EzyTcpSocketWriter::~EzyTcpSocketWriter() {
 }
 
-void EzyTcpSocketWriter::update(){
+void EzyTcpSocketWriter::update() {
 	size_t rs;
 	size_t sentData;
     auto releasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
@@ -73,18 +73,18 @@ void EzyTcpSocketReader::update() {
 	size_t rs;
 	char dataBuffer[BUFFER_SIZE];
     auto releasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
-	while (true){
+	while (true) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		releasePool->releaseAll();
 
-		if (!isActive()){
+		if (!isActive()) {
 			break;
 		}
 		rs = recv(mSocket, dataBuffer, BUFFER_SIZE, 0);
 		if (rs > 0) {
 			acceptData(dataBuffer, rs);
 		}
-		else if (rs == 0){
+		else if (rs == 0) {
 #ifdef EZY_DEBUG
 			logger::log("server shutdown[1]");
 #endif
@@ -121,9 +121,9 @@ EzyTcpSocketClient::~EzyTcpSocketClient() {
 #endif
 }
 
-void EzyTcpSocketClient::closeSocket(){
+void EzyTcpSocketClient::closeSocket() {
 	std::unique_lock<std::mutex> lk(mSocketMutex);
-	if (mSocket != SYS_SOCKET_INVALID){
+	if (mSocket != SYS_SOCKET_INVALID) {
 #ifdef USE_WINSOCK_2
 		shutdown(mSocket, SD_BOTH);
 		closesocket(mSocket);
@@ -146,7 +146,7 @@ void EzyTcpSocketClient::createAdapters() {
 	mSocketWriter = new EzyTcpSocketWriter();
 }
 
-void EzyTcpSocketClient::startAdapters(){
+void EzyTcpSocketClient::startAdapters() {
 	std::unique_lock<std::mutex> lk(mClientMutex);
 	((EzyTcpSocketWriter*)mSocketWriter)->mSocket = mSocket;
 	mSocketWriter->start();

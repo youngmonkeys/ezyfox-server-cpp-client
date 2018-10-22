@@ -36,7 +36,7 @@ void EzySocketAdapter::setActive(bool active) {
 }
 
 void EzySocketAdapter::start() {
-	if (!isActive()){
+	if (!isActive()) {
 		setActive(true);
 		retain();
 		std::thread newThread(&EzySocketAdapter::run, this);
@@ -44,19 +44,19 @@ void EzySocketAdapter::start() {
 	}
 }
 
-void EzySocketAdapter::stop(){
+void EzySocketAdapter::stop() {
 	setActive(false);
 	mSocketPool->clear();
 }
 
-void EzySocketAdapter::update(){
+void EzySocketAdapter::update() {
 }
 
-void EzySocketAdapter::pushMessage(EzySocketData* data){
+void EzySocketAdapter::pushMessage(EzySocketData* data) {
 	mSocketPool->push(data);
 }
 
-EzySocketData* EzySocketAdapter::popMessage(){
+EzySocketData* EzySocketAdapter::popMessage() {
 	return mSocketPool->pop();
 }
 

@@ -27,18 +27,18 @@ void EzyValue::printDebug() {
 	refreshLogBuffer(stream);
 }
 
-void EzyValue::refreshLogBuffer(std::ostringstream& stream){
+void EzyValue::refreshLogBuffer(std::ostringstream& stream) {
 	logger::console(stream.str().c_str());
 	stream.str("");
 	stream.clear();
 }
 
-void EzyValue::printToOutStream(std::ostringstream& stream, int padding){
+void EzyValue::printToOutStream(std::ostringstream& stream, int padding) {
 	stream << "[NULL]";
 }
 
-void EzyValue::printPadding(std::ostringstream& stream, int padding){
-	for (int i = 0; i < padding; i++){
+void EzyValue::printPadding(std::ostringstream& stream, int padding) {
+	for (int i = 0; i < padding; i++) {
 #if defined(ANDROID)
 		stream << "  ";
 #else
@@ -48,7 +48,7 @@ void EzyValue::printPadding(std::ostringstream& stream, int padding){
 }
 #endif
 
-void EzyValue::toValue(rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator){
+void EzyValue::toValue(rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator) {
 	value.SetNull();
 }
 

@@ -39,7 +39,7 @@ void EzyConnectionSuccessHandler::sendHandshakeRequest()
     mClient->send(request);
 }
 
-request::EzyRequest* EzyConnectionSuccessHandler::newHandshakeRequest(){
+request::EzyRequest* EzyConnectionSuccessHandler::newHandshakeRequest() {
     auto request = request::EzyHandshakeRequest::create();
     request->setClientId(getClientId());
     request->setClientKey(getClientKey());

@@ -33,7 +33,7 @@ handler::EzyEventHandlers* EzyHandlerManager::newEventHandlers() {
     return handlers;
 }
 
-handler::EzyDataHandlers* EzyHandlerManager::newDataHandlers(){
+handler::EzyDataHandlers* EzyHandlerManager::newDataHandlers() {
     auto handlers = new handler::EzyDataHandlers(mClient);
     handlers->addHandler(constant::Pong, new handler::EzyPongHandler());
     handlers->addHandler(constant::Login, new handler::EzyLoginSuccessHandler());

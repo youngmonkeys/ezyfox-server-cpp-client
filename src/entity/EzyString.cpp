@@ -7,7 +7,7 @@ EzyString::EzyString() {
     mValueType = EzyValueType::TypeString;
 }
 
-EzyString::~EzyString(){
+EzyString::~EzyString() {
     
 }
 
@@ -29,7 +29,7 @@ void EzyString::setString(const std::string& str) {
 }
 
 void EzyString::setData(const char* buffer, int size) {
-    if (size > 0){
+    if (size > 0) {
         mData.assign(buffer, buffer + size);
     }
 }

@@ -5,16 +5,16 @@
 
 EZY_NAMESPACE_START_WITH(socket)
 
-EzySocketWriter::EzySocketWriter(){
+EzySocketWriter::EzySocketWriter() {
     mSocketPool = new EzySocketPool();
     mEncoder = new codec::EzyDataEncoder();
 }
 
-EzySocketWriter::~EzySocketWriter(){
+EzySocketWriter::~EzySocketWriter() {
     delete mEncoder;
 }
 
-void EzySocketWriter::toBufferData(EzySocketData* data){
+void EzySocketWriter::toBufferData(EzySocketData* data) {
     mEncoder->clear();
     data->writeToBuffer(mEncoder);
     

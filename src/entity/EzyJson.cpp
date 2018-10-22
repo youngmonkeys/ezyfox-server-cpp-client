@@ -11,7 +11,7 @@
 
 EZY_NAMESPACE_START_WITH(entity)
 
-inline bool __checkDoubleIsFloat(double d){
+inline bool __checkDoubleIsFloat(double d) {
 	if (d < static_cast<double>(-std::numeric_limits<float>::max()) ||
         d > static_cast<double>(std::numeric_limits<float>::max())) {
 		return false;
@@ -23,7 +23,7 @@ inline bool __checkDoubleIsFloat(double d){
 
 inline EzyValue* __createDictFromJson(const rapidjson::Value& value);
 inline EzyValue* __createArrayFromJson(const rapidjson::Value& value);
-inline EzyValue* __createValueFromJson(const rapidjson::Value& value){
+inline EzyValue* __createValueFromJson(const rapidjson::Value& value) {
 	int type = value.GetType();
 	switch (type)
 	{
@@ -47,21 +47,21 @@ inline EzyValue* __createValueFromJson(const rapidjson::Value& value){
 	case rapidjson::Type::kNumberType:{
 		auto pret = new EzyPrimitive();
         pret->autorelease();
-		if (value.IsInt()){
+		if (value.IsInt()) {
 			pret->setInt(value.GetInt());
 		}
-		else if (value.IsInt64()){
+		else if (value.IsInt64()) {
 			pret->setInt(value.GetInt64());
 		}
-		else if (value.IsUint()){
+		else if (value.IsUint()) {
 			pret->setUInt(value.GetUint());
 		}
-		else if (value.IsUint64()){
+		else if (value.IsUint64()) {
 			pret->setUInt(value.GetUint64());
 		}
-		else if (value.IsDouble()){
+		else if (value.IsDouble()) {
 			double d = value.GetDouble();
-			if (__checkDoubleIsFloat(d)){
+			if (__checkDoubleIsFloat(d)) {
 				pret->setFloat((float)d);
 			}
 			else{
@@ -70,16 +70,16 @@ inline EzyValue* __createValueFromJson(const rapidjson::Value& value){
 		}
 		return pret;
 	}
-	case rapidjson::Type::kStringType:{
+	case rapidjson::Type::kStringType: {
 		auto pret = new entity::EzyString();
         pret->autorelease();
 		pret->setString(value.GetString());
 		return pret;
 	}
-	case rapidjson::Type::kObjectType:{
+	case rapidjson::Type::kObjectType: {
 		return __createDictFromJson(value);
 	}
-	case rapidjson::Type::kArrayType:{
+	case rapidjson::Type::kArrayType: {
 		return __createArrayFromJson(value);
 	}
 	}
@@ -89,10 +89,10 @@ inline EzyValue* __createValueFromJson(const rapidjson::Value& value){
     return pret;
 }
 
-inline EzyValue* __createDictFromJson(const rapidjson::Value& value){
+inline EzyValue* __createDictFromJson(const rapidjson::Value& value) {
 	EzyObject* pret = new EzyObject();
     pret->autorelease();
-	for (auto it = value.MemberBegin(); it != value.MemberEnd(); ++it){
+	for (auto it = value.MemberBegin(); it != value.MemberEnd(); ++it) {
 		EzyValue* item = __createValueFromJson(it->value);
 		pret->addItem(it->name.GetString(), item);
 		//item->release();
@@ -100,10 +100,10 @@ inline EzyValue* __createDictFromJson(const rapidjson::Value& value){
 	return pret;
 }
 
-inline EzyValue* __createArrayFromJson(const rapidjson::Value& value){
+inline EzyValue* __createArrayFromJson(const rapidjson::Value& value) {
 	EzyArray* pret = new EzyArray();
     pret->autorelease();
-	for (int i = 0; i < value.Size(); i++){
+	for (int i = 0; i < value.Size(); i++) {
 		EzyValue* item = __createValueFromJson(value[i]);
 		pret->addItem(item);
 		//item->release();
@@ -113,19 +113,19 @@ inline EzyValue* __createArrayFromJson(const rapidjson::Value& value){
 
 /****/
 
-EzyJson::EzyJson(){
+EzyJson::EzyJson() {
     mValue = 0;
     mString = "";
     mValueType = EzyValueType::TypeJson;
 }
 
-EzyJson::~EzyJson(){
+EzyJson::~EzyJson() {
     EZY_SAFE_DELETE(mValue)
 }
 
 void EzyJson::writeToBuffer(codec::EzyDataEncoder* encoder) {
 	rapidjson::Document doc;
-	if (doc.Parse<0>(mString.c_str()).HasParseError()){
+	if (doc.Parse<0>(mString.c_str()).HasParseError()) {
 		//error parse json
 	}
 	else{
@@ -137,8 +137,8 @@ void EzyJson::writeToBuffer(codec::EzyDataEncoder* encoder) {
 }
 
 #ifdef EZY_DEBUG
-void EzyJson::printDebug(){
-	if (mValue){
+void EzyJson::printDebug() {
+	if (mValue) {
 		mValue->printDebug();
 	}
 	else{
@@ -147,33 +147,33 @@ void EzyJson::printDebug(){
 }
 #endif
 
-const std::string& EzyJson::toString(){
+const std::string& EzyJson::toString() {
 	return mString;
 }
 
-EzyObject* EzyJson::getValue(){
+EzyObject* EzyJson::getValue() {
 	return (EzyObject*)mValue;
 }
 
-void EzyJson::initWithString(const std::string& json){
+void EzyJson::initWithString(const std::string& json) {
 	this->mString = json;
 }
 
-void EzyJson::initWithValue(EzyValue* value){
+void EzyJson::initWithValue(EzyValue* value) {
     EZY_SAFE_DELETE(mValue)
 	mValue = value;
 	mValue->retain();
 	mString = mValue->toJson();
 }
 
-EzyJson* EzyJson::create(const std::string& json){
+EzyJson* EzyJson::create(const std::string& json) {
 	auto* pret = new EzyJson();
 	pret->initWithString(json);
 	pret->autorelease();
 	return pret;
 }
 
-EzyJson* EzyJson::create(entity::EzyValue* value){
+EzyJson* EzyJson::create(entity::EzyValue* value) {
 	auto* pret = new EzyJson();
 	pret->initWithValue(value);
 	pret->autorelease();

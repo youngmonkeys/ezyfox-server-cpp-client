@@ -21,7 +21,7 @@ EzyObject* EzyObject::create() {
 
 void EzyObject::writeToBuffer(codec::EzyDataEncoder* encoder) {
 	encoder->writeMap((uint32_t)mData.size());
-	if (mData.size() > 0){
+	if (mData.size() > 0) {
 		for (auto it = mData.begin(); it != mData.end(); it++) {
 			encoder->writeString(it->first);
 			it->second->writeToBuffer(encoder);
@@ -73,7 +73,7 @@ void EzyObject::addItem(const std::string& key, EzyValue* item) {
 
 EzyValue* EzyObject::getItem(const std::string& key) {
 	auto it = mData.find(key);
-	if (it != mData.end()){
+	if (it != mData.end()) {
 		return it->second;
 	}
 	return 0;
@@ -81,49 +81,49 @@ EzyValue* EzyObject::getItem(const std::string& key) {
 
 bool EzyObject::isExistKey(const std::string& key) {
 	auto it = mData.find(key);
-	if (it != mData.end()){
+	if (it != mData.end()) {
 		return true;
 	}
 	return false;
 }
 
-void EzyObject::clear(){
+void EzyObject::clear() {
 	for (auto it = mData.begin(); it != mData.end(); it++) {
 		it->second->release();
 	}
 	mData.clear();
 }
 
-int EzyObject::size(){
+int EzyObject::size() {
 	return (int)mData.size();
 }
 
 
-bool EzyObject::getBool(const std::string& key, bool defaultValue){
+bool EzyObject::getBool(const std::string& key, bool defaultValue) {
 	auto item = this->getItem(key);
-	if (item){
+	if (item) {
 		return ((EzyPrimitive*)item)->getBool();
 	}
 	return defaultValue;
 }
 
-float EzyObject::getFloat(const std::string& key, float defaultValue){
+float EzyObject::getFloat(const std::string& key, float defaultValue) {
 	auto item = this->getItem(key);
-	if (item){
+	if (item) {
 		return ((EzyPrimitive*)item)->getFloat();
 	}
 	return defaultValue;
 }
 
-double EzyObject::getDouble(const std::string& key, double defaultValue){
+double EzyObject::getDouble(const std::string& key, double defaultValue) {
 	auto item = this->getItem(key);
-	if (item){
+	if (item) {
 		return ((EzyPrimitive*)item)->getDouble();
 	}
 	return defaultValue;
 }
 
-int64_t EzyObject::getInt(const std::string& key, int64_t defaultValue){
+int64_t EzyObject::getInt(const std::string& key, int64_t defaultValue) {
 	auto item = this->getItem(key);
 	if (item) {
 		return ((EzyPrimitive*)item)->getInt();
@@ -132,9 +132,9 @@ int64_t EzyObject::getInt(const std::string& key, int64_t defaultValue){
 }
 
 
-uint64_t EzyObject::getUInt(const std::string& key, uint64_t defaultValue){
+uint64_t EzyObject::getUInt(const std::string& key, uint64_t defaultValue) {
 	auto item = this->getItem(key);
-	if (item){
+	if (item) {
 		return ((EzyPrimitive*)item)->getUInt();
 	}
 	return defaultValue;
@@ -142,7 +142,7 @@ uint64_t EzyObject::getUInt(const std::string& key, uint64_t defaultValue){
 
 const std::string& EzyObject::getString(const std::string& key, const std::string& defaultValue) {
 	auto item = this->getItem(key);
-	if (item){
+	if (item) {
 		return ((EzyString*)item)->getString();
 	}
 	return defaultValue;
@@ -150,7 +150,7 @@ const std::string& EzyObject::getString(const std::string& key, const std::strin
 
 EzyObject* EzyObject::getObject(const std::string& key, EzyObject* defaultValue) {
 	auto item = this->getItem(key);
-	if (item){
+	if (item) {
 		return ((EzyObject*)item);
 	}
 	return defaultValue;
@@ -158,7 +158,7 @@ EzyObject* EzyObject::getObject(const std::string& key, EzyObject* defaultValue)
 
 EzyArray* EzyObject::getArray(const std::string& key, EzyArray* defaultValue) {
 	auto item = this->getItem(key);
-	if (item){
+	if (item) {
 		return ((EzyArray*)item);
 	}
 	return defaultValue;

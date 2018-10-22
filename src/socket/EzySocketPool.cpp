@@ -2,15 +2,15 @@
 
 EZY_NAMESPACE_START_WITH(socket)
 
-EzySocketPool::EzySocketPool(){
+EzySocketPool::EzySocketPool() {
     mDataQueue = new std::queue<EzySocketData*>();
 }
 
-EzySocketPool::~EzySocketPool(){
-    if (mDataQueue){
+EzySocketPool::~EzySocketPool() {
+    if (mDataQueue) {
         while (!mDataQueue->empty()) {
             EzySocketData* data = mDataQueue->front();
-            if (data){
+            if (data) {
                 //delete data;
                 data->release();
             }
@@ -23,9 +23,9 @@ EzySocketPool::~EzySocketPool(){
     
 }
 
-void EzySocketPool::push(EzySocketData* data){
+void EzySocketPool::push(EzySocketData* data) {
     std::unique_lock<std::mutex> lk(mPoolMutex);
-    if (mDataQueue){
+    if (mDataQueue) {
         data->retain();
         mDataQueue->push(data);
     }
@@ -33,9 +33,9 @@ void EzySocketPool::push(EzySocketData* data){
     mPoolCondition.notify_one();
 }
 
-void EzySocketPool::clear(){
+void EzySocketPool::clear() {
     std::unique_lock<std::mutex> lk(mPoolMutex);
-    if (mDataQueue){
+    if (mDataQueue) {
         while (!mDataQueue->empty()) {
             EzySocketData* data = mDataQueue->front();
             //delete data;
@@ -47,10 +47,10 @@ void EzySocketPool::clear(){
     mPoolCondition.notify_all();
 }
 
-EzySocketData* EzySocketPool::take(){
+EzySocketData* EzySocketPool::take() {
     std::unique_lock<std::mutex> lk(mPoolMutex);
-    if (mDataQueue){
-        if (!mDataQueue->empty()){
+    if (mDataQueue) {
+        if (!mDataQueue->empty()) {
             EzySocketData* data = mDataQueue->front();
             mDataQueue->pop();
             
@@ -61,7 +61,7 @@ EzySocketData* EzySocketPool::take(){
         
         mPoolCondition.wait(lk);
         
-        if (mDataQueue && !mDataQueue->empty()){
+        if (mDataQueue && !mDataQueue->empty()) {
             EzySocketData* data = mDataQueue->front();
             mDataQueue->pop();
             
@@ -79,7 +79,7 @@ EzySocketData* EzySocketPool::take(){
 
 EzySocketData* EzySocketPool::pop() {
     std::unique_lock<std::mutex> lk(mPoolMutex);
-    if (mDataQueue && !mDataQueue->empty()){
+    if (mDataQueue && !mDataQueue->empty()) {
         auto data = mDataQueue->front();
         mDataQueue->pop();
         
