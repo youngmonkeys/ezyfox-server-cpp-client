@@ -31,8 +31,7 @@ enum EzySocketStatus {
     SocketConnecting,
     SocketConnected,
     SocketDisconnected,
-    SocketReconnecting,
-    SocketDestroyed
+    SocketReconnecting
 };
 
 class EzySocketDelegate {

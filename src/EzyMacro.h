@@ -187,8 +187,8 @@ public: \
 private: \
     className(); \
 public: \
-    className(const className&) = delete; \
-    void operator = (const className &) = delete;
+    className(className const&) = delete; \
+    void operator = (className const&) = delete;
 
 #define EZY_FOREACH_MAP(map)\
 for(auto it = map.begin() ; it != map.end() ; ++it)

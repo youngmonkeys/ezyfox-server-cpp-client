@@ -12,16 +12,14 @@ EZY_NAMESPACE_START_WITH(gc)
 class EzyReleasePool;
 
 class EzyAutoReleasePool {
+private:
     std::mutex mPoolMutex;
     std::map<size_t, EzyReleasePool*> mPools;
 public:
-    EzyAutoReleasePool();
-    virtual ~EzyAutoReleasePool();
-    
+    EZY_SINGLETON_GET_INSTANCE(EzyAutoReleasePool)
+public:
     virtual void removePool();
     virtual EzyReleasePool* getPool();
-    
-    static EzyAutoReleasePool* getInstance();
 };
 
 EZY_NAMESPACE_END_WITH

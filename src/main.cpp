@@ -45,7 +45,7 @@ protected:
 int main(int argc, const char * argv[]) {
     srand( static_cast<unsigned int>(time(NULL)));
     auto config = config::EzyClientConfig::create();
-    auto client = new EzyClient(config);
+    auto client = EzyClients::getInstance()->newDefaultClient(config);
     auto setup = client->setup();
     setup->addEventHandler(event::ConnectionSuccess, new handler::EzyConnectionSuccessHandler());
     setup->addDataHandler(constant::Handshake, new ExHandshakeHandler());
@@ -55,13 +55,20 @@ int main(int argc, const char * argv[]) {
     appSetup->addDataHandler("5", new ExFirstAppResponseHandler());
     logger::log("start client");
     client->connect("127.0.0.1", 3005);
+//    int x = 0;
     do {
         client->processEvents();
         std::this_thread::sleep_for(std::chrono::milliseconds(3));
+//        x += 3;
+//        if(x > 3000)
+//            break;
     } while(true);
 //    std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 //    EZY_SAFE_DELETE(client);
-//    while (1);
+//    EZY_SAFE_DELETE(client);
+//    while (1) {
+//        std::this_thread::sleep_for(std::chrono::milliseconds(3));
+//    }
 //    logger::log("shutdown client");
     return 0;
 }

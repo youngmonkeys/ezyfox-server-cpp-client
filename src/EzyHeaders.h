@@ -24,5 +24,6 @@
 #include "manager/EzyAppManager.h"
 #include "manager/EzyPluginManager.h"
 #include "manager/EzyPluginManager.h"
-#include "EzyClient.h"
 #include "EzyClientConfig.h"
+#include "EzyClient.h"
+#include "EzyClients.h"

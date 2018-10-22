@@ -3,6 +3,7 @@
 #include <map>
 #include <set>
 #include <mutex>
+#include <string>
 #include "constant/EzyCommand.h"
 #include "socket/EzySender.h"
 #include "constant/EzyConnectionStatus.h"
@@ -55,6 +56,7 @@ protected:
 protected:
     EZY_SYNTHESIZE(entity::EzyUser*, Me)
     EZY_SYNTHESIZE(entity::EzyZone*, Zone)
+    EZY_SYNTHESIZE_READONLY(std::string, Name);
     EZY_SYNTHESIZE_READONLY(config::EzyClientConfig*, Config);
     EZY_SYNTHESIZE_READONLY(manager::EzyPingManager*, PingManager);
     EZY_SYNTHESIZE_READONLY(socket::EzyPingSchedule*, PingSchedule);

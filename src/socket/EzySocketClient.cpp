@@ -30,7 +30,6 @@ EzySocketClient::EzySocketClient() {
 }
 
 EzySocketClient::~EzySocketClient() {
-    setStatus(SocketDestroyed);
     closeClient();
     clearAdapters();
     mPingSchedule = 0;
@@ -89,11 +88,8 @@ void EzySocketClient::connect1(long sleepTime) {
         if(dt < 2000) //delay 2000ms
             realSleepTime = 2000 - dt;
     }
-    if (realSleepTime >= 0) {
+    if (realSleepTime >= 0)
         std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime - dt));
-    }
-    if(getStatus() == SocketDestroyed)
-        return;
     setStatus(SocketConnecting);
     bool success = this->connectNow();
     mConnectTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();

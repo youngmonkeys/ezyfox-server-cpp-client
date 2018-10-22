@@ -19,6 +19,7 @@ EzyClient::EzyClient(config::EzyClientConfig* config) {
     mZone = 0;
     mMe = 0;
     mConfig = config;
+    mName = config->getClientName();
     mPingManager = new manager::EzyPingManager();
     mPingSchedule = new socket::EzyPingSchedule(this);
     mHandlerManager = new manager::EzyHandlerManager(this);
