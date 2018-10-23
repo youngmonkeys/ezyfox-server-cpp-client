@@ -69,7 +69,6 @@
 #pragma comment(lib, "ws2_32.lib")
 #include <winsock2.h>
 #include <ws2tcpip.h>
-//#include <wspiapi.h>
 #include <Ws2tcpip.h>
 #define SYS_SOCKET_INVALID INVALID_SOCKET
 #else 

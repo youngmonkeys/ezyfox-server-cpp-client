@@ -2,6 +2,8 @@
 
 #define EZY_NAMESPACE com::tvd12::ezyfoxserver::client
 
+#define EZY_USING_NAMESPACE using namespace com::tvd12::ezyfoxserver::client
+
 #define EZY_NAMESPACE_START \
 namespace com {\
 namespace tvd12 {\
