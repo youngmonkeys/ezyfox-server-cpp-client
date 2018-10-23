@@ -36,12 +36,11 @@ entity::EzyApp* EzyAppManager::getAppByName(std::string appName) {
 }
 
 std::vector<entity::EzyApp*> EzyAppManager::getApps() {
-    auto answer = util::EzyMaps::getValues<int, entity::EzyApp>(mAppByIds);
-    return answer;
+    return mAppList;
 }
 
 void EzyAppManager::clear() {
-    EZY_SAFE_DELETE_VECTOR(mAppList, entity::EzyApp)
+    EZY_SAFE_DELETE_VECTOR(mAppList)
     mAppList.clear();
     mAppByIds.clear();
     mAppByNames.clear();

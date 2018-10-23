@@ -22,7 +22,7 @@ EzyClientConfig::~EzyClientConfig() {
 
 EzyReconnectConfig::EzyReconnectConfig() {
     this->mEnable = true;
-    this->mReconnectPeriod = 3000;
+    this->mReconnectPeriod = 5000;
     this->mMaxReconnectCount = 5;
 }
 

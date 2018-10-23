@@ -1,8 +1,10 @@
 #include <thread>
 #include "EzySocketClient.h"
+#include "EzyPingSchedule.h"
 #include "../event/EzyEvent.h"
 #include "../gc/EzyAutoReleasePool.h"
 #include "../manager/EzyHandlerManager.h"
+#include "../manager/EzyPingManager.h"
 #include "../handler/EzyEventHandlers.h"
 #include "../handler/EzyDataHandlers.h"
 #include "../constant/EzyDisconnectReason.h"
@@ -21,19 +23,24 @@ EzySocketClient::EzySocketClient() {
     mReleasePool = 0;
     mReconnectCount = 0;
     mReconnectConfig = 0;
+    mPingManager = 0;
     mHandlerManager = 0;
+    mStatus = SocketNotConnect;
     mSocketEventQueue = new EzySocketEventQueue();
 }
 
 EzySocketClient::~EzySocketClient() {
-    closeSocket();
+    closeClient();
     clearAdapters();
+    mPingSchedule = 0;
+    mReconnectConfig = 0;
     mLocalEventQueue.clear();
     EZY_SAFE_DELETE(mSocketEventQueue);
 }
 
-void EzySocketClient::setReconnectConfig(config::EzyReconnectConfig *reconnectConfig) {
-    mReconnectConfig = reconnectConfig;
+void EzySocketClient::setPingSchedule(EzyPingSchedule* pingSchedule) {
+    pingSchedule->setSocketEventQueue(mSocketEventQueue);
+    mPingSchedule = pingSchedule;
 }
 
 void EzySocketClient::setHandlerManager(manager::EzyHandlerManager* handlerManager) {
@@ -42,20 +49,11 @@ void EzySocketClient::setHandlerManager(manager::EzyHandlerManager* handlerManag
     mDataHandlers = handlerManager->getDataHandlers();
 }
 
-void EzySocketClient::closeSocket() {
-}
-
-void EzySocketClient::createAdapters() {
-}
-
-bool EzySocketClient::connectNow() {
-    return false;
-}
-
 void EzySocketClient::connectTo(const std::string& host, int port) {
     mHost = host;
     mPort = port;
     mReconnectCount = 0;
+    setStatus(SocketConnecting);
     connect0(0);
 }
 
@@ -64,6 +62,7 @@ bool EzySocketClient::reconnect() {
     if (mReconnectCount >= maxReconnectCount)
         return false;
     auto reconnectSleepTime = mReconnectConfig->getReconnectPeriod();
+    setStatus(SocketReconnecting);
     connect0(reconnectSleepTime);
     mReconnectCount++;
     logger::log("try reconnect to server: %d, wating time: %d", mReconnectCount, reconnectSleepTime);
@@ -84,16 +83,21 @@ void EzySocketClient::connect0(long sleepTime) {
 void EzySocketClient::connect1(long sleepTime) {
     auto currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     auto dt = currentTime - mConnectTime;
-    if (dt < sleepTime) { //delay 2000ms
-        std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime - dt));
+    auto realSleepTime = sleepTime;
+    if(sleepTime <= 0) {
+        if(dt < 2000) //delay 2000ms
+            realSleepTime = 2000 - dt;
     }
-    
+    if (realSleepTime >= 0)
+        std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime - dt));
+    setStatus(SocketConnecting);
     bool success = this->connectNow();
     mConnectTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     
     if (success) {
-        this->startAdapters();
+        this->setStatus(SocketConnected);
         this->mReconnectCount = 0;
+        this->startAdapters();
         auto evt = event::EzyConnectionSuccessEvent::create();
         this->mSocketEventQueue->addEvent(evt);
     }
@@ -104,14 +108,14 @@ void EzySocketClient::connect1(long sleepTime) {
     }
 }
 
-void EzySocketClient::startAdapters() {
+bool EzySocketClient::connectNow() {
+    return false;
 }
 
-void EzySocketClient::closeClient() {
-    stopAdapter(mSocketWriter);
-    stopAdapter(mSocketReader);
-    mSocketEventQueue->clear();
-    closeSocket();
+void EzySocketClient::createAdapters() {
+}
+
+void EzySocketClient::startAdapters() {
 }
 
 void EzySocketClient::stopAdapter(EzySocketAdapter* adapter) {
@@ -119,10 +123,58 @@ void EzySocketClient::stopAdapter(EzySocketAdapter* adapter) {
         adapter->stop();
 }
 
+void EzySocketClient::clearAdapters() {
+    std::unique_lock<std::mutex> lk(mClientMutex);
+    clearAdapter(mSocketReader);
+    clearAdapter(mSocketWriter);
+}
+
+void EzySocketClient::clearAdapter(EzySocketAdapter* adapter) {
+    EZY_SAFE_DELETE(adapter);
+}
+
+void EzySocketClient::closeClient() {
+    stopAdapter(mSocketWriter);
+    stopAdapter(mSocketReader);
+    mPingSchedule->stop();
+    mSocketEventQueue->clear();
+    closeSocket();
+}
+
+void EzySocketClient::resetSocket() {
+}
+
+void EzySocketClient::closeSocket() {
+}
+
+void EzySocketClient::setStatus(EzySocketStatus value) {
+    std::unique_lock<std::mutex> lk(mStatusMutex);
+    mStatus = value;
+}
+
+EzySocketStatus EzySocketClient::getStatus() {
+    std::unique_lock<std::mutex> lk(mStatusMutex);
+    return mStatus;
+}
+
+void EzySocketClient::onDisconnected(int reason) {
+    if(getStatus() != SocketConnected)
+        return;
+    setStatus(SocketDisconnected);
+    closeClient();
+    auto event = event::EzyDisconnectionEvent::create(reason);
+    mSocketEventQueue->addEvent(event);
+}
+
 void EzySocketClient::sendMessage(EzySocketData* message) {
-    if (mSocketWriter) {
-        mSocketWriter->pushMessage(message);
-    }
+    mSocketWriter->pushMessage(message);
+}
+
+void EzySocketClient::processEventMessages() {
+    processEvents();
+    processReceivedMessages();
+    mReleasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
+    mReleasePool->releaseAll();
 }
 
 void EzySocketClient::processEvents() {
@@ -137,6 +189,7 @@ void EzySocketClient::processEvents() {
 void EzySocketClient::processReceivedMessages() {
     auto data = mSocketReader->popMessage();
     while (data) {
+        mPingManager->setLostPingCount(0);
         processReceivedMessage(data);
         data = mSocketReader->popMessage();
     }
@@ -145,8 +198,9 @@ void EzySocketClient::processReceivedMessages() {
 void EzySocketClient::processReceivedMessage(EzySocketData* message) {
     auto array = (entity::EzyArray*)message;
     auto cmdId = array->getInt(0);
-    auto data = array->getArray(1);
+    auto data = array->getArray(1, 0);
     auto cmd = (constant::EzyCommand)cmdId;
+    printReceivedData(cmd, data);
     if(cmd == constant::Disconnect) {
         auto reasonId = data->getInt(0);
         onDisconnected((int)reasonId);
@@ -156,33 +210,24 @@ void EzySocketClient::processReceivedMessage(EzySocketData* message) {
     }
 }
 
-void EzySocketClient::onDisconnected(int reason) {
-    auto event = event::EzyDisconnectionEvent::create(reason);
-    mSocketEventQueue->addEvent(event);
-}
-
-void EzySocketClient::clearAdapters() {
-    std::unique_lock<std::mutex> lk(mClientMutex);
-    clearAdapter(mSocketReader);
-    clearAdapter(mSocketWriter);
-}
-
-void EzySocketClient::clearAdapter(EzySocketAdapter* adapter) {
-    if(adapter) {
-        adapter->stop();
-        adapter->release();
-        adapter = 0;
-    }
-}
-
-void EzySocketClient::resetSocket() {
-}
-
-void EzySocketClient::processEventMessages() {
-    processEvents();
-    processReceivedMessages();
-    mReleasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
-    mReleasePool->releaseAll();
+void EzySocketClient::printReceivedData(int cmd, entity::EzyArray* data) {
+#ifdef EZY_DEBUG
+    if(mUnloggableCommands.count(cmd) > 0)
+        return;
+    auto cmdName = constant::getCommandName(cmd);
+    std::ostringstream stream;
+    stream << "\n-------------------\n";
+    stream << "[RECV] <== \n";
+    stream << "command: ";
+    stream << cmdName;
+    stream << ", data:\n";
+    logger::console(stream.str().c_str());
+    stream.str("");
+    stream.clear();
+    if(data)
+        data->printDebug();
+    logger::console("\n-------------------\n");
+#endif
 }
 
 EZY_NAMESPACE_END_WITH

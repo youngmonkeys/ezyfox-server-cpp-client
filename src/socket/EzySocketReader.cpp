@@ -1,22 +1,25 @@
 #include "EzySocketReader.h"
+#include "EzySocketClient.h"
 #include "../logger/EzyLogger.h"
 #include "../entity/EzyJson.h"
 
 EZY_NAMESPACE_START_WITH(socket)
 
-EzySocketReader::EzySocketReader(){
+EzySocketReader::EzySocketReader() {
     mSocketPool = new EzySocketPool();
     mMessageHeader = new codec::EzyMessageHeader();
     mDecoder = new codec::EzyDataDecoder();
     mDecoder->setDelegate(this);
+    mSocketDelegate = 0;
 }
 
-EzySocketReader::~EzySocketReader(){
+EzySocketReader::~EzySocketReader() {
+    mSocketDelegate = 0;
     EZY_SAFE_DELETE(mDecoder)
     EZY_SAFE_DELETE(mMessageHeader);
 }
 
-void EzySocketReader::run(){
+void EzySocketReader::run() {
 #ifdef USE_MESSAGE_HEADER
     mDecodeState = codec::prepareMessage;
     mDataSize = 0;
@@ -25,8 +28,8 @@ void EzySocketReader::run(){
     EzySocketAdapter::run();
 }
 
-void EzySocketReader::acceptData(const char* data, size_t size){
-    if (size <= 0){
+void EzySocketReader::acceptData(const char* data, size_t size) {
+    if (size <= 0) {
         return;
     }
 #ifdef USE_MESSAGE_HEADER
@@ -74,8 +77,8 @@ void EzySocketReader::onUpdateDataHeader() {
 void EzySocketReader::onUpdateDataSize() {
     bool bigSize = mMessageHeader->isBigSize();
     int dataSizeLength = bigSize ? 4 : 2;
-    if (mByteBuffer.size() >= dataSizeLength){
-        if(bigSize){
+    if (mByteBuffer.size() >= dataSizeLength) {
+        if(bigSize) {
             uint64_t dataSize;
             memcpy(&dataSize, mByteBuffer.data(), sizeof(dataSize));
             mDataSize = ntohl(dataSize);
@@ -101,21 +104,14 @@ void EzySocketReader::onUpdateData() {
 }
 #endif
 
-void EzySocketReader::onReceivedMessage(entity::EzyValue* value){
-    if (!value){
+void EzySocketReader::onReceivedMessage(entity::EzyValue* value) {
+    if (!value) {
 #ifdef EZY_DEBUG
         logger::log("error parse data");
 #endif
         setActive(false);
         return;
     }
-    
-#ifdef EZY_DEBUG
-    logger::console("\n-------------------\n");
-    logger::console("[RECV] ==>\n");
-    value->printDebug();
-    logger::console("\n-------------------\n");
-#endif
     pushMessage(value);
 }
 

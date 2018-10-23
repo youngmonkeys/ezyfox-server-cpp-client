@@ -12,6 +12,7 @@ EzyPluginManager::~EzyPluginManager() {
 }
 
 void EzyPluginManager::addPlugin(entity::EzyPlugin* plugin) {
+    mPluginList.push_back(plugin);
     mPluginByIds[plugin->getId()] = plugin;
     mPluginByNames[plugin->getName()] = plugin;
 }
@@ -25,12 +26,11 @@ entity::EzyPlugin* EzyPluginManager::getPluginByName(std::string pluginName) {
 }
 
 std::vector<entity::EzyPlugin*> EzyPluginManager::getPlugins() {
-    return util::EzyMaps::getValues<int, entity::EzyPlugin>(mPluginByIds);
+    return mPluginList;
 }
 
 void EzyPluginManager::clear() {
-    std::vector<entity::EzyPlugin*> Plugins = getPlugins();
-    EZY_SAFE_DELETE_VECTOR(Plugins, entity::EzyPlugin)
+    EZY_SAFE_DELETE_VECTOR(mPluginList)
     mPluginByIds.clear();
     mPluginByNames.clear();
 }

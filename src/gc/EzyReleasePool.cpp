@@ -4,7 +4,6 @@
 EZY_NAMESPACE_START_WITH(gc)
     
 EzyReleasePool::EzyReleasePool() {
-    
 }
     
 EzyReleasePool::~EzyReleasePool() {
@@ -16,7 +15,7 @@ void EzyReleasePool::addObject(base::EzyRef* object) {
     object->retain();
 }
     
-void EzyReleasePool::releaseAll(){
+void EzyReleasePool::releaseAll() {
     for (int i = 0; i < mObjects.size(); i++) {
         mObjects[i]->release();
     }

@@ -35,7 +35,7 @@ entity::EzyArray* EzyRequest::serialize() {
 //=======================================================
 
 entity::EzyArray* EzyHandshakeRequest::serialize() {
-    auto array = new entity::EzyArray();
+    auto array = entity::EzyArray::create();
     array->addString(mClientId);
     array->addString(mClientKey);
     array->addString(mClientType);
@@ -55,7 +55,7 @@ EzyLoginRequest::EzyLoginRequest() {
 }
 
 entity::EzyArray* EzyLoginRequest::serialize() {
-    auto array = new entity::EzyArray();
+    auto array = entity::EzyArray::create();
     array->addString(mZoneName);
     array->addString(mUsername);
     array->addString(mPassword);
@@ -68,7 +68,7 @@ EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(Login)
 //=======================================================
 
 entity::EzyArray* EzyAppAccessRequest::serialize() {
-    auto array = new entity::EzyArray();
+    auto array = entity::EzyArray::create();
     array->addString(mAppName);
     array->addItem(mData);
     return array;
@@ -83,7 +83,7 @@ EzyAppRequestRequest::EzyAppRequestRequest() {
 }
 
 entity::EzyArray* EzyAppRequestRequest::serialize() {
-    auto array = new entity::EzyArray();
+    auto array = entity::EzyArray::create();
     array->addInt(mAppId);
     array->addItem(mData);
     return array;
@@ -98,7 +98,7 @@ EzyPluginRequestByIdRequest::EzyPluginRequestByIdRequest() {
 }
 
 entity::EzyArray* EzyPluginRequestByIdRequest::serialize() {
-    auto array = new entity::EzyArray();
+    auto array = entity::EzyArray::create();
     array->addInt(mPluginId);
     array->addItem(mData);
     return array;
@@ -113,7 +113,7 @@ EzyPluginRequestByNameRequest::EzyPluginRequestByNameRequest() {
 }
 
 entity::EzyArray* EzyPluginRequestByNameRequest::serialize() {
-    auto array = new entity::EzyArray();
+    auto array = entity::EzyArray::create();
     array->addString(mPluginName);
     array->addItem(mData);
     return array;

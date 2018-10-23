@@ -13,6 +13,7 @@ EZY_NAMESPACE_START_WITH(manager)
 
 class EzyPluginManager {
 protected:
+    std::vector<entity::EzyPlugin*> mPluginList;
     std::map<int, entity::EzyPlugin*> mPluginByIds;
     std::map<std::string, entity::EzyPlugin*> mPluginByNames;
 public:

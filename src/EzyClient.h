@@ -1,7 +1,9 @@
 #pragma once
 
 #include <map>
+#include <set>
 #include <mutex>
+#include <string>
 #include "constant/EzyCommand.h"
 #include "socket/EzySender.h"
 #include "constant/EzyConnectionStatus.h"
@@ -48,19 +50,21 @@ protected:
     std::mutex mStatusMutex;
     constant::EzyConnectionStatus mStatus;
     socket::EzySocketClient* mSocketClient;
+    std::set<int> mUnloggableCommands;
     std::map<int, entity::EzyApp*> mAppsById;
     request::EzyRequestSerializer* mRequestSerializer;
 protected:
     EZY_SYNTHESIZE(entity::EzyUser*, Me)
     EZY_SYNTHESIZE(entity::EzyZone*, Zone)
+    EZY_SYNTHESIZE_READONLY(std::string, Name);
     EZY_SYNTHESIZE_READONLY(config::EzyClientConfig*, Config);
     EZY_SYNTHESIZE_READONLY(manager::EzyPingManager*, PingManager);
     EZY_SYNTHESIZE_READONLY(socket::EzyPingSchedule*, PingSchedule);
     EZY_SYNTHESIZE_READONLY(manager::EzyHandlerManager*, HandlerManager);
-    
 protected:
+    void preconnect();
     socket::EzySocketClient* newSocketClient();
-    
+    void printSentData(int cmd, entity::EzyArray* data);
 public:
     EzyClient(config::EzyClientConfig* config);
     ~EzyClient();

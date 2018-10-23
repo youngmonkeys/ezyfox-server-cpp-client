@@ -5,11 +5,15 @@
 
 EZY_NAMESPACE_START_WITH(socket)
 
+class EzySocketDelegate;
+
 class EzySocketReader : public EzySocketAdapter, public codec::EzyDataDecoderDelegate {
 protected:
+    EZY_SYNTHESIZE_WRITEONLY(EzySocketDelegate*, SocketDelegate);
+protected:
 #ifdef USE_MESSAGE_HEADER
-    std::vector<char> mByteBuffer;
     int mDataSize;
+    std::vector<char> mByteBuffer;
     codec::EzyDecodeState mDecodeState;
     codec::EzyMessageHeader* mMessageHeader;
     

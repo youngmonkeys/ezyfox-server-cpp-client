@@ -35,7 +35,7 @@ EzyPrimitive::~EzyPrimitive() {
 }
 
 void EzyPrimitive::writeToBuffer(codec::EzyDataEncoder* encoder) {
-	switch (mValueType){
+	switch (mValueType) {
 		case EzyValueType::TypeBool: {
 			encoder->writeBool(data.boolValue);
 			break;

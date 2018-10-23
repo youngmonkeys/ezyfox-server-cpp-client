@@ -4,6 +4,7 @@
 #include "../logger/EzyLogger.h"
 #include "../gc/EzyAutoReleasePool.h"
 #include "../constant/EzyConnectionFailedReason.h"
+#include "../constant/EzyDisconnectReason.h"
 
 EZY_NAMESPACE_START_WITH(socket)
 
@@ -13,7 +14,7 @@ EzyTcpSocketWriter::EzyTcpSocketWriter() {
 EzyTcpSocketWriter::~EzyTcpSocketWriter() {
 }
 
-void EzyTcpSocketWriter::update(){
+void EzyTcpSocketWriter::update() {
 	size_t rs;
 	size_t sentData;
     auto releasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
@@ -31,15 +32,14 @@ void EzyTcpSocketWriter::update(){
 
 			while (true) {
 				rs = send(mSocket, sendBuffer.data() + sentData, sendBuffer.size() - sentData, 0);
-				//rs = write(mSocket, senderBuffer.data(), senderBuffer.size());
-				if (rs > 0){
+				if (rs > 0) {
 					sentData += rs;
-					if (sentData < sendBuffer.size()){
+					if (sentData < sendBuffer.size()) {
 						continue;
 					}
 					break;
 				}
-				else if (rs == 0){
+				else if (rs == 0) {
 #ifdef EZY_DEBUG
                     logger::log("server shutdown[2]");
 #endif
@@ -62,7 +62,7 @@ void EzyTcpSocketWriter::update(){
 	}
 }
 
-/****/
+/*****************************************/
 EzyTcpSocketReader::EzyTcpSocketReader() {
 }
 
@@ -74,31 +74,28 @@ void EzyTcpSocketReader::update() {
 	size_t rs;
 	char dataBuffer[BUFFER_SIZE];
     auto releasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
-	while (true){
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+	while (true) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(3));
 		releasePool->releaseAll();
 
-		if (!isActive()){
+		if (!isActive()) {
 			break;
 		}
 		rs = recv(mSocket, dataBuffer, BUFFER_SIZE, 0);
-		if (rs > 0){
-#ifdef EZY_DEBUG
-			logger::log("recvdata: %d",rs);
-#endif
+		if (rs > 0) {
 			acceptData(dataBuffer, rs);
 		}
-		else if (rs == 0){
+		else if (rs == 0) {
 #ifdef EZY_DEBUG
 			logger::log("server shutdown[1]");
 #endif
 			setActive(false);
+            mSocketDelegate->onDisconnected(constant::UnknownDisconnection);
 			break;
 		}
-		else{
-			//error
+		else {
 #ifdef EZY_DEBUG
-			logger::log("recv header error");
+			logger::log("received header error");
 #endif
 			setActive(false);
 			break;
@@ -106,9 +103,8 @@ void EzyTcpSocketReader::update() {
 	}
 }
 
-/**/
+/*****************************************/
 EzyTcpSocketClient::EzyTcpSocketClient() {
-	// TODO Auto-generated constructor stub
 	mSocket = SYS_SOCKET_INVALID;
 
 #ifdef USE_WINSOCK_2
@@ -125,9 +121,9 @@ EzyTcpSocketClient::~EzyTcpSocketClient() {
 #endif
 }
 
-void EzyTcpSocketClient::closeSocket(){
+void EzyTcpSocketClient::closeSocket() {
 	std::unique_lock<std::mutex> lk(mSocketMutex);
-	if (mSocket != SYS_SOCKET_INVALID){
+	if (mSocket != SYS_SOCKET_INVALID) {
 #ifdef USE_WINSOCK_2
 		shutdown(mSocket, SD_BOTH);
 		closesocket(mSocket);
@@ -147,10 +143,11 @@ void EzyTcpSocketClient::resetSocket() {
 void EzyTcpSocketClient::createAdapters() {
 	std::unique_lock<std::mutex> lk(mClientMutex);
 	mSocketReader = new EzyTcpSocketReader();
+    mSocketReader->setSocketDelegate(this);
 	mSocketWriter = new EzyTcpSocketWriter();
 }
 
-void EzyTcpSocketClient::startAdapters(){
+void EzyTcpSocketClient::startAdapters() {
 	std::unique_lock<std::mutex> lk(mClientMutex);
 	((EzyTcpSocketWriter*)mSocketWriter)->mSocket = mSocket;
 	mSocketWriter->start();

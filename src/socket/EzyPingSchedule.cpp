@@ -1,8 +1,11 @@
 #include <chrono>
 #include "EzySender.h"
 #include "EzyPingSchedule.h"
-#include "../manager/EzyPingManager.h"
+#include "EzySocketCore.h"
 #include "../EzyClient.h"
+#include "../manager/EzyPingManager.h"
+#include "../event/EzyEvent.h"
+#include "../constant/EzyDisconnectReason.h"
 
 EZY_NAMESPACE_START_WITH(socket)
 
@@ -10,6 +13,7 @@ EzyPingSchedule::EzyPingSchedule(EzyClient* client) {
     this->mActive = false;
     this->mThread = 0;
     this->mClient = client;
+    this->mSocketEventQueue = 0;
     this->mPingManager = client->getPingManager();
 }
 
@@ -17,6 +21,7 @@ EzyPingSchedule::~EzyPingSchedule() {
     stop();
     this->mClient = 0;
     this->mPingManager = 0;
+    this->mSocketEventQueue = 0;
 }
 
 void EzyPingSchedule::start() {
@@ -34,9 +39,23 @@ void EzyPingSchedule::stop() {
 void EzyPingSchedule::loop() {
     mActive = true;
     while (mActive) {
-        sendPingRequest();
-        auto period = mPingManager->getPingPeriod();
-        std::this_thread::sleep_for(std::chrono::milliseconds(period));
+        auto maxLostPingCount = mPingManager->getMaxLostPingCount();
+        auto lostPingCount = mPingManager->increaseLostPingCount();
+        if(lostPingCount <= maxLostPingCount) {
+            sendPingRequest();
+            auto period = mPingManager->getPingPeriod();
+            std::this_thread::sleep_for(std::chrono::milliseconds(period));
+        }
+        else {
+            mActive = false;
+            auto event = event::EzyDisconnectionEvent::create(constant::ServerNotResponding);
+            mSocketEventQueue->addEvent(event);
+            break;
+        }
+        if(lostPingCount > 1) {
+            auto event = event::EzyLostPingEvent::create(lostPingCount);
+            mSocketEventQueue->addEvent(event);
+        }
     }
 }
 

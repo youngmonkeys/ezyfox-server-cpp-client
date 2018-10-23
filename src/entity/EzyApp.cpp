@@ -21,21 +21,21 @@ EzyApp::~EzyApp() {
 }
 
 void EzyApp::send(entity::EzyValue *data) {
-    auto request = new request::EzyAppRequestRequest();
+    auto request = request::EzyAppRequestRequest::create();
     request->setAppId(mId);
     request->setData(data);
     mClient->send(request);
 }
 
 void EzyApp::send(int cmd, entity::EzyValue *data) {
-    auto array = new entity::EzyArray();
+    auto array = entity::EzyArray::create();
     array->addInt(cmd);
     array->addItem(data);
     send(array);
 }
 
 void EzyApp::send(std::string cmd, entity::EzyValue *data) {
-    auto array = new entity::EzyArray();
+    auto array = entity::EzyArray::create();
     array->addString(cmd);
     array->addItem(data);
     send(array);

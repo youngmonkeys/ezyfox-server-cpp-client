@@ -10,7 +10,7 @@
 
 EZY_NAMESPACE_START_WITH(socket)
 
-class EzySocketAdapter : public base::EzyRef {
+class EzySocketAdapter {
 protected:
     bool mActive;
 	std::mutex mMutex;
