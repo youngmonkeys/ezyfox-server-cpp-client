@@ -2,6 +2,7 @@
 
 #include <string>
 #include <map>
+#include <vector>
 #include "EzyMacro.h"
 
 EZY_NAMESPACE_START_WITH_ONLY(config)
@@ -24,6 +25,7 @@ public:
     EzyClient* newDefaultClient(config::EzyClientConfig* config);
     EzyClient* getClient(std::string name);
     EzyClient* getDefaultClient();
+    std::vector<EzyClient*> getClients();
 };
 EZY_NAMESPACE_END
 

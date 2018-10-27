@@ -16,6 +16,7 @@ EZY_NAMESPACE_START_WITH_ONLY(entity)
 class EzyZone;
 class EzyUser;
 class EzyApp;
+class EzyArray;
 EZY_NAMESPACE_END_WITH
 
 EZY_NAMESPACE_START_WITH_ONLY(request)
@@ -72,6 +73,7 @@ public:
     bool reconnect();
     void disconnect();
     void send(request::EzyRequest* request);
+    void send(constant::EzyCommand cmd, entity::EzyArray* data);
     command::EzySetup* setup();
     void addApp(entity::EzyApp* app);
     entity::EzyApp* getAppById(int appId);

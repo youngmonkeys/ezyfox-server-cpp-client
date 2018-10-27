@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <vector>
 #include "EzyValue.h"
 #include "../codec/EzyDataEncoder.h"
 
@@ -21,6 +22,7 @@ public:
 	bool isExistKey(const std::string& key);
 	int size();
 	void clear();
+    std::vector<std::string> getKeys();
 
 	void addItem(const std::string& key, EzyValue* item);
 	EzyValue* getItem(const std::string& key);

@@ -35,6 +35,8 @@ class EzyValue : public base::EzyRef {
 	friend EzyArray;
 	friend EzyString;
 protected:
+    int mValueType;
+protected:
 #ifdef EZY_DEBUG
 	virtual void refreshLogBuffer(std::ostringstream& stream);
 	virtual void printToOutStream(std::ostringstream& stream, int padding);
@@ -42,15 +44,13 @@ protected:
 #endif
 	virtual void toValue(rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator);
 public:
-	int mValueType;
-public:
 	EzyValue();
 	virtual ~EzyValue();
     virtual void writeToBuffer(codec::EzyDataEncoder* encoder);
 #ifdef EZY_DEBUG
 	virtual void printDebug();
 #endif
-
+    int getType();
 	std::string toJson();
 };
 

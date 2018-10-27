@@ -98,6 +98,12 @@ int EzyObject::size() {
 	return (int)mData.size();
 }
 
+std::vector<std::string> EzyObject::getKeys() {
+    auto keys = std::vector<std::string>();
+    EZY_FOREACH_MAP(mData)
+        keys.push_back(it->first);
+    return keys;
+}
 
 bool EzyObject::getBool(const std::string& key, bool defaultValue) {
 	auto item = this->getItem(key);

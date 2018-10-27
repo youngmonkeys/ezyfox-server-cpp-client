@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include "../EzyMacro.h"
 
 EZY_NAMESPACE_START_WITH_ONLY(constant)
@@ -13,5 +14,7 @@ enum EzyConnectionStatus
     Failure = 4,
     Reconnecting = 5
 };
+
+std::string getConnectionStatusName(int command);
 
 EZY_NAMESPACE_END_WITH

@@ -4,6 +4,7 @@
 #include "entity/EzyZone.h"
 #include "entity/EzyUser.h"
 #include "entity/EzyApp.h"
+#include "entity/EzyArray.h"
 #include "command/EzySetup.h"
 #include "logger/EzyLogger.h"
 #include "socket/EzyTcpSocketClient.h"
@@ -20,6 +21,7 @@ EzyClient::EzyClient(config::EzyClientConfig* config) {
     mMe = 0;
     mConfig = config;
     mName = config->getClientName();
+    mSocketClient = 0;
     mPingManager = new manager::EzyPingManager();
     mPingSchedule = new socket::EzyPingSchedule(this);
     mHandlerManager = new manager::EzyHandlerManager(this);
@@ -85,6 +87,10 @@ void EzyClient::processEvents() {
 void EzyClient::send(request::EzyRequest *request) {
     auto cmd = request->getCommand();
     auto data = request->serialize();
+    send(cmd, data);
+}
+
+void EzyClient::send(constant::EzyCommand cmd, entity::EzyArray* data) {
     auto array = mRequestSerializer->serialize(cmd, data);
     if(mSocketClient) {
         mSocketClient->sendMessage(array);

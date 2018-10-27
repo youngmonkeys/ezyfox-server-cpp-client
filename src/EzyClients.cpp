@@ -36,4 +36,11 @@ EzyClient* EzyClients::getDefaultClient() {
     return client;
 }
 
+std::vector<EzyClient*> EzyClients::getClients() {
+    auto clients = std::vector<EzyClient*>();
+    EZY_FOREACH_MAP(mClients)
+        clients.push_back(it->second);
+    return clients;
+}
+
 EZY_NAMESPACE_END

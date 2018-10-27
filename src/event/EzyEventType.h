@@ -3,6 +3,8 @@
 #include <string>
 #include "../EzyMacro.h"
 
+#define NUMBER_OF_EVENTS 6
+
 EZY_NAMESPACE_START_WITH_ONLY(event)
     
 enum EzyEventType {
