@@ -82,12 +82,22 @@ EzySocketData* EzySocketPool::pop() {
     if (mDataQueue && !mDataQueue->empty()) {
         auto data = mDataQueue->front();
         mDataQueue->pop();
-        
-        //data->retain();
         data->autorelease();
         return data;
     }
     return 0;
+}
+
+void EzySocketPool::popAll(std::vector<EzySocketData*>& buffer) {
+    std::unique_lock<std::mutex> lk(mPoolMutex);
+    if(mDataQueue) {
+        while (!mDataQueue->empty()) {
+            auto data = mDataQueue->front();
+            mDataQueue->pop();
+            data->autorelease();
+            buffer.push_back(data);
+        }
+    }
 }
 
 EZY_NAMESPACE_END_WITH

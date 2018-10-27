@@ -59,6 +59,7 @@ protected:
     handler::EzyDataHandlers* mDataHandlers;
     manager::EzyHandlerManager* mHandlerManager;
     std::vector<event::EzyEvent*> mLocalEventQueue;
+    std::vector<EzySocketData*> mLocalMessageQueue;
 protected:
     EZY_SYNTHESIZE_WRITEONLY(std::set<int>, UnloggableCommands);
     EZY_SYNTHESIZE_WRITEONLY(manager::EzyPingManager*, PingManager);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <queue>
+#include <vector>
 #include "EzySocketCore.h"
 
 EZY_NAMESPACE_START_WITH(socket)
@@ -16,6 +17,7 @@ public:
     
     virtual EzySocketData* take();
     virtual EzySocketData* pop();
+    virtual void popAll(std::vector<EzySocketData*>& buffer);
     virtual void push(EzySocketData* data);
     virtual void clear();
 };

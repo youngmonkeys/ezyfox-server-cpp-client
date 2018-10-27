@@ -35,6 +35,7 @@ EzySocketClient::~EzySocketClient() {
     mPingSchedule = 0;
     mReconnectConfig = 0;
     mLocalEventQueue.clear();
+    mLocalMessageQueue.clear();
     EZY_SAFE_DELETE(mSocketEventQueue);
 }
 
@@ -187,11 +188,13 @@ void EzySocketClient::processEvents() {
 }
 
 void EzySocketClient::processReceivedMessages() {
-    auto data = mSocketReader->popMessage();
-    while (data) {
+    if(mSocketReader) {
         mPingManager->setLostPingCount(0);
-        processReceivedMessage(data);
-        data = mSocketReader->popMessage();
+        mSocketReader->popMessages(mLocalMessageQueue);
+        for(int i = 0 ; i < mLocalMessageQueue.size() ; i++) {
+            processReceivedMessage(mLocalMessageQueue[i]);
+        }
+        mLocalMessageQueue.clear();
     }
 }
 

@@ -2,6 +2,7 @@
 
 #include <queue>
 #include <ctime>
+#include <vector>
 #include <condition_variable>
 #include "EzySocketCore.h"
 #include "EzySocketPool.h"
@@ -25,8 +26,9 @@ public:
 	virtual void stop();
     virtual bool isActive();
     virtual void setActive(bool active);
-    virtual EzySocketData* popMessage();
 	virtual void pushMessage(EzySocketData* data);
+    virtual EzySocketData* popMessage();
+    virtual void popMessages(std::vector<EzySocketData*>& buffer);
 };
 
 EZY_NAMESPACE_END_WITH

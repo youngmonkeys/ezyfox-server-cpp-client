@@ -58,4 +58,8 @@ EzySocketData* EzySocketAdapter::popMessage() {
 	return mSocketPool->pop();
 }
 
+void EzySocketAdapter::popMessages(std::vector<EzySocketData*>& buffer) {
+    mSocketPool->popAll(buffer);
+}
+
 EZY_NAMESPACE_END_WITH
