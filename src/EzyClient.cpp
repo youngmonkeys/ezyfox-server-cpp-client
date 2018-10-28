@@ -47,7 +47,9 @@ EzyClient::~EzyClient() {
 
 void EzyClient::connect(std::string host, int port) {
     preconnect();
+    auto oldSocketClient = mSocketClient;
     mSocketClient = newSocketClient();
+    EZY_SAFE_DELETE(oldSocketClient);
     mSocketClient->connectTo(host, port);
 }
 

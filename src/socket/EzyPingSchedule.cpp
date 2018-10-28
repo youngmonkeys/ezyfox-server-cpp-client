@@ -61,7 +61,7 @@ void EzyPingSchedule::loop() {
 
 void EzyPingSchedule::sendPingRequest() {
     auto request = request::EzyPingRequest::create();
-//    mClient->send(request);
+    mClient->send(request);
 }
 
 EZY_NAMESPACE_END_WITH

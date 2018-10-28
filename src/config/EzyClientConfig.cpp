@@ -8,7 +8,14 @@ EzyClientConfig* EzyClientConfig::create() {
 }
 
 EzyClientConfig::EzyClientConfig() {
+    this->mClientName = "";
     this->mReconnect = new EzyReconnectConfig();
+}
+
+std::string EzyClientConfig::getClientName() {
+    if(mClientName.empty())
+        return mZoneName;
+    return mClientName;
 }
 
 void EzyClientConfig::setReconnect(EzyReconnectConfig* reconnect) {

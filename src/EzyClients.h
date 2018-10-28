@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <mutex>
 #include "EzyMacro.h"
 
 EZY_NAMESPACE_START_WITH_ONLY(config)
@@ -15,6 +16,7 @@ class EzyClient;
 
 class EzyClients {
 private:
+    std::mutex mMutex;
     std::string mDefaultClientName;
     std::map<std::string, EzyClient*> mClients;
 public:

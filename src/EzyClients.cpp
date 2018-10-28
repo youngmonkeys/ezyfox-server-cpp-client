@@ -5,6 +5,7 @@
 EZY_NAMESPACE_START
 
 EzyClients::EzyClients() {
+    mClients.clear();
     mDefaultClientName = "";
 }
 
@@ -23,6 +24,7 @@ EzyClient* EzyClients::newDefaultClient(config::EzyClientConfig* config) {
 }
 
 void EzyClients::addClient(EzyClient* client) {
+    std::unique_lock<std::mutex> lock(mMutex);
     mClients[client->getName()] = client;
 }
 
@@ -38,8 +40,12 @@ EzyClient* EzyClients::getDefaultClient() {
 
 void EzyClients::getClients(std::vector<EzyClient*>& buffer) {
     buffer.clear();
-    EZY_FOREACH_MAP(mClients)
-        buffer.push_back(it->second);
+    std::unique_lock<std::mutex> lock(mMutex);
+    EZY_FOREACH_MAP(mClients) {
+        auto client = it->second;
+        if(client)
+            buffer.push_back(it->second);
+    }
 }
 
 EZY_NAMESPACE_END

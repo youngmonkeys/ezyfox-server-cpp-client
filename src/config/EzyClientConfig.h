@@ -8,14 +8,15 @@ EZY_NAMESPACE_START_WITH_ONLY(config)
 class EzyReconnectConfig;
 
 class EzyClientConfig {
-public:
+protected:
     EZY_SYNTHESIZE(std::string, ZoneName);
-    EZY_SYNTHESIZE(std::string, ClientName);
+    EZY_SYNTHESIZE_WRITEONLY(std::string, ClientName);
     EZY_SYNTHESIZE_READONLY(EzyReconnectConfig*, Reconnect);
 public:
     static EzyClientConfig* create();
     EzyClientConfig();
     ~EzyClientConfig();
+    std::string getClientName();
     void setReconnect(EzyReconnectConfig* reconnect);
 };
 
