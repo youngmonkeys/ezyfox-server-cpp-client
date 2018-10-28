@@ -71,7 +71,7 @@ EzyTcpSocketReader::~EzyTcpSocketReader() {
 
 #define BUFFER_SIZE 102400
 void EzyTcpSocketReader::update() {
-	size_t rs;
+	size_t rs = 0;
 	char dataBuffer[BUFFER_SIZE];
     auto releasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
 	while (true) {
@@ -90,7 +90,6 @@ void EzyTcpSocketReader::update() {
 			logger::log("server shutdown[1]");
 #endif
 			setActive(false);
-            mSocketDelegate->onDisconnected(constant::UnknownDisconnection);
 			break;
 		}
 		else {
@@ -101,6 +100,8 @@ void EzyTcpSocketReader::update() {
 			break;
 		}
 	}
+    if(rs <= 0)
+        mSocketDelegate->onDisconnected(constant::UnknownDisconnection);
 }
 
 /*****************************************/
