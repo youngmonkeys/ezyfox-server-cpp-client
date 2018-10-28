@@ -21,7 +21,7 @@ protected:
     void handleLoginSuccess(entity::EzyValue* responseData) {
         auto request = request::EzyAppAccessRequest::create();
         request->setAppName("freechat");
-        request->setData(entity::EzyArray::create());
+        request->setData(new entity::EzyArray());
         mClient->send(request);
     }
 };
@@ -29,7 +29,7 @@ protected:
 class ExAppAccessHandler : public handler::EzyAccessAppHandler {
 protected:
     void postHandle(entity::EzyApp* app, entity::EzyArray* data) {
-        auto obj = entity::EzyObject::create();
+        auto obj = new entity::EzyObject();
         obj->setInt("skip", 0);
         obj->setInt("limit", 100);
         app->send("5", obj);

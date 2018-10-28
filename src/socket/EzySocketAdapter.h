@@ -3,7 +3,6 @@
 #include <queue>
 #include <ctime>
 #include <vector>
-#include <condition_variable>
 #include "EzySocketCore.h"
 #include "EzySocketPool.h"
 #include "../base/EzyRef.h"

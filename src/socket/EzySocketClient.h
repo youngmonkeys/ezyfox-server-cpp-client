@@ -26,14 +26,6 @@ EZY_NAMESPACE_START_WITH(socket)
 
 class EzyPingSchedule;
 
-enum EzySocketStatus {
-    SocketNotConnect = 1,
-    SocketConnecting,
-    SocketConnected,
-    SocketDisconnected,
-    SocketReconnecting
-};
-
 class EzySocketDelegate {
 public:
     virtual void onDisconnected(int reason) = 0;

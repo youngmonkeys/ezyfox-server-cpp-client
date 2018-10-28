@@ -56,7 +56,6 @@ void EzyArray::toValue(rapidjson::Value& value, rapidjson::Document::AllocatorTy
 
 void EzyArray::addItem(EzyValue* item) {
 	mData.push_back(item);
-	item->retain();
 }
 
 EzyValue* EzyArray::getItem(int index) {
@@ -86,42 +85,36 @@ void EzyArray::addBool(bool value) {
 	auto item = new EzyPrimitive();
 	item->setBool(value);
 	this->addItem(item);
-	item->release();
 }
 
 void EzyArray::addFloat(float value) {
 	auto item = new EzyPrimitive();
 	item->setFloat(value);
 	this->addItem(item);
-	item->release();
 }
 
 void EzyArray::addDouble(double value) {
 	auto item = new EzyPrimitive();
 	item->setDouble(value);
 	this->addItem(item);
-	item->release();
 }
 
 void EzyArray::addInt(int64_t value) {
 	auto item = new EzyPrimitive();
 	item->setInt(value);
 	this->addItem(item);
-	item->release();
 }
 
 void EzyArray::addUInt(uint64_t value) {
 	auto item = new EzyPrimitive();
 	item->setUInt(value);
 	this->addItem(item);
-	item->release();
 }
 
 void EzyArray::addString(const std::string& value) {
 	auto item = new EzyString();
 	item->setString(value);
 	this->addItem(item);
-	item->release();
 }
 
 
@@ -132,7 +125,6 @@ EzyObject* EzyArray::addObject(EzyObject* value) {
 	else{
 		value = new EzyObject();
 		this->addItem(value);
-		value->release();
 	}
 	return value;
 }
@@ -144,7 +136,6 @@ EzyArray* EzyArray::addArray(EzyArray* value) {
 	else{
 		value = new EzyArray();
 		this->addItem(value);
-		value->release();
 	}
 	return value;
 }

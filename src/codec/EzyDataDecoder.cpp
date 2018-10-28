@@ -13,15 +13,11 @@ EzyArrayBuffer::EzyArrayBuffer(int type, int size) {
 }
 
 EzyArrayBuffer::~EzyArrayBuffer() {
-	for (int i = 0; i < mArray.size(); i++) {
-		mArray[i]->release();
-	}
 	mArray.clear();
 }
     
 void EzyArrayBuffer::pushValue(entity::EzyValue* value) {
     mArray.push_back(value);
-    value->retain();
 }
 
 bool EzyArrayBuffer::validate() {
@@ -37,7 +33,6 @@ entity::EzyValue* EzyArrayBuffer::toValue() {
         for (int i = 0; i < mArray.size(); i++) {
             newValue->addItem(mArray[i]);
         }
-        newValue->autorelease();
         return newValue;
     }
     else if(mType == entity::EzyValueType::TypeDict) {
@@ -46,8 +41,8 @@ entity::EzyValue* EzyArrayBuffer::toValue() {
             auto key = mArray[i];
             auto value = mArray[i + 1];
             newValue->addItem(((entity::EzyString*)key)->getString(), value);
+            key->release();
         }
-        newValue->autorelease();
         return newValue;
     }
     return 0;
@@ -448,10 +443,8 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize) {
 
 void EzyDataDecoder::onReadValue(entity::EzyValue* object) {
 	if (mStack.empty()) {
-		//call obj
-		if (mDelegate) {
+		if (mDelegate)
 			mDelegate->onReceivedMessage(object);
-		}
 	}
 	else{
 		auto item = mStack.top();
@@ -459,7 +452,7 @@ void EzyDataDecoder::onReadValue(entity::EzyValue* object) {
         if(item->validate()) {
             mStack.pop();
             auto value = item->toValue();
-            delete item;
+            EZY_SAFE_DELETE(item);
             this->onReadValue(value);
         }
 	}
@@ -468,63 +461,54 @@ void EzyDataDecoder::onReadValue(entity::EzyValue* object) {
 void EzyDataDecoder::onReadNil() {
     auto value = new entity::EzyValue();
 	this->onReadValue(value);
-    value->release();
 }
 
 void EzyDataDecoder::onReadBool(bool b) {
 	auto value = new entity::EzyPrimitive();
 	value->setBool(b);
 	this->onReadValue(value);
-    value->release();
 }
 
 void EzyDataDecoder::onReadInt(int64_t i64) {
 	auto value = new entity::EzyPrimitive();
 	value->setInt(i64);
 	this->onReadValue(value);
-    value->release();
 }
 
 void EzyDataDecoder::onReadUnsignedInt(uint64_t i64) {
 	auto value = new entity::EzyPrimitive();
 	value->setUInt(i64);
 	this->onReadValue(value);
-    value->release();
 }
 
 void EzyDataDecoder::onReadFloat(float f) {
 	auto value = new entity::EzyPrimitive();
 	value->setFloat(f);
 	this->onReadValue(value);
-    value->release();
 }
 
 void EzyDataDecoder::onReadDouble(double d) {
     auto value = new entity::EzyPrimitive();
 	value->setDouble(d);
 	this->onReadValue(value);
-    value->release();
 }
 
 void EzyDataDecoder::onReadString(const char* str, uint32_t size) {
     auto value = new entity::EzyString();
 	value->setData(str, size);
 	this->onReadValue(value);
-    value->release();
 }
 
 void EzyDataDecoder::onReadBin(const char* str, uint32_t size) {
 	auto value = new entity::EzyString();
 	value->setData(str, size);
 	this->onReadValue(value);
-    value->release();
 }
 
 void EzyDataDecoder::onReadMap(uint32_t size) {
 	if (size == 0) {
 		entity::EzyValue* value = new entity::EzyObject();
 		this->onReadValue(value);
-        value->release();
 	}
 	else{
         EzyArrayBuffer* arr = new EzyArrayBuffer(entity::EzyValueType::TypeDict, size * 2);
@@ -536,7 +520,6 @@ void EzyDataDecoder::onReadArray(uint32_t size) {
 	if (size == 0) {
         entity::EzyValue* value = new entity::EzyArray();
 		this->onReadValue(value);
-        value->release();
 	}
 	else{
         EzyArrayBuffer* arr = new EzyArrayBuffer(entity::EzyValueType::TypeArray, size);

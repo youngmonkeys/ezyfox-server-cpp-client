@@ -17,7 +17,11 @@ EzyTcpSocketWriter::~EzyTcpSocketWriter() {
 void EzyTcpSocketWriter::update() {
 	size_t rs;
 	size_t sentData;
+#ifdef EZY_DEBUG
+    auto releasePool = gc::EzyAutoReleasePool::getInstance()->newPool("socket-writer");
+#else
     auto releasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
+#endif
 	while (true) {
 		releasePool->releaseAll();
 		if (!isActive()) {
@@ -73,7 +77,11 @@ EzyTcpSocketReader::~EzyTcpSocketReader() {
 void EzyTcpSocketReader::update() {
 	size_t rs = 0;
 	char dataBuffer[BUFFER_SIZE];
+#ifdef EZY_DEBUG
+    auto releasePool = gc::EzyAutoReleasePool::getInstance()->newPool("socket-reader");
+#else
     auto releasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
+#endif
 	while (true) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(3));
 		releasePool->releaseAll();

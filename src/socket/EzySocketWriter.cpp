@@ -17,6 +17,7 @@ EzySocketWriter::~EzySocketWriter() {
 void EzySocketWriter::toBufferData(EzySocketData* data) {
     mEncoder->clear();
     data->writeToBuffer(mEncoder);
+    data->release();
     
 #ifdef USE_MESSAGE_HEADER
     auto header = codec::EzyMessageHeader::create(mEncoder->getSize());

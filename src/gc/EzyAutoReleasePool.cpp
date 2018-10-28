@@ -7,6 +7,16 @@ EZY_NAMESPACE_START_WITH(gc)
 EzyAutoReleasePool::EzyAutoReleasePool() {
 }
 
+#ifdef EZY_DEBUG
+EzyReleasePool* EzyAutoReleasePool::newPool(std::string name) {
+    std::unique_lock<std::mutex> lk(mPoolMutex);
+    size_t threadId = std::hash<std::thread::id>()(std::this_thread::get_id());
+    auto pret = new EzyReleasePool(name);
+    mPools.insert(std::make_pair(threadId, pret));
+    return pret;
+}
+#endif
+
 EzyReleasePool* EzyAutoReleasePool::getPool() {
     std::unique_lock<std::mutex> lk(mPoolMutex);
     

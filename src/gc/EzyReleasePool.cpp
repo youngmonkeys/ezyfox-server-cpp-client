@@ -2,6 +2,12 @@
 #include "EzyReleasePool.h"
 
 EZY_NAMESPACE_START_WITH(gc)
+
+#ifdef EZY_DEBUG
+EzyReleasePool::EzyReleasePool(std::string name) {
+    this->mName = name;
+}
+#endif
     
 EzyReleasePool::EzyReleasePool() {
 }
