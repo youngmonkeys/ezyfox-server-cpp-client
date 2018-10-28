@@ -2,6 +2,10 @@
 
 #include "logger/EzyLogger.h"
 #include "util/EzyMaps.h"
+#include "constant/EzyCommand.h"
+#include "constant/EzyConnectionStatus.h"
+#include "constant/EzyConnectionFailedReason.h"
+#include "constant/EzyDisconnectReason.h"
 #include "entity/EzyPrimitive.h"
 #include "entity/EzyObject.h"
 #include "entity/EzyArray.h"
@@ -24,6 +28,7 @@
 #include "manager/EzyAppManager.h"
 #include "manager/EzyPluginManager.h"
 #include "manager/EzyPluginManager.h"
+#include "socket/EzyPingSchedule.h"
 #include "EzyClientConfig.h"
 #include "EzyClient.h"
 #include "EzyClients.h"

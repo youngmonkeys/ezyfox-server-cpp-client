@@ -52,6 +52,10 @@ void EzyValue::toValue(rapidjson::Value& value, rapidjson::Document::AllocatorTy
 	value.SetNull();
 }
 
+int EzyValue::getType() {
+    return mValueType;
+}
+
 std::string EzyValue::toJson() {
 
 	rapidjson::Document doc;

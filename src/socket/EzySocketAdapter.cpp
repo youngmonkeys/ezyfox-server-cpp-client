@@ -11,6 +11,7 @@ EZY_NAMESPACE_START_WITH(socket)
 
 EzySocketAdapter::EzySocketAdapter() {
 	mActive = false;
+    mHasError = false;
 	mSocketPool = 0;
 }
 
@@ -27,6 +28,10 @@ void EzySocketAdapter::run() {
 bool EzySocketAdapter::isActive() {
 	std::unique_lock<std::mutex> lk(mMutex);
 	return mActive;
+}
+
+bool EzySocketAdapter::hasError() {
+    return mHasError;
 }
 
 void EzySocketAdapter::setActive(bool active) {
@@ -56,6 +61,10 @@ void EzySocketAdapter::pushMessage(EzySocketData* data) {
 
 EzySocketData* EzySocketAdapter::popMessage() {
 	return mSocketPool->pop();
+}
+
+void EzySocketAdapter::popMessages(std::vector<EzySocketData*>& buffer) {
+    mSocketPool->popAll(buffer);
 }
 
 EZY_NAMESPACE_END_WITH

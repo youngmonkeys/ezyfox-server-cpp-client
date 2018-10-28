@@ -28,14 +28,14 @@ void EzyApp::send(entity::EzyValue *data) {
 }
 
 void EzyApp::send(int cmd, entity::EzyValue *data) {
-    auto array = entity::EzyArray::create();
+    auto array = new entity::EzyArray();
     array->addInt(cmd);
     array->addItem(data);
     send(array);
 }
 
 void EzyApp::send(std::string cmd, entity::EzyValue *data) {
-    auto array = entity::EzyArray::create();
+    auto array = new entity::EzyArray();
     array->addString(cmd);
     array->addItem(data);
     send(array);

@@ -17,7 +17,11 @@ EzyTcpSocketWriter::~EzyTcpSocketWriter() {
 void EzyTcpSocketWriter::update() {
 	size_t rs;
 	size_t sentData;
+#ifdef EZY_DEBUG
+    auto releasePool = gc::EzyAutoReleasePool::getInstance()->newPool("socket-writer");
+#else
     auto releasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
+#endif
 	while (true) {
 		releasePool->releaseAll();
 		if (!isActive()) {
@@ -71,9 +75,13 @@ EzyTcpSocketReader::~EzyTcpSocketReader() {
 
 #define BUFFER_SIZE 102400
 void EzyTcpSocketReader::update() {
-	size_t rs;
+	size_t rs = 0;
 	char dataBuffer[BUFFER_SIZE];
+#ifdef EZY_DEBUG
+    auto releasePool = gc::EzyAutoReleasePool::getInstance()->newPool("socket-reader");
+#else
     auto releasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
+#endif
 	while (true) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(3));
 		releasePool->releaseAll();
@@ -90,7 +98,6 @@ void EzyTcpSocketReader::update() {
 			logger::log("server shutdown[1]");
 #endif
 			setActive(false);
-            mSocketDelegate->onDisconnected(constant::UnknownDisconnection);
 			break;
 		}
 		else {
@@ -101,6 +108,8 @@ void EzyTcpSocketReader::update() {
 			break;
 		}
 	}
+    if(rs <= 0)
+        mHasError = true;
 }
 
 /*****************************************/
@@ -143,7 +152,6 @@ void EzyTcpSocketClient::resetSocket() {
 void EzyTcpSocketClient::createAdapters() {
 	std::unique_lock<std::mutex> lk(mClientMutex);
 	mSocketReader = new EzyTcpSocketReader();
-    mSocketReader->setSocketDelegate(this);
 	mSocketWriter = new EzyTcpSocketWriter();
 }
 

@@ -11,6 +11,14 @@ EZY_NAMESPACE_END_WITH
 
 EZY_NAMESPACE_START_WITH(socket)
 
+enum EzySocketStatus {
+    SocketNotConnect = 1,
+    SocketConnecting,
+    SocketConnected,
+    SocketDisconnected,
+    SocketReconnecting
+};
+
 typedef entity::EzyValue EzySocketData;
 
 class EzySocketEventQueue {

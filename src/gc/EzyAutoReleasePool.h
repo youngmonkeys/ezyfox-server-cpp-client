@@ -3,6 +3,10 @@
 #include <map>
 #include "../EzyMacro.h"
 
+#ifdef EZY_DEBUG
+#include <string>
+#endif
+
 EZY_NAMESPACE_START_WITH_ONLY(base)
 class EzyRef;
 EZY_NAMESPACE_END_WITH
@@ -18,8 +22,12 @@ private:
 public:
     EZY_SINGLETON_GET_INSTANCE(EzyAutoReleasePool)
 public:
-    virtual void removePool();
-    virtual EzyReleasePool* getPool();
+    void removePool();
+    EzyReleasePool* getPool();
+public:
+#ifdef EZY_DEBUG
+    EzyReleasePool* newPool(std::string name);
+#endif
 };
 
 EZY_NAMESPACE_END_WITH

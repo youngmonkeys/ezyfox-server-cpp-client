@@ -29,13 +29,13 @@ EZY_NAMESPACE_START_WITH(request)
 EZY_IMPLEMENT_REQUEST_CLASS(Ping)
 
 entity::EzyArray* EzyRequest::serialize() {
-    return entity::EzyArray::create();
+    return new entity::EzyArray();
 }
 
 //=======================================================
 
 entity::EzyArray* EzyHandshakeRequest::serialize() {
-    auto array = entity::EzyArray::create();
+    auto array = new entity::EzyArray();
     array->addString(mClientId);
     array->addString(mClientKey);
     array->addString(mClientType);
@@ -55,7 +55,7 @@ EzyLoginRequest::EzyLoginRequest() {
 }
 
 entity::EzyArray* EzyLoginRequest::serialize() {
-    auto array = entity::EzyArray::create();
+    auto array = new entity::EzyArray();
     array->addString(mZoneName);
     array->addString(mUsername);
     array->addString(mPassword);
@@ -68,7 +68,7 @@ EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(Login)
 //=======================================================
 
 entity::EzyArray* EzyAppAccessRequest::serialize() {
-    auto array = entity::EzyArray::create();
+    auto array = new entity::EzyArray();
     array->addString(mAppName);
     array->addItem(mData);
     return array;
@@ -83,7 +83,7 @@ EzyAppRequestRequest::EzyAppRequestRequest() {
 }
 
 entity::EzyArray* EzyAppRequestRequest::serialize() {
-    auto array = entity::EzyArray::create();
+    auto array = new entity::EzyArray();
     array->addInt(mAppId);
     array->addItem(mData);
     return array;
@@ -98,7 +98,7 @@ EzyPluginRequestByIdRequest::EzyPluginRequestByIdRequest() {
 }
 
 entity::EzyArray* EzyPluginRequestByIdRequest::serialize() {
-    auto array = entity::EzyArray::create();
+    auto array = new entity::EzyArray();
     array->addInt(mPluginId);
     array->addItem(mData);
     return array;
@@ -113,7 +113,7 @@ EzyPluginRequestByNameRequest::EzyPluginRequestByNameRequest() {
 }
 
 entity::EzyArray* EzyPluginRequestByNameRequest::serialize() {
-    auto array = entity::EzyArray::create();
+    auto array = new entity::EzyArray();
     array->addString(mPluginName);
     array->addItem(mData);
     return array;

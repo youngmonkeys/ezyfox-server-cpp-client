@@ -3,91 +3,63 @@
 EZY_NAMESPACE_START_WITH(socket)
 
 EzySocketPool::EzySocketPool() {
-    mDataQueue = new std::queue<EzySocketData*>();
+    clear0();
 }
 
 EzySocketPool::~EzySocketPool() {
-    if (mDataQueue) {
-        while (!mDataQueue->empty()) {
-            EzySocketData* data = mDataQueue->front();
-            if (data) {
-                //delete data;
-                data->release();
-            }
-            mDataQueue->pop();
-        }
-        
-        delete mDataQueue;
-        mDataQueue = 0;
-    }
-    
+    clear0();
 }
 
 void EzySocketPool::push(EzySocketData* data) {
-    std::unique_lock<std::mutex> lk(mPoolMutex);
-    if (mDataQueue) {
-        data->retain();
-        mDataQueue->push(data);
+    {
+        std::unique_lock<std::mutex> lk(mPoolMutex);
+        mDataQueue.push(data);
     }
-    
     mPoolCondition.notify_one();
 }
 
 void EzySocketPool::clear() {
     std::unique_lock<std::mutex> lk(mPoolMutex);
-    if (mDataQueue) {
-        while (!mDataQueue->empty()) {
-            EzySocketData* data = mDataQueue->front();
-            //delete data;
-            data->release();
-            mDataQueue->pop();
-        }
-    }
-    
+    clear0();
     mPoolCondition.notify_all();
+}
+
+void EzySocketPool::clear0() {
+    while (!mDataQueue.empty()) {
+        EzySocketData* data = mDataQueue.front();
+        EZY_SAFE_DELETE(data);
+        mDataQueue.pop();
+    }
 }
 
 EzySocketData* EzySocketPool::take() {
     std::unique_lock<std::mutex> lk(mPoolMutex);
-    if (mDataQueue) {
-        if (!mDataQueue->empty()) {
-            EzySocketData* data = mDataQueue->front();
-            mDataQueue->pop();
-            
-            //data->retain();
-            data->autorelease();
-            return data;
-        }
-        
-        mPoolCondition.wait(lk);
-        
-        if (mDataQueue && !mDataQueue->empty()) {
-            EzySocketData* data = mDataQueue->front();
-            mDataQueue->pop();
-            
-            //data->retain();
-            data->autorelease();
-            return data;
-        }
-        else{
-            return 0;
-        }
-    }
-    
-    return 0;
+    mPoolCondition.wait(lk, [=] { return !this->mDataQueue.empty(); });
+    if(mDataQueue.empty()) return 0;
+    EzySocketData* data = mDataQueue.front();
+    mDataQueue.pop();
+    return data;
 }
 
 EzySocketData* EzySocketPool::pop() {
     std::unique_lock<std::mutex> lk(mPoolMutex);
-    if (mDataQueue && !mDataQueue->empty()) {
-        auto data = mDataQueue->front();
-        mDataQueue->pop();
-        
-        //data->retain();
+    if (!mDataQueue.empty()) {
+        auto data = mDataQueue.front();
+        mDataQueue.pop();
         data->autorelease();
         return data;
     }
     return 0;
+}
+
+void EzySocketPool::popAll(std::vector<EzySocketData*>& buffer) {
+    std::unique_lock<std::mutex> lk(mPoolMutex);
+    while (!mDataQueue.empty()) {
+        auto data = mDataQueue.front();
+        mDataQueue.pop();
+        data->autorelease();
+        buffer.push_back(data);
+    }
 }
 
 EZY_NAMESPACE_END_WITH

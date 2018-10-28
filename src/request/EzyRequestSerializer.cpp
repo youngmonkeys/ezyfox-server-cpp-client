@@ -6,6 +6,7 @@ entity::EzyArray* EzyRequestSerializer::serialize(int cmd, entity::EzyArray* dat
     auto array = entity::EzyArray::create();
     array->addInt(cmd);
     array->addItem(data);
+    array->retain();
     return array;
 }
 

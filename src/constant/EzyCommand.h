@@ -3,6 +3,8 @@
 #include <string>
 #include "../EzyMacro.h"
 
+#define NUMBER_OF_COMMANDS 14
+
 EZY_NAMESPACE_START_WITH_ONLY(constant)
 
 enum EzyCommand {
@@ -20,6 +22,23 @@ enum EzyCommand {
     PluginInfo = 40,
     PluginRequestByName = 41,
     PluginRequestById = 42
+};
+
+static int sCommands[] = {
+    Error,
+    Handshake,
+    Ping,
+    Pong,
+    Disconnect,
+    Login,
+    LoginError,
+    AppAccess,
+    AppRequest,
+    AppExit,
+    AppAccessError,
+    PluginInfo,
+    PluginRequestByName,
+    PluginRequestById
 };
 
 std::string getCommandName(int command);

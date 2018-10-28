@@ -68,7 +68,6 @@ void EzyObject::addItem(const std::string& key, EzyValue* item) {
 	}
 
 	mData.insert(std::make_pair(key, item));
-	item->retain();
 }
 
 EzyValue* EzyObject::getItem(const std::string& key) {
@@ -98,6 +97,12 @@ int EzyObject::size() {
 	return (int)mData.size();
 }
 
+std::vector<std::string> EzyObject::getKeys() {
+    auto keys = std::vector<std::string>();
+    EZY_FOREACH_MAP(mData)
+        keys.push_back(it->first);
+    return keys;
+}
 
 bool EzyObject::getBool(const std::string& key, bool defaultValue) {
 	auto item = this->getItem(key);
@@ -168,42 +173,36 @@ void EzyObject::setBool(const std::string& key, bool value) {
 	auto item = new EzyPrimitive();
 	item->setBool(value);
 	this->addItem(key, item);
-	item->release();
 }
 
 void EzyObject::setFloat(const std::string& key, float value) {
 	auto item = new EzyPrimitive();
 	item->setFloat(value);
 	this->addItem(key, item);
-	item->release();
 }
 
 void EzyObject::setDouble(const std::string& key, double value) {
 	auto item = new EzyPrimitive();
 	item->setDouble(value);
 	this->addItem(key, item);
-	item->release();
 }
 
 void EzyObject::setInt(const std::string& key, int64_t value) {
 	auto item = new EzyPrimitive();
 	item->setInt(value);
 	this->addItem(key, item);
-	item->release();
 }
 
 void EzyObject::setUInt(const std::string& key, uint64_t value) {
 	auto item = new EzyPrimitive();
 	item->setUInt(value);
 	this->addItem(key, item);
-	item->release();
 }
 
 void EzyObject::setString(const std::string& key, const std::string& value) {
 	auto item = new EzyString();
 	item->setString(value);
 	this->addItem(key, item);
-	item->release();
 }
 
 EzyObject* EzyObject::setObject(const std::string& key, EzyObject* value) {
@@ -213,7 +212,6 @@ EzyObject* EzyObject::setObject(const std::string& key, EzyObject* value) {
 	else{
 		value = new EzyObject();
 		this->addItem(key, value);
-		value->release();
 	}
 	return value;
 }
@@ -225,7 +223,6 @@ EzyArray* EzyObject::setArray(const std::string& key, EzyArray* value) {
 	else{
 		value = new EzyArray();
 		this->addItem(key, value);
-		value->release();
 	}
 	return value;
 }

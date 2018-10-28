@@ -29,24 +29,20 @@ inline EzyValue* __createValueFromJson(const rapidjson::Value& value) {
 	{
 	case rapidjson::Type::kNullType:{
         auto pret = new EzyValue();
-        pret->autorelease();
         return pret;
 	}
 	case rapidjson::Type::kFalseType:{
 		auto pret = new EzyPrimitive();
-        pret->autorelease();
 		pret->setBool(false);
 		return pret;
 	}
 	case rapidjson::Type::kTrueType:{
 		auto pret = new EzyPrimitive();
-        pret->autorelease();
 		pret->setBool(true);
 		return pret;
 	}
 	case rapidjson::Type::kNumberType:{
 		auto pret = new EzyPrimitive();
-        pret->autorelease();
 		if (value.IsInt()) {
 			pret->setInt(value.GetInt());
 		}
@@ -72,7 +68,6 @@ inline EzyValue* __createValueFromJson(const rapidjson::Value& value) {
 	}
 	case rapidjson::Type::kStringType: {
 		auto pret = new entity::EzyString();
-        pret->autorelease();
 		pret->setString(value.GetString());
 		return pret;
 	}
@@ -91,22 +86,18 @@ inline EzyValue* __createValueFromJson(const rapidjson::Value& value) {
 
 inline EzyValue* __createDictFromJson(const rapidjson::Value& value) {
 	EzyObject* pret = new EzyObject();
-    pret->autorelease();
 	for (auto it = value.MemberBegin(); it != value.MemberEnd(); ++it) {
 		EzyValue* item = __createValueFromJson(it->value);
 		pret->addItem(it->name.GetString(), item);
-		//item->release();
 	}
 	return pret;
 }
 
 inline EzyValue* __createArrayFromJson(const rapidjson::Value& value) {
 	EzyArray* pret = new EzyArray();
-    pret->autorelease();
 	for (int i = 0; i < value.Size(); i++) {
 		EzyValue* item = __createValueFromJson(value[i]);
 		pret->addItem(item);
-		//item->release();
 	}
 	return pret;
 }
@@ -131,7 +122,6 @@ void EzyJson::writeToBuffer(codec::EzyDataEncoder* encoder) {
 	else{
         EZY_SAFE_DELETE(mValue)
 		mValue = __createValueFromJson(doc);
-        mValue->retain();
 		mValue->writeToBuffer(encoder);
 	}
 }
@@ -162,7 +152,6 @@ void EzyJson::initWithString(const std::string& json) {
 void EzyJson::initWithValue(EzyValue* value) {
     EZY_SAFE_DELETE(mValue)
 	mValue = value;
-	mValue->retain();
 	mString = mValue->toJson();
 }
 

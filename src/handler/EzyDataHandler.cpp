@@ -54,12 +54,21 @@ void EzyLoginSuccessHandler::handle(entity::EzyArray *data) {
     auto zone = newZone(data);
     mClient->setMe(user);
     mClient->setZone(zone);
-    handleResponseAppDatas(joinedApps);
+    auto allowReconnect = allowReconnection();
+    auto appCount = joinedApps->size();
+    auto shouldReconnect = allowReconnect && appCount > 0;
     handleResponseData(responseData);
-    if (joinedApps->size() == 0)
-        handleLoginSuccess(responseData);
-    else
+    if(shouldReconnect) {
+        handleResponseAppDatas(joinedApps);
         handleReconnectSuccess(responseData);
+    }
+    else {
+        handleLoginSuccess(responseData);
+    }        
+}
+
+bool EzyLoginSuccessHandler::allowReconnection() {
+    return false;
 }
 
 void EzyLoginSuccessHandler::handleResponseData(entity::EzyValue* responseData) {

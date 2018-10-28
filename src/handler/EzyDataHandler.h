@@ -61,6 +61,7 @@ public:
 
 class EzyLoginSuccessHandler : public EzyDataHandler {
 protected:
+    virtual bool allowReconnection();
     virtual void handleResponseData(entity::EzyValue* responseData);
     virtual void handleResponseAppDatas(entity::EzyArray* appDatas);
     virtual entity::EzyArray* newAccessAppData(entity::EzyArray* appData);

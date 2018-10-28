@@ -9,8 +9,6 @@ class EzySocketDelegate;
 
 class EzySocketReader : public EzySocketAdapter, public codec::EzyDataDecoderDelegate {
 protected:
-    EZY_SYNTHESIZE_WRITEONLY(EzySocketDelegate*, SocketDelegate);
-protected:
 #ifdef USE_MESSAGE_HEADER
     int mDataSize;
     std::vector<char> mByteBuffer;

@@ -26,14 +26,6 @@ EZY_NAMESPACE_START_WITH(socket)
 
 class EzyPingSchedule;
 
-enum EzySocketStatus {
-    SocketNotConnect = 1,
-    SocketConnecting,
-    SocketConnected,
-    SocketDisconnected,
-    SocketReconnecting
-};
-
 class EzySocketDelegate {
 public:
     virtual void onDisconnected(int reason) = 0;
@@ -59,6 +51,7 @@ protected:
     handler::EzyDataHandlers* mDataHandlers;
     manager::EzyHandlerManager* mHandlerManager;
     std::vector<event::EzyEvent*> mLocalEventQueue;
+    std::vector<EzySocketData*> mLocalMessageQueue;
 protected:
     EZY_SYNTHESIZE_WRITEONLY(std::set<int>, UnloggableCommands);
     EZY_SYNTHESIZE_WRITEONLY(manager::EzyPingManager*, PingManager);
@@ -75,6 +68,7 @@ protected:
     virtual void stopAdapter(EzySocketAdapter* adapter);
     virtual void clearAdapter(EzySocketAdapter* adapter);
     virtual void processReceivedMessages();
+    virtual void processReceivedMessages0();
     virtual void processReceivedMessage(EzySocketData* message);
 protected:
     virtual void setStatus(EzySocketStatus value);

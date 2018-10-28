@@ -23,14 +23,14 @@ void EzyPlugin::sendById(entity::EzyValue *data) {
 }
 
 void EzyPlugin::sendById(int cmd, entity::EzyValue *data) {
-    auto array = entity::EzyArray::create();
+    auto array = new entity::EzyArray();
     array->addInt(cmd);
     array->addItem(data);
     sendById(array);
 }
 
 void EzyPlugin::sendById(std::string cmd, entity::EzyValue *data) {
-    auto array = entity::EzyArray::create();
+    auto array = new entity::EzyArray();
     array->addString(cmd);
     array->addItem(data);
     sendById(array);
@@ -44,14 +44,14 @@ void EzyPlugin::sendByName(entity::EzyValue *data) {
 }
 
 void EzyPlugin::sendByName(int cmd, entity::EzyValue *data) {
-    auto array = entity::EzyArray::create();
+    auto array = new entity::EzyArray();
     array->addInt(cmd);
     array->addItem(data);
     sendByName(array);
 }
 
 void EzyPlugin::sendByName(std::string cmd, entity::EzyValue *data) {
-    auto array = entity::EzyArray::create();
+    auto array = new entity::EzyArray();
     array->addString(cmd);
     array->addItem(data);
     sendByName(array);
