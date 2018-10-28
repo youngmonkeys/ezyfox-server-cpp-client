@@ -101,7 +101,7 @@ void EzyTcpSocketReader::update() {
 		}
 	}
     if(rs <= 0)
-        mSocketDelegate->onDisconnected(constant::UnknownDisconnection);
+        mHasError = true;
 }
 
 /*****************************************/
@@ -144,7 +144,6 @@ void EzyTcpSocketClient::resetSocket() {
 void EzyTcpSocketClient::createAdapters() {
 	std::unique_lock<std::mutex> lk(mClientMutex);
 	mSocketReader = new EzyTcpSocketReader();
-    mSocketReader->setSocketDelegate(this);
 	mSocketWriter = new EzyTcpSocketWriter();
 }
 

@@ -13,6 +13,7 @@
 #include "manager/EzyHandlerManager.h"
 #include "manager/EzyPingManager.h"
 #include "config/EzyClientConfig.h"
+#include "constant/EzyDisconnectReason.h"
 
 EZY_NAMESPACE_START
 
@@ -75,7 +76,7 @@ socket::EzySocketClient* EzyClient::newSocketClient() {
 
 void EzyClient::disconnect() {
     if(mSocketClient)
-        mSocketClient->closeSocket();
+        mSocketClient->onDisconnected(constant::UnknownDisconnection);
     EZY_SAFE_DELETE(mSocketClient);
 }
 

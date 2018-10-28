@@ -76,6 +76,7 @@ protected:
     virtual void stopAdapter(EzySocketAdapter* adapter);
     virtual void clearAdapter(EzySocketAdapter* adapter);
     virtual void processReceivedMessages();
+    virtual void processReceivedMessages0();
     virtual void processReceivedMessage(EzySocketData* message);
 protected:
     virtual void setStatus(EzySocketStatus value);

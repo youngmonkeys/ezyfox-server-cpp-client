@@ -188,14 +188,24 @@ void EzySocketClient::processEvents() {
 }
 
 void EzySocketClient::processReceivedMessages() {
-    if(mSocketReader) {
-        mPingManager->setLostPingCount(0);
-        mSocketReader->popMessages(mLocalMessageQueue);
-        for(int i = 0 ; i < mLocalMessageQueue.size() ; i++) {
-            processReceivedMessage(mLocalMessageQueue[i]);
-        }
-        mLocalMessageQueue.clear();
+    auto status = getStatus();
+    auto connected = (status == SocketConnected);
+    auto valid = connected && mSocketReader;
+    if(valid) {
+        if(mSocketReader->hasError())
+            onDisconnected(constant::UnknownDisconnection);
+        else
+            processReceivedMessages0();
     }
+}
+
+void EzySocketClient::processReceivedMessages0() {
+    mPingManager->setLostPingCount(0);
+    mSocketReader->popMessages(mLocalMessageQueue);
+    for(int i = 0 ; i < mLocalMessageQueue.size() ; i++) {
+        processReceivedMessage(mLocalMessageQueue[i]);
+    }
+    mLocalMessageQueue.clear();
 }
 
 void EzySocketClient::processReceivedMessage(EzySocketData* message) {

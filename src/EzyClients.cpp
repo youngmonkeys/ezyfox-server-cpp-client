@@ -10,9 +10,9 @@ EzyClients::EzyClients() {
 
 EzyClient* EzyClients::newClient(config::EzyClientConfig* config) {
     auto client = new EzyClient(config);
-    addClient(client);
     if(mDefaultClientName.length() == 0)
         mDefaultClientName = client->getName();
+    addClient(client);
     return client;
 }
 
@@ -36,11 +36,10 @@ EzyClient* EzyClients::getDefaultClient() {
     return client;
 }
 
-std::vector<EzyClient*> EzyClients::getClients() {
-    auto clients = std::vector<EzyClient*>();
+void EzyClients::getClients(std::vector<EzyClient*>& buffer) {
+    buffer.clear();
     EZY_FOREACH_MAP(mClients)
-        clients.push_back(it->second);
-    return clients;
+        buffer.push_back(it->second);
 }
 
 EZY_NAMESPACE_END

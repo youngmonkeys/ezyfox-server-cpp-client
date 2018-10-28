@@ -25,7 +25,7 @@ public:
     EzyClient* newDefaultClient(config::EzyClientConfig* config);
     EzyClient* getClient(std::string name);
     EzyClient* getDefaultClient();
-    std::vector<EzyClient*> getClients();
+    void getClients(std::vector<EzyClient*>& buffer);
 };
 EZY_NAMESPACE_END
 
