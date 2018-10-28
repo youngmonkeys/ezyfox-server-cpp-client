@@ -41,7 +41,7 @@ entity::EzyValue* EzyArrayBuffer::toValue() {
             auto key = mArray[i];
             auto value = mArray[i + 1];
             newValue->addItem(((entity::EzyString*)key)->getString(), value);
-            key->release();
+            key->autorelease();
         }
         return newValue;
     }
