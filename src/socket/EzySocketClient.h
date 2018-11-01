@@ -33,8 +33,6 @@ public:
 
 class EzySocketClient : public base::EzyRef, public EzySocketDelegate {
 protected:
-    std::string mHost;
-    int mPort;
     long long mConnectTime;
     int mReconnectCount;
     int mConnectionFailedReason;
@@ -53,6 +51,8 @@ protected:
     std::vector<event::EzyEvent*> mLocalEventQueue;
     std::vector<EzySocketData*> mLocalMessageQueue;
 protected:
+    EZY_SYNTHESIZE_READONLY(std::string, Host);
+    EZY_SYNTHESIZE_READONLY(int, Port);
     EZY_SYNTHESIZE_WRITEONLY(std::set<int>, UnloggableCommands);
     EZY_SYNTHESIZE_WRITEONLY(manager::EzyPingManager*, PingManager);
     EZY_SYNTHESIZE_WRITEONLY(config::EzyReconnectConfig*, ReconnectConfig);
@@ -87,6 +87,8 @@ public:
     virtual void onDisconnected(int reason);
     virtual void setPingSchedule(EzyPingSchedule* pingSchedule);
     virtual void setHandlerManager(manager::EzyHandlerManager* handlerManager);
+public:
+    virtual bool isConnectable();
 };
 
 EZY_NAMESPACE_END_WITH

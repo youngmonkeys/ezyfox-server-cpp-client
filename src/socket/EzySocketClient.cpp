@@ -51,10 +51,10 @@ void EzySocketClient::setHandlerManager(manager::EzyHandlerManager* handlerManag
 }
 
 void EzySocketClient::connectTo(const std::string& host, int port) {
+    setStatus(SocketConnecting);
     mHost = host;
     mPort = port;
     mReconnectCount = 0;
-    setStatus(SocketConnecting);
     connect0(0);
 }
 
@@ -62,8 +62,8 @@ bool EzySocketClient::reconnect() {
     auto maxReconnectCount = mReconnectConfig->getMaxReconnectCount();
     if (mReconnectCount >= maxReconnectCount)
         return false;
-    auto reconnectSleepTime = mReconnectConfig->getReconnectPeriod();
     setStatus(SocketReconnecting);
+    auto reconnectSleepTime = mReconnectConfig->getReconnectPeriod();
     connect0(reconnectSleepTime);
     mReconnectCount++;
     logger::log("try reconnect to server: %d, wating time: %d", mReconnectCount, reconnectSleepTime);
@@ -148,6 +148,11 @@ void EzySocketClient::resetSocket() {
 void EzySocketClient::closeSocket() {
 }
 
+bool EzySocketClient::isConnectable() {
+    std::unique_lock<std::mutex> lk(mStatusMutex);
+    return mStatus == SocketNotConnect || mStatus == SocketDisconnected;
+}
+
 void EzySocketClient::setStatus(EzySocketStatus value) {
     std::unique_lock<std::mutex> lk(mStatusMutex);
     mStatus = value;
@@ -192,10 +197,13 @@ void EzySocketClient::processReceivedMessages() {
     auto connected = (status == SocketConnected);
     auto valid = connected && mSocketReader;
     if(valid) {
-        if(mSocketReader->hasError())
+        if(mSocketReader->isStopped() &&
+           mSocketWriter->isStopped()) {
             onDisconnected(constant::UnknownDisconnection);
-        else
+        }
+        else if(mSocketReader->isActive()) {
             processReceivedMessages0();
+        }
     }
 }
 

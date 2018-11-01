@@ -47,8 +47,8 @@ public:
 
 class EzyClient : public socket::EzySender, public EzyClientStatusAware {
 protected:
-    command::EzySetup* mSetup;
     std::mutex mStatusMutex;
+    command::EzySetup* mSetup;
     constant::EzyConnectionStatus mStatus;
     socket::EzySocketClient* mSocketClient;
     std::set<int> mUnloggableCommands;

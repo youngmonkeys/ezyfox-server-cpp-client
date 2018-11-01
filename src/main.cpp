@@ -9,7 +9,7 @@ class ExHandshakeHandler : public handler::EzyHandshakeHandler {
 protected:
     request::EzyRequest* getLoginRequest() {
         auto request = request::EzyLoginRequest::create();
-        request->setZoneName("freechat");
+        request->setZoneName("freechat1");
         request->setUsername("dungtv");
         request->setPassword("123456");
         return request;
@@ -65,7 +65,8 @@ int main(int argc, const char * argv[]) {
     loopOnDetachedThread(client);
 //    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 //    connectOnMainThread(client);
-    connectOnDetachedThread(client);
+    for(int i = 0 ; i < 100 ; i++)
+        connectOnDetachedThread(client);
 //    loopOnMainThread(client);
 //    std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 //    EZY_SAFE_DELETE(client);
