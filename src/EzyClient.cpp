@@ -30,6 +30,7 @@ EzyClient::EzyClient(config::EzyClientConfig* config) {
     mSetup = new command::EzySetup(mHandlerManager);
     mUnloggableCommands.insert(constant::Ping);
     mUnloggableCommands.insert(constant::Pong);
+    mSocketClient = newSocketClient();
 }
 
 EzyClient::~EzyClient() {
@@ -46,14 +47,23 @@ EzyClient::~EzyClient() {
 }
 
 void EzyClient::connect(std::string host, int port) {
+    auto connectable = mSocketClient->isConnectable();
+    if(!connectable) {
+        logger::log("client has already connected to: %s:%d", host.c_str(), port);
+        return;
+    }
     preconnect();
-    auto oldSocketClient = mSocketClient;
-    mSocketClient = newSocketClient();
-    EZY_SAFE_DELETE(oldSocketClient);
     mSocketClient->connectTo(host, port);
 }
 
 bool EzyClient::reconnect() {
+    auto connectable = mSocketClient->isConnectable();
+    if(!connectable) {
+        auto host = mSocketClient->getHost();
+        auto port = mSocketClient->getPort();
+        logger::log("client has already connected to: %s:%d", host.c_str(), port);
+        return false;
+    }
     this->preconnect();
     auto success = mSocketClient->reconnect();
     if (success)
@@ -76,10 +86,8 @@ socket::EzySocketClient* EzyClient::newSocketClient() {
     return socketClient;
 }
 
-void EzyClient::disconnect() {
-    if(mSocketClient)
-        mSocketClient->onDisconnected(constant::UnknownDisconnection);
-    EZY_SAFE_DELETE(mSocketClient);
+void EzyClient::disconnect(int reason) {
+    mSocketClient->onDisconnect(reason);
 }
 
 void EzyClient::processEvents() {

@@ -26,6 +26,8 @@ EzySocketClient::EzySocketClient() {
     mPingManager = 0;
     mHandlerManager = 0;
     mStatus = SocketNotConnect;
+    mDisconnectReason = constant::UnknownDisconnection;
+    mConnectionFailedReason = constant::UnknownFailure;
     mSocketEventQueue = new EzySocketEventQueue();
 }
 
@@ -51,10 +53,10 @@ void EzySocketClient::setHandlerManager(manager::EzyHandlerManager* handlerManag
 }
 
 void EzySocketClient::connectTo(const std::string& host, int port) {
+    setStatus(SocketConnecting);
     mHost = host;
     mPort = port;
     mReconnectCount = 0;
-    setStatus(SocketConnecting);
     connect0(0);
 }
 
@@ -62,8 +64,8 @@ bool EzySocketClient::reconnect() {
     auto maxReconnectCount = mReconnectConfig->getMaxReconnectCount();
     if (mReconnectCount >= maxReconnectCount)
         return false;
-    auto reconnectSleepTime = mReconnectConfig->getReconnectPeriod();
     setStatus(SocketReconnecting);
+    auto reconnectSleepTime = mReconnectConfig->getReconnectPeriod();
     connect0(reconnectSleepTime);
     mReconnectCount++;
     logger::log("try reconnect to server: %d, wating time: %d", mReconnectCount, reconnectSleepTime);
@@ -103,6 +105,7 @@ void EzySocketClient::connect1(long sleepTime) {
         this->mSocketEventQueue->addEvent(evt);
     }
     else {
+        this->setStatus(SocketNotConnect);
         this->resetSocket();
         auto evt = event::EzyConnectionFailureEvent::create(mConnectionFailedReason);
         this->mSocketEventQueue->addEvent(evt);
@@ -148,6 +151,11 @@ void EzySocketClient::resetSocket() {
 void EzySocketClient::closeSocket() {
 }
 
+bool EzySocketClient::isConnectable() {
+    std::unique_lock<std::mutex> lk(mStatusMutex);
+    return mStatus == SocketNotConnect || mStatus == SocketDisconnected;
+}
+
 void EzySocketClient::setStatus(EzySocketStatus value) {
     std::unique_lock<std::mutex> lk(mStatusMutex);
     mStatus = value;
@@ -159,12 +167,17 @@ EzySocketStatus EzySocketClient::getStatus() {
 }
 
 void EzySocketClient::onDisconnected(int reason) {
-    if(getStatus() != SocketConnected)
-        return;
     setStatus(SocketDisconnected);
-    closeClient();
     auto event = event::EzyDisconnectionEvent::create(reason);
     mSocketEventQueue->addEvent(event);
+}
+
+void EzySocketClient::onDisconnect(int reason) {
+    if(getStatus() != SocketConnected)
+        return;
+    setStatus(SocketDisconnecting);
+    mDisconnectReason = reason;
+    closeClient();
 }
 
 void EzySocketClient::sendMessage(EzySocketData* message) {
@@ -188,14 +201,18 @@ void EzySocketClient::processEvents() {
 }
 
 void EzySocketClient::processReceivedMessages() {
-    auto status = getStatus();
-    auto connected = (status == SocketConnected);
-    auto valid = connected && mSocketReader;
-    if(valid) {
-        if(mSocketReader->hasError())
-            onDisconnected(constant::UnknownDisconnection);
-        else
+    if(getStatus() == SocketConnected) {
+        if(mSocketReader->isStopped()) {
+            onDisconnect(constant::UnknownDisconnection);
+        }
+        else if(mSocketReader->isActive()) {
             processReceivedMessages0();
+        }
+    }
+    if(getStatus() == SocketDisconnecting) {
+        if(mSocketWriter->isStopped()) {
+            onDisconnected(mDisconnectReason);
+        }
     }
 }
 

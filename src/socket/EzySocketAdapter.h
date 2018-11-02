@@ -12,9 +12,8 @@ EZY_NAMESPACE_START_WITH(socket)
 
 class EzySocketAdapter {
 protected:
-    bool mActive;
-    bool mHasError;
-	std::mutex mMutex;
+    std::atomic_bool mStopped;
+    std::atomic_bool mActive;
 	EzySocketPool* mSocketPool;
 protected:
 	virtual void update();
@@ -25,8 +24,9 @@ public:
     virtual void run();
 	virtual void stop();
     virtual bool isActive();
-    virtual bool hasError();
+    virtual bool isStopped();
     virtual void setActive(bool active);
+    virtual void setStopped(bool stopped);
 	virtual void pushMessage(EzySocketData* data);
     virtual EzySocketData* popMessage();
     virtual void popMessages(std::vector<EzySocketData*>& buffer);

@@ -11,7 +11,7 @@ EZY_NAMESPACE_START_WITH(socket)
 
 EzySocketAdapter::EzySocketAdapter() {
 	mActive = false;
-    mHasError = false;
+    mStopped = false;
 	mSocketPool = 0;
 }
 
@@ -21,22 +21,26 @@ EzySocketAdapter::~EzySocketAdapter() {
 }
 
 void EzySocketAdapter::run() {
-	this->update();
+    setStopped(false);
+	update();
     gc::EzyAutoReleasePool::getInstance()->removePool();
+    setStopped(true);
 }
 
 bool EzySocketAdapter::isActive() {
-	std::unique_lock<std::mutex> lk(mMutex);
 	return mActive;
 }
 
-bool EzySocketAdapter::hasError() {
-    return mHasError;
+bool EzySocketAdapter::isStopped() {
+    return mStopped;
 }
 
 void EzySocketAdapter::setActive(bool active) {
-	std::unique_lock<std::mutex> lk(mMutex);
 	mActive = active;
+}
+
+void EzySocketAdapter::setStopped(bool stopped) {
+    mStopped = stopped;
 }
 
 void EzySocketAdapter::start() {
@@ -48,8 +52,8 @@ void EzySocketAdapter::start() {
 }
 
 void EzySocketAdapter::stop() {
-	setActive(false);
 	mSocketPool->clear();
+    setActive(false);
 }
 
 void EzySocketAdapter::update() {

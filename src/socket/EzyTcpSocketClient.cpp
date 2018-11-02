@@ -108,8 +108,6 @@ void EzyTcpSocketReader::update() {
 			break;
 		}
 	}
-    if(rs <= 0)
-        mHasError = true;
 }
 
 /*****************************************/
@@ -200,11 +198,8 @@ bool EzyTcpSocketClient::connectNow() {
 
 		int rs = connect(mSocket, tpeer->ai_addr, tpeer->ai_addrlen);
 		if (rs == 0) {
-			std::unique_lock<std::mutex> lk(mClientMutex);
-			if (mSocketReader && mSocketWriter) {
-				freeaddrinfo(peer);
-				return true;
-			}
+            freeaddrinfo(peer);
+            return true;
 		}	
 #ifdef USE_WINSOCK_2
 		closesocket(mSocket);
