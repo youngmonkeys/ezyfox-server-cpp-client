@@ -28,6 +28,7 @@ class EzyPingSchedule;
 
 class EzySocketDelegate {
 public:
+    virtual void onDisconnect(int reason) = 0;
     virtual void onDisconnected(int reason) = 0;
 };
 
@@ -35,6 +36,7 @@ class EzySocketClient : public base::EzyRef, public EzySocketDelegate {
 protected:
     long long mConnectTime;
     int mReconnectCount;
+    int mDisconnectReason;
     int mConnectionFailedReason;
     EzySocketStatus mStatus;
     std::mutex mClientMutex;
@@ -84,6 +86,7 @@ public:
     virtual void closeSocket();
     virtual void sendMessage(EzySocketData* message);
     virtual void processEventMessages();
+    virtual void onDisconnect(int reason);
     virtual void onDisconnected(int reason);
     virtual void setPingSchedule(EzyPingSchedule* pingSchedule);
     virtual void setHandlerManager(manager::EzyHandlerManager* handlerManager);

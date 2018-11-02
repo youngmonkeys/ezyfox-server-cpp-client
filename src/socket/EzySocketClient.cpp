@@ -26,6 +26,8 @@ EzySocketClient::EzySocketClient() {
     mPingManager = 0;
     mHandlerManager = 0;
     mStatus = SocketNotConnect;
+    mDisconnectReason = constant::UnknownDisconnection;
+    mConnectionFailedReason = constant::UnknownFailure;
     mSocketEventQueue = new EzySocketEventQueue();
 }
 
@@ -103,6 +105,7 @@ void EzySocketClient::connect1(long sleepTime) {
         this->mSocketEventQueue->addEvent(evt);
     }
     else {
+        this->setStatus(SocketNotConnect);
         this->resetSocket();
         auto evt = event::EzyConnectionFailureEvent::create(mConnectionFailedReason);
         this->mSocketEventQueue->addEvent(evt);
@@ -164,12 +167,17 @@ EzySocketStatus EzySocketClient::getStatus() {
 }
 
 void EzySocketClient::onDisconnected(int reason) {
-    if(getStatus() != SocketConnected)
-        return;
     setStatus(SocketDisconnected);
-    closeClient();
     auto event = event::EzyDisconnectionEvent::create(reason);
     mSocketEventQueue->addEvent(event);
+}
+
+void EzySocketClient::onDisconnect(int reason) {
+    if(getStatus() != SocketConnected)
+        return;
+    setStatus(SocketDisconnecting);
+    mDisconnectReason = reason;
+    closeClient();
 }
 
 void EzySocketClient::sendMessage(EzySocketData* message) {
@@ -193,16 +201,17 @@ void EzySocketClient::processEvents() {
 }
 
 void EzySocketClient::processReceivedMessages() {
-    auto status = getStatus();
-    auto connected = (status == SocketConnected);
-    auto valid = connected && mSocketReader;
-    if(valid) {
-        if(mSocketReader->isStopped() &&
-           mSocketWriter->isStopped()) {
-            onDisconnected(constant::UnknownDisconnection);
+    if(getStatus() == SocketConnected) {
+        if(mSocketReader->isStopped()) {
+            onDisconnect(constant::UnknownDisconnection);
         }
         else if(mSocketReader->isActive()) {
             processReceivedMessages0();
+        }
+    }
+    if(getStatus() == SocketDisconnecting) {
+        if(mSocketWriter->isStopped()) {
+            onDisconnected(mDisconnectReason);
         }
     }
 }

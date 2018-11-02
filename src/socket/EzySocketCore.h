@@ -15,6 +15,7 @@ enum EzySocketStatus {
     SocketNotConnect = 1,
     SocketConnecting,
     SocketConnected,
+    SocketDisconnecting,
     SocketDisconnected,
     SocketReconnecting
 };

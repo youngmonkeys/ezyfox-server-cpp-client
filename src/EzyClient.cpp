@@ -86,10 +86,8 @@ socket::EzySocketClient* EzyClient::newSocketClient() {
     return socketClient;
 }
 
-void EzyClient::disconnect() {
-    if(mSocketClient)
-        mSocketClient->onDisconnected(constant::UnknownDisconnection);
-    EZY_SAFE_DELETE(mSocketClient);
+void EzyClient::disconnect(int reason) {
+    mSocketClient->onDisconnect(reason);
 }
 
 void EzyClient::processEvents() {

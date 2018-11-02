@@ -71,7 +71,7 @@ public:
     ~EzyClient();
     void connect(std::string host, int port);
     bool reconnect();
-    void disconnect();
+    void disconnect(int reason);
     void send(request::EzyRequest* request);
     void send(constant::EzyCommand cmd, entity::EzyArray* data);
     command::EzySetup* setup();
