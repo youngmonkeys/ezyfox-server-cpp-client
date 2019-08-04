@@ -4,3 +4,4 @@ socket.xcodeproj/
 src/Info.plist
 lib/
 ezyfox-server-cpp-client.xcodeproj/
+src/main.cpp
