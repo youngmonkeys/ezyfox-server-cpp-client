@@ -90,7 +90,7 @@ protected:
     }
 };
 ```
-**7. Custom app's data handler**
+**8. Custom app's data handler**
 
 ```cpp
 class MessageResponseHandler : public handler::EzyAbstractAppDataHandler<entity::EzyValue> {
