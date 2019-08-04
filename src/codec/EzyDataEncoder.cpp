@@ -18,7 +18,7 @@ void EzyDataEncoder::clear() {
 }
 
 inline void __swapBytes(char* bytes, int size) {
-	for (int i = 0, j = size - 1; i < j; i++, j--) {
+	for (int i = 0, j = size - 1; i < j; ++i, --j) {
 		char c = bytes[i];
 		bytes[i] = bytes[j];
 		bytes[j] = c;

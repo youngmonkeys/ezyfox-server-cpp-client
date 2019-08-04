@@ -38,7 +38,7 @@ void EzyValue::printToOutStream(std::ostringstream& stream, int padding) {
 }
 
 void EzyValue::printPadding(std::ostringstream& stream, int padding) {
-	for (int i = 0; i < padding; i++) {
+	for (int i = 0; i < padding; ++i) {
 #if defined(ANDROID)
 		stream << "  ";
 #else

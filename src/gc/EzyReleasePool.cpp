@@ -22,7 +22,7 @@ void EzyReleasePool::addObject(base::EzyRef* object) {
 }
     
 void EzyReleasePool::releaseAll() {
-    for (int i = 0; i < mObjects.size(); i++) {
+    for (int i = 0; i < mObjects.size(); ++i) {
         mObjects[i]->release();
     }
     mObjects.clear();

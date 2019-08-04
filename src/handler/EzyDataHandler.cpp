@@ -77,7 +77,7 @@ void EzyLoginSuccessHandler::handleResponseData(entity::EzyValue* responseData) 
 void EzyLoginSuccessHandler::handleResponseAppDatas(entity::EzyArray* appDatas) {
     auto handlerManager = mClient->getHandlerManager();
     auto appAccessHandler = handlerManager->getDataHandler(constant::AppAccess);
-    for (int i = 0; i < appDatas->size(); i++)
+    for (int i = 0; i < appDatas->size(); ++i)
     {
         auto appData = appDatas->getArray(i);
         auto accessAppData = newAccessAppData(appData);

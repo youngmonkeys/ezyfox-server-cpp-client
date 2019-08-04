@@ -65,7 +65,7 @@ int main(int argc, const char * argv[]) {
     loopOnDetachedThread(client);
 //    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 //    connectOnMainThread(client);
-    for(int i = 0 ; i < 100 ; i++)
+    for(int i = 0 ; i < 100 ; ++i)
         connectOnDetachedThread(client);
 //    loopOnMainThread(client);
 //    std::this_thread::sleep_for(std::chrono::milliseconds(3000));
