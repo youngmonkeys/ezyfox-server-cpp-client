@@ -1,11 +1,15 @@
 #pragma once
 
-#include <thread>
+#include <mutex>
 #include "../EzyMacro.h"
 
 EZY_NAMESPACE_START
 class EzyClient;
 EZY_NAMESPACE_END
+
+EZY_NAMESPACE_START_WITH_ONLY(concurrent)
+class EzyScheduleAtFixedRate;
+EZY_NAMESPACE_END_WITH
 
 EZY_NAMESPACE_START_WITH_ONLY(manager)
 class EzyPingManager;
@@ -18,14 +22,13 @@ class EzySocketEventQueue;
 
 class EzyPingSchedule {
 protected:
-    bool mActive;
+    std::mutex mMutex;
     EzyClient* mClient;
-    std::thread* mThread;
     manager::EzyPingManager* mPingManager;
+    concurrent::EzyScheduleAtFixedRate* mSchedule;
 protected:
     EZY_SYNTHESIZE_WRITEONLY(socket::EzySocketEventQueue*, SocketEventQueue);
 protected:
-    void loop();
     void sendPingRequest();
 public:
     EzyPingSchedule(EzyClient* mClient);

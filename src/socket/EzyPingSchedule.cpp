@@ -3,15 +3,16 @@
 #include "EzyPingSchedule.h"
 #include "EzySocketCore.h"
 #include "../EzyClient.h"
-#include "../manager/EzyPingManager.h"
 #include "../event/EzyEvent.h"
+#include "../logger/EzyLogger.h"
+#include "../manager/EzyPingManager.h"
 #include "../constant/EzyDisconnectReason.h"
+#include "../concurrent/EzyScheduleAtFixedRate.h"
 
 EZY_NAMESPACE_START_WITH(socket)
 
 EzyPingSchedule::EzyPingSchedule(EzyClient* client) {
-    this->mActive = false;
-    this->mThread = 0;
+    this->mSchedule = 0;
     this->mClient = client;
     this->mSocketEventQueue = 0;
     this->mPingManager = client->getPingManager();
@@ -25,43 +26,34 @@ EzyPingSchedule::~EzyPingSchedule() {
 }
 
 void EzyPingSchedule::start() {
-    auto currentThread = mThread;
-    mThread = new std::thread(&EzyPingSchedule::loop, this);
-    mThread->detach();
-    EZY_SAFE_DELETE(currentThread);
+    std::unique_lock<std::mutex> lock(mMutex);
+    auto currentSchedule = mSchedule;
+    mSchedule = new concurrent::EzyScheduleAtFixedRate();
+    auto period = mPingManager->getPingPeriod();
+    mSchedule->schedule([this]() {this->sendPingRequest();}, period, period);
+    EZY_SAFE_DELETE(currentSchedule);
 }
 
 void EzyPingSchedule::stop() {
-    mActive = false;
-    EZY_SAFE_DELETE(mThread);
-}
-
-void EzyPingSchedule::loop() {
-    mActive = true;
-    while (mActive) {
-        auto maxLostPingCount = mPingManager->getMaxLostPingCount();
-        auto lostPingCount = mPingManager->increaseLostPingCount();
-        if(lostPingCount <= maxLostPingCount) {
-            sendPingRequest();
-            auto period = mPingManager->getPingPeriod();
-            std::this_thread::sleep_for(std::chrono::milliseconds(period));
-        }
-        else {
-            mActive = false;
-            auto event = event::EzyDisconnectionEvent::create(constant::ServerNotResponding);
-            mSocketEventQueue->addEvent(event);
-            break;
-        }
-        if(lostPingCount > 1) {
-            auto event = event::EzyLostPingEvent::create(lostPingCount);
-            mSocketEventQueue->addEvent(event);
-        }
-    }
+    EZY_SAFE_DELETE(mSchedule);
 }
 
 void EzyPingSchedule::sendPingRequest() {
-    auto request = request::EzyPingRequest::create();
-    mClient->send(request);
+    auto lostPingCount = mPingManager->increaseLostPingCount();
+    auto maxLostPingCount = mPingManager->getMaxLostPingCount();
+    if(lostPingCount >= maxLostPingCount) {
+        auto event = event::EzyDisconnectionEvent::create(constant::ServerNotResponding);
+        mSocketEventQueue->addEvent(event);
+    }
+    else {
+        auto request = request::EzyPingRequest::create();
+        mClient->send(request);
+    }
+    if(lostPingCount > 1) {
+        logger::log("lost ping count: %d", lostPingCount);
+        auto event = event::EzyLostPingEvent::create(lostPingCount);
+        mSocketEventQueue->addEvent(event);
+    }
 }
 
 EZY_NAMESPACE_END_WITH
