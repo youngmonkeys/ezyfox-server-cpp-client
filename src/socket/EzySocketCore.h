@@ -23,6 +23,7 @@ enum EzySocketStatus {
 typedef entity::EzyValue EzySocketData;
 
 class EzySocketEventQueue {
+protected:
 	std::mutex mMutex;
     std::vector<event::EzyEvent*> mEvents;
 public:

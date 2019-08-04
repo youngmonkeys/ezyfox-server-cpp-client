@@ -61,14 +61,10 @@ public:
 
 class EzyLoginSuccessHandler : public EzyDataHandler {
 protected:
-    virtual bool allowReconnection();
-    virtual void handleResponseData(entity::EzyValue* responseData);
-    virtual void handleResponseAppDatas(entity::EzyArray* appDatas);
-    virtual entity::EzyArray* newAccessAppData(entity::EzyArray* appData);
     virtual entity::EzyUser* newUser(entity::EzyArray* data);
     virtual entity::EzyZone* newZone(entity::EzyArray* data);
-    virtual void handleLoginSuccess(entity::EzyValue* responseData);
-    virtual void handleReconnectSuccess(entity::EzyValue* responseData);
+    virtual void handleLoginSuccess(entity::EzyArray* joinedApps,
+                                    entity::EzyValue* responseData);
 public:
     void handle(entity::EzyArray* data);
 };
