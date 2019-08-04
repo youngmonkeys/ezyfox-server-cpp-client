@@ -193,7 +193,7 @@ void EzySocketClient::processEventMessages() {
 
 void EzySocketClient::processEvents() {
     mSocketEventQueue->popAll(mLocalEventQueue);
-    for (int i = 0; i < mLocalEventQueue.size(); i++) {
+    for (int i = 0; i < mLocalEventQueue.size(); ++i) {
         auto event = mLocalEventQueue[i];
         mEventHandlers->handle(event);
     }
@@ -219,7 +219,7 @@ void EzySocketClient::processReceivedMessages() {
 void EzySocketClient::processReceivedMessages0() {
     mPingManager->setLostPingCount(0);
     mSocketReader->popMessages(mLocalMessageQueue);
-    for(int i = 0 ; i < mLocalMessageQueue.size() ; i++) {
+    for(int i = 0 ; i < mLocalMessageQueue.size() ; ++i) {
         processReceivedMessage(mLocalMessageQueue[i]);
     }
     mLocalMessageQueue.clear();

@@ -54,39 +54,7 @@ void EzyLoginSuccessHandler::handle(entity::EzyArray *data) {
     auto zone = newZone(data);
     mClient->setMe(user);
     mClient->setZone(zone);
-    auto allowReconnect = allowReconnection();
-    auto appCount = joinedApps->size();
-    auto shouldReconnect = allowReconnect && appCount > 0;
-    handleResponseData(responseData);
-    if(shouldReconnect) {
-        handleResponseAppDatas(joinedApps);
-        handleReconnectSuccess(responseData);
-    }
-    else {
-        handleLoginSuccess(responseData);
-    }        
-}
-
-bool EzyLoginSuccessHandler::allowReconnection() {
-    return false;
-}
-
-void EzyLoginSuccessHandler::handleResponseData(entity::EzyValue* responseData) {
-}
-
-void EzyLoginSuccessHandler::handleResponseAppDatas(entity::EzyArray* appDatas) {
-    auto handlerManager = mClient->getHandlerManager();
-    auto appAccessHandler = handlerManager->getDataHandler(constant::AppAccess);
-    for (int i = 0; i < appDatas->size(); i++)
-    {
-        auto appData = appDatas->getArray(i);
-        auto accessAppData = newAccessAppData(appData);
-        appAccessHandler->handle(accessAppData);
-    }
-}
-
-entity::EzyArray* EzyLoginSuccessHandler::newAccessAppData(entity::EzyArray* appData) {
-    return appData;
+    handleLoginSuccess(joinedApps, responseData);
 }
 
 entity::EzyUser* EzyLoginSuccessHandler::newUser(entity::EzyArray* data) {
@@ -103,11 +71,8 @@ entity::EzyZone* EzyLoginSuccessHandler::newZone(entity::EzyArray* data) {
     return zone;
 }
 
-void EzyLoginSuccessHandler::handleLoginSuccess(entity::EzyValue* responseData) {
-}
-
-void EzyLoginSuccessHandler::handleReconnectSuccess(entity::EzyValue* responseData) {
-    handleLoginSuccess(responseData);
+void EzyLoginSuccessHandler::handleLoginSuccess(entity::EzyArray* joinedApps,
+                                                entity::EzyValue* responseData) {
 }
 
 //===============================================

@@ -30,7 +30,7 @@ entity::EzyValue* EzyArrayBuffer::toValue() {
     }
     if(mType == entity::EzyValueType::TypeArray) {
         auto newValue = new entity::EzyArray();
-        for (int i = 0; i < mArray.size(); i++) {
+        for (int i = 0; i < mArray.size(); ++i) {
             newValue->addItem(mArray[i]);
         }
         return newValue;
@@ -93,7 +93,7 @@ void EzyDataDecoder::addData(const std::vector<char> data) {
 
 /****/
 inline void __swapBytes(char* bytes, int size) {
-    for (int i = 0, j = size - 1; i < j; i++, j--) {
+    for (int i = 0, j = size - 1; i < j; ++i, --j) {
         char c = bytes[i];
         bytes[i] = bytes[j];
         bytes[j] = c;

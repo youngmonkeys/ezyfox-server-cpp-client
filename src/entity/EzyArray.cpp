@@ -13,7 +13,7 @@ EzyArray::EzyArray() {
 void EzyArray::writeToBuffer(codec::EzyDataEncoder* encoder) {
 	encoder->writeArray((uint32_t)mData.size());
 	if (mData.size() > 0) {
-		for (int i = 0; i < mData.size(); i++) {
+		for (int i = 0; i < mData.size(); ++i) {
 			mData[i]->writeToBuffer(encoder);
 		}
 	}	
@@ -35,7 +35,7 @@ void EzyArray::printToOutStream(std::ostringstream& outStream, int padding) {
 
 	this->printPadding(outStream, padding);
 	outStream << "{" << std::endl;
-	for (int i = 0; i < mData.size(); i++) {
+	for (int i = 0; i < mData.size(); ++i) {
 		this->printPadding(outStream, padding + 1);
 		mData[i]->printToOutStream(outStream, padding + 1);
 		outStream << std::endl;
@@ -47,7 +47,7 @@ void EzyArray::printToOutStream(std::ostringstream& outStream, int padding) {
 #endif
 void EzyArray::toValue(rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator) {
 	value.SetArray();
-	for (int i = 0; i < mData.size(); i++) {
+	for (int i = 0; i < mData.size(); ++i) {
 		rapidjson::Value obj;
 		mData[i]->toValue(obj, allocator);
 		value.PushBack(obj, allocator);
@@ -75,7 +75,7 @@ int EzyArray::size() {
 }
 
 void EzyArray::clear() {
-	for (int i = 0; i < mData.size(); i++) {
+	for (int i = 0; i < mData.size(); ++i) {
 		mData[i]->release();
 	}
 	mData.clear();

@@ -95,7 +95,7 @@ inline EzyValue* __createDictFromJson(const rapidjson::Value& value) {
 
 inline EzyValue* __createArrayFromJson(const rapidjson::Value& value) {
 	EzyArray* pret = new EzyArray();
-	for (int i = 0; i < value.Size(); i++) {
+	for (int i = 0; i < value.Size(); ++i) {
 		EzyValue* item = __createValueFromJson(value[i]);
 		pret->addItem(item);
 	}

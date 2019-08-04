@@ -73,7 +73,7 @@ void log(const char * format, ...) {
 void hex(const char* buf, int len) {
 	char* data = new char[len * 3 + 10];
 
-	for (int i = 0; i<len; i++) {
+	for (int i = 0; i<len; ++i) {
 		sprintf(&data[i * 3], "%02X ", (unsigned char)buf[i]);
 	}
 

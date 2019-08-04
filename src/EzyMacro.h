@@ -167,14 +167,14 @@ public:\
 #define EZY_SAFE_RETAIN(p)           do { if(p) { (p)->retain(); } } while(0);
 #define EZY_BREAK_IF(cond)           if(cond) break
 #define EZY_SAFE_DELETE_VECTOR(vector) \
-for(int i = 0 ; i < vector.size() ; i++) {\
+for(int i = 0 ; i < vector.size() ; ++i) {\
     auto p = vector[i];\
     do { if(p) {delete (p); (p) = nullptr; } } while(0);\
 }\
 vector.clear();
 
 #define EZY_SAFE_RELEASE_VECTOR(vector) \
-for(int i = 0 ; i < vector.size() ; i++) {\
+for(int i = 0 ; i < vector.size() ; ++i) {\
     auto p = vector[i];\
     do { if(p) { (p)->release(); } } while(0);\
 }\
