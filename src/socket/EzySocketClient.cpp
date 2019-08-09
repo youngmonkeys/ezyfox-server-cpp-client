@@ -1,8 +1,10 @@
 #include <thread>
 #include "EzySocketClient.h"
 #include "EzyPingSchedule.h"
+#include "../logger/EzyLogger.h"
 #include "../event/EzyEvent.h"
 #include "../gc/EzyAutoReleasePool.h"
+#include "../concurrent/EzyThread.h"
 #include "../manager/EzyHandlerManager.h"
 #include "../manager/EzyPingManager.h"
 #include "../handler/EzyEventHandlers.h"
@@ -10,7 +12,6 @@
 #include "../constant/EzyDisconnectReason.h"
 #include "../constant/EzyConnectionFailedReason.h"
 #include "../config/EzyClientConfig.h"
-#include "../logger/EzyLogger.h"
 
 EZY_NAMESPACE_START_WITH(socket)
 
@@ -84,6 +85,7 @@ void EzySocketClient::connect0(long sleepTime) {
 }
 
 void EzySocketClient::connect1(long sleepTime) {
+    concurrent::EzyThread::setCurrentThreadName("ezyfox-connection");
     auto currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     auto dt = currentTime - mConnectTime;
     auto realSleepTime = sleepTime;

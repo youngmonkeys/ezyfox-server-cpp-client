@@ -28,14 +28,18 @@ EzyPingSchedule::~EzyPingSchedule() {
 void EzyPingSchedule::start() {
     std::unique_lock<std::mutex> lock(mMutex);
     auto currentSchedule = mSchedule;
-    mSchedule = new concurrent::EzyScheduleAtFixedRate();
+    mSchedule = new concurrent::EzyScheduleAtFixedRate("ezyfox-ping-schedule");
     auto period = mPingManager->getPingPeriod();
     mSchedule->schedule([this]() {this->sendPingRequest();}, period, period);
-    EZY_SAFE_DELETE(currentSchedule);
+    if(currentSchedule)
+        currentSchedule->stop();
 }
 
 void EzyPingSchedule::stop() {
-    EZY_SAFE_DELETE(mSchedule);
+    std::unique_lock<std::mutex> lock(mMutex);
+    if(mSchedule)
+        mSchedule->stop();
+    mSchedule = 0;
 }
 
 void EzyPingSchedule::sendPingRequest() {

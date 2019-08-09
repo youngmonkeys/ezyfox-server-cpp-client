@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <string>
 #include <atomic>
 #include <thread>
 #include <functional>
@@ -17,14 +18,18 @@ EZY_NAMESPACE_START_WITH_ONLY(concurrent)
 
 class EzyScheduleAtFixedRate {
 protected:
-    std::atomic<bool> mActive;
-    std::atomic<bool> mStarted;
-    std::thread* mThread;
+    bool mActive;
+    std::mutex mMutex;
+    std::thread mThread;
+    std::string mThreadName;
 public:
-    EzyScheduleAtFixedRate();
-    ~EzyScheduleAtFixedRate();
+    EzyScheduleAtFixedRate(std::string threadName = "");
     
     void schedule(std::function<void(void)> task, int delay, int period);
+    void stop();
+    
+protected:
+    bool stoppable();
 };
 
 EZY_NAMESPACE_END_WITH
