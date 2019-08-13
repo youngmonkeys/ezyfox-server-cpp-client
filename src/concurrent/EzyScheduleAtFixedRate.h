@@ -13,22 +13,25 @@
 #include <thread>
 #include <functional>
 #include "../EzyMacro.h"
+#include "../base/EzyRef.h"
 
 EZY_NAMESPACE_START_WITH_ONLY(concurrent)
 
-class EzyScheduleAtFixedRate {
+class EzyScheduleAtFixedRate : public base::EzyRef {
 protected:
     bool mActive;
-    std::mutex mMutex;
     std::thread mThread;
     std::string mThreadName;
+    std::mutex mScheduleMutex;
 public:
     EzyScheduleAtFixedRate(std::string threadName = "");
-    
+    ~EzyScheduleAtFixedRate();
     void schedule(std::function<void(void)> task, int delay, int period);
     void stop();
     
 protected:
+    void startLoop(std::function<void(void)> task, int delay, int period);
+    void startLoop0(std::function<void(void)> task, int delay, int period);
     bool stoppable();
 };
 

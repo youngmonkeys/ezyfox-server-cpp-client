@@ -47,7 +47,7 @@ EzyClient::~EzyClient() {
 }
 
 void EzyClient::connect(std::string host, int port) {
-    auto connectable = mSocketClient->isConnectable();
+    auto connectable = true;
     if(!connectable) {
         logger::log("client has already connected to: %s:%d", host.c_str(), port);
         return;
@@ -57,7 +57,7 @@ void EzyClient::connect(std::string host, int port) {
 }
 
 bool EzyClient::reconnect() {
-    auto connectable = mSocketClient->isConnectable();
+    auto connectable = true;
     if(!connectable) {
         auto host = mSocketClient->getHost();
         auto port = mSocketClient->getPort();
@@ -87,7 +87,7 @@ socket::EzySocketClient* EzyClient::newSocketClient() {
 }
 
 void EzyClient::disconnect(int reason) {
-    mSocketClient->onDisconnect(reason);
+    mSocketClient->disconnect(reason);
 }
 
 void EzyClient::processEvents() {

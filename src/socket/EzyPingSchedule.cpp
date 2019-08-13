@@ -26,7 +26,7 @@ EzyPingSchedule::~EzyPingSchedule() {
 }
 
 void EzyPingSchedule::start() {
-    std::unique_lock<std::mutex> lock(mMutex);
+    std::unique_lock<std::mutex> lock(mPingMutex);
     auto currentSchedule = mSchedule;
     mSchedule = new concurrent::EzyScheduleAtFixedRate("ezyfox-ping-schedule");
     auto period = mPingManager->getPingPeriod();
@@ -36,7 +36,7 @@ void EzyPingSchedule::start() {
 }
 
 void EzyPingSchedule::stop() {
-    std::unique_lock<std::mutex> lock(mMutex);
+    std::unique_lock<std::mutex> lock(mPingMutex);
     if(mSchedule)
         mSchedule->stop();
     mSchedule = 0;

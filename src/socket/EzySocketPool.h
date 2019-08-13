@@ -8,6 +8,7 @@ EZY_NAMESPACE_START_WITH(socket)
 
 class EzySocketPool {
 protected:
+    bool mDestroyed;
     std::mutex mPoolMutex;
     std::condition_variable mPoolCondition;
     std::queue<EzySocketData*> mDataQueue;
@@ -20,6 +21,7 @@ public:
     virtual void popAll(std::vector<EzySocketData*>& buffer);
     virtual void push(EzySocketData* data);
     virtual void clear();
+    virtual void destroy();
 protected:
     virtual void clear0();
 };

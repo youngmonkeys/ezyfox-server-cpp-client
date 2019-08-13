@@ -61,7 +61,7 @@ void EzyTcpSocketWriter::update() {
 				}
 			}
 		}
-		else{
+		else {
 			setActive(false);
 			return;
 		}
@@ -151,13 +151,11 @@ void EzyTcpSocketClient::resetSocket() {
 }
 
 void EzyTcpSocketClient::createAdapters() {
-	std::unique_lock<std::mutex> lk(mClientMutex);
 	mSocketReader = new EzyTcpSocketReader();
 	mSocketWriter = new EzyTcpSocketWriter();
 }
 
 void EzyTcpSocketClient::startAdapters() {
-	std::unique_lock<std::mutex> lk(mClientMutex);
 	((EzyTcpSocketWriter*)mSocketWriter)->mSocket = mSocket;
 	mSocketWriter->start();
 	((EzyTcpSocketReader*)mSocketReader)->mSocket = mSocket;

@@ -22,7 +22,7 @@ class EzySocketEventQueue;
 
 class EzyPingSchedule {
 protected:
-    std::mutex mMutex;
+    std::mutex mPingMutex;
     EzyClient* mClient;
     manager::EzyPingManager* mPingManager;
     concurrent::EzyScheduleAtFixedRate* mSchedule;

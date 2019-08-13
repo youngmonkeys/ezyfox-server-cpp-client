@@ -3,6 +3,7 @@
 EZY_NAMESPACE_START_WITH(socket)
 
 EzySocketPool::EzySocketPool() {
+    mDestroyed = false;
     clear0();
 }
 
@@ -21,6 +22,12 @@ void EzySocketPool::push(EzySocketData* data) {
 void EzySocketPool::clear() {
     std::unique_lock<std::mutex> lk(mPoolMutex);
     clear0();
+}
+
+void EzySocketPool::destroy() {
+    std::unique_lock<std::mutex> lk(mPoolMutex);
+    clear0();
+    mDestroyed = true;
     mPoolCondition.notify_all();
 }
 
@@ -34,7 +41,7 @@ void EzySocketPool::clear0() {
 
 EzySocketData* EzySocketPool::take() {
     std::unique_lock<std::mutex> lk(mPoolMutex);
-    mPoolCondition.wait(lk, [=] { return !this->mDataQueue.empty(); });
+    mPoolCondition.wait(lk, [=] { return mDestroyed || this->mDataQueue.size() > 0; });
     if(mDataQueue.empty()) return 0;
     EzySocketData* data = mDataQueue.front();
     mDataQueue.pop();

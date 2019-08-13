@@ -6,7 +6,6 @@
 EZY_NAMESPACE_START_WITH(socket)
 
 EzySocketWriter::EzySocketWriter() {
-    mSocketPool = new EzySocketPool();
     mEncoder = new codec::EzyDataEncoder();
 }
 
