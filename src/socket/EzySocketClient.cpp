@@ -27,10 +27,14 @@ EzySocketClient::EzySocketClient() {
     mReconnectCount = 0;
     mReconnectConfig = 0;
     mPingManager = 0;
+    mPingSchedule = 0;
     mHandlerManager = 0;
+    mEventHandlers = 0;
+    mDataHandlers = 0;
     mLocalEventQueue.clear();
     mLocalMessageQueue.clear();
     mSocketStatusesBuffer.clear();
+    mUnloggableCommands.clear();
     mDisconnectReason = constant::UnknownDisconnection;
     mConnectionFailedReason = constant::UnknownFailure;
     mSocketEventQueue = new EzySocketEventQueue();
