@@ -21,7 +21,7 @@ EZY_NAMESPACE_START_WITH(socket)
 
 class EzyMainEventsLoop {
 protected:
-    std::atomic<bool> mActive;
+    bool mActive;
     EzyClients* mClients;
     std::vector<EzyClient*> mCachedClients;
 public:

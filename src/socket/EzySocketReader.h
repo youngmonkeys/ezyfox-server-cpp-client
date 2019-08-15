@@ -5,8 +5,6 @@
 
 EZY_NAMESPACE_START_WITH(socket)
 
-class EzySocketDelegate;
-
 class EzySocketReader : public EzySocketAdapter, public codec::EzyDataDecoderDelegate {
 protected:
 #ifdef USE_MESSAGE_HEADER

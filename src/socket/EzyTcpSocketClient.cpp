@@ -3,6 +3,7 @@
 #include "EzyTcpSocketClient.h"
 #include "../logger/EzyLogger.h"
 #include "../gc/EzyAutoReleasePool.h"
+#include "../concurrent/EzyThread.h"
 #include "../constant/EzyConnectionFailedReason.h"
 #include "../constant/EzyDisconnectReason.h"
 
@@ -15,6 +16,7 @@ EzyTcpSocketWriter::~EzyTcpSocketWriter() {
 }
 
 void EzyTcpSocketWriter::update() {
+    concurrent::EzyThread::setCurrentThreadName("ezyfox-socket-writer");
 	size_t rs;
 	size_t sentData;
 #ifdef EZY_DEBUG
@@ -45,7 +47,7 @@ void EzyTcpSocketWriter::update() {
 				}
 				else if (rs == 0) {
 #ifdef EZY_DEBUG
-                    logger::log("server shutdown[2]");
+                    logger::log("connection shutdown[2]");
 #endif
 					setActive(false);
 					return;
@@ -59,7 +61,7 @@ void EzyTcpSocketWriter::update() {
 				}
 			}
 		}
-		else{
+		else {
 			setActive(false);
 			return;
 		}
@@ -75,6 +77,7 @@ EzyTcpSocketReader::~EzyTcpSocketReader() {
 
 #define BUFFER_SIZE 102400
 void EzyTcpSocketReader::update() {
+    concurrent::EzyThread::setCurrentThreadName("ezyfox-socket-reader");
 	size_t rs = 0;
 	char dataBuffer[BUFFER_SIZE];
 #ifdef EZY_DEBUG
@@ -95,7 +98,7 @@ void EzyTcpSocketReader::update() {
 		}
 		else if (rs == 0) {
 #ifdef EZY_DEBUG
-			logger::log("server shutdown[1]");
+			logger::log("connection shutdown[1]");
 #endif
 			setActive(false);
 			break;
@@ -148,13 +151,11 @@ void EzyTcpSocketClient::resetSocket() {
 }
 
 void EzyTcpSocketClient::createAdapters() {
-	std::unique_lock<std::mutex> lk(mClientMutex);
 	mSocketReader = new EzyTcpSocketReader();
 	mSocketWriter = new EzyTcpSocketWriter();
 }
 
 void EzyTcpSocketClient::startAdapters() {
-	std::unique_lock<std::mutex> lk(mClientMutex);
 	((EzyTcpSocketWriter*)mSocketWriter)->mSocket = mSocket;
 	mSocketWriter->start();
 	((EzyTcpSocketReader*)mSocketReader)->mSocket = mSocket;

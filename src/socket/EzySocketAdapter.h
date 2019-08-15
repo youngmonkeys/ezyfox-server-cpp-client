@@ -3,6 +3,7 @@
 #include <queue>
 #include <ctime>
 #include <vector>
+#include <mutex>
 #include "EzySocketCore.h"
 #include "EzySocketPool.h"
 #include "../base/EzyRef.h"
@@ -10,10 +11,11 @@
 
 EZY_NAMESPACE_START_WITH(socket)
 
-class EzySocketAdapter {
+class EzySocketAdapter : public base::EzyRef {
 protected:
-    std::atomic_bool mStopped;
-    std::atomic_bool mActive;
+    bool mActive;
+    bool mStopped;
+    std::mutex mAdapterMutex;
 	EzySocketPool* mSocketPool;
 protected:
 	virtual void update();
@@ -23,10 +25,10 @@ public:
 	virtual void start();
     virtual void run();
 	virtual void stop();
-    virtual bool isActive();
-    virtual bool isStopped();
     virtual void setActive(bool active);
     virtual void setStopped(bool stopped);
+    virtual bool isActive();
+    virtual bool isStopped();
 	virtual void pushMessage(EzySocketData* data);
     virtual EzySocketData* popMessage();
     virtual void popMessages(std::vector<EzySocketData*>& buffer);

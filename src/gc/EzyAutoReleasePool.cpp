@@ -5,6 +5,7 @@
 EZY_NAMESPACE_START_WITH(gc)
 
 EzyAutoReleasePool::EzyAutoReleasePool() {
+    mPools.clear();
 }
 
 #ifdef EZY_DEBUG

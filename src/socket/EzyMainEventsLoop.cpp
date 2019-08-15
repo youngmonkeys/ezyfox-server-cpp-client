@@ -16,6 +16,7 @@ EZY_NAMESPACE_START_WITH(socket)
 
 EzyMainEventsLoop::EzyMainEventsLoop() {
     this->mActive = false;
+    this->mCachedClients.clear();
     this->mClients = EzyClients::getInstance();
 }
 

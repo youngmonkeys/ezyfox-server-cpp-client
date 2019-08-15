@@ -12,51 +12,60 @@ EZY_NAMESPACE_START_WITH(socket)
 EzySocketAdapter::EzySocketAdapter() {
 	mActive = false;
     mStopped = false;
-	mSocketPool = 0;
+	mSocketPool = new EzySocketPool();
 }
 
 EzySocketAdapter::~EzySocketAdapter() {
     mActive = false;
+    mStopped = true;
     EZY_SAFE_DELETE(mSocketPool)
 }
 
 void EzySocketAdapter::run() {
-    setStopped(false);
 	update();
     gc::EzyAutoReleasePool::getInstance()->removePool();
     setStopped(true);
-}
-
-bool EzySocketAdapter::isActive() {
-	return mActive;
-}
-
-bool EzySocketAdapter::isStopped() {
-    return mStopped;
-}
-
-void EzySocketAdapter::setActive(bool active) {
-	mActive = active;
-}
-
-void EzySocketAdapter::setStopped(bool stopped) {
-    mStopped = stopped;
+    release();
 }
 
 void EzySocketAdapter::start() {
-	if (!isActive()) {
-		setActive(true);
+    std::unique_lock<std::mutex> lk(mAdapterMutex);
+	if (!mActive) {
+        mActive = true;
+        mStopped = false;
+        retain();
 		std::thread newThread(&EzySocketAdapter::run, this);
 		newThread.detach();
 	}
 }
 
 void EzySocketAdapter::stop() {
-	mSocketPool->clear();
-    setActive(false);
+    std::unique_lock<std::mutex> lk(mAdapterMutex);
+    mSocketPool->destroy();
+    mActive = false;
 }
 
 void EzySocketAdapter::update() {
+}
+
+void EzySocketAdapter::setActive(bool active) {
+    std::unique_lock<std::mutex> lk(mAdapterMutex);
+    mActive = active;
+}
+
+void EzySocketAdapter::setStopped(bool stopped) {
+    std::unique_lock<std::mutex> lk(mAdapterMutex);
+    mStopped = stopped;
+}
+
+bool EzySocketAdapter::isActive() {
+    std::unique_lock<std::mutex> lk(mAdapterMutex);
+    return mActive;
+}
+
+bool EzySocketAdapter::isStopped() {
+    std::unique_lock<std::mutex> lk(mAdapterMutex);
+    return mStopped;
 }
 
 void EzySocketAdapter::pushMessage(EzySocketData* data) {

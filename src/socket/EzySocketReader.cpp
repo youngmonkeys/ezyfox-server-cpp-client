@@ -6,10 +6,10 @@
 EZY_NAMESPACE_START_WITH(socket)
 
 EzySocketReader::EzySocketReader() {
-    mSocketPool = new EzySocketPool();
-    mMessageHeader = new codec::EzyMessageHeader();
+    mByteBuffer.clear();
     mDecoder = new codec::EzyDataDecoder();
     mDecoder->setDelegate(this);
+    mMessageHeader = new codec::EzyMessageHeader();
 }
 
 EzySocketReader::~EzySocketReader() {

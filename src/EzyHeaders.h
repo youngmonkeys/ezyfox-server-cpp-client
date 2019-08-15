@@ -2,6 +2,7 @@
 
 #include "logger/EzyLogger.h"
 #include "util/EzyMaps.h"
+#include "concurrent/EzyThread.h"
 #include "constant/EzyCommand.h"
 #include "constant/EzyConnectionStatus.h"
 #include "constant/EzyConnectionFailedReason.h"
