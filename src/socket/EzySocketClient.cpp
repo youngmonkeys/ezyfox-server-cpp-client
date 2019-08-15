@@ -132,7 +132,8 @@ void EzySocketClient::connect1(long sleepTime) {
         this->resetSocket();
         this->mSocketStatuses->push(SocketConnectFailed);
     }
-    this->release();
+    gc::EzyAutoReleasePool::getInstance()->removePool();
+    release();
 }
 
 bool EzySocketClient::connectNow() {

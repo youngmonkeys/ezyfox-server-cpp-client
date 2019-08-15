@@ -15,6 +15,7 @@ EzyPingSchedule::EzyPingSchedule(EzyClient* client) {
     this->mSchedule = 0;
     this->mClient = client;
     this->mSocketEventQueue = 0;
+    this->mPingRequest = new request::EzyPingRequest();
     this->mPingManager = client->getPingManager();
 }
 
@@ -23,16 +24,15 @@ EzyPingSchedule::~EzyPingSchedule() {
     this->mClient = 0;
     this->mPingManager = 0;
     this->mSocketEventQueue = 0;
+    EZY_SAFE_DELETE(mPingRequest);
 }
 
 void EzyPingSchedule::start() {
     std::unique_lock<std::mutex> lock(mPingMutex);
-    auto currentSchedule = mSchedule;
+    if(mSchedule) mSchedule->stop();
     mSchedule = new concurrent::EzyScheduleAtFixedRate("ezyfox-ping-schedule");
     auto period = mPingManager->getPingPeriod();
     mSchedule->schedule([this]() {this->sendPingRequest();}, period, period);
-    if(currentSchedule)
-        currentSchedule->stop();
 }
 
 void EzyPingSchedule::stop() {
@@ -50,8 +50,7 @@ void EzyPingSchedule::sendPingRequest() {
         mSocketEventQueue->addEvent(event);
     }
     else {
-        auto request = request::EzyPingRequest::create();
-        mClient->send(request);
+        mClient->send(mPingRequest);
     }
     if(lostPingCount > 1) {
         logger::log("lost ping count: %d", lostPingCount);
