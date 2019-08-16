@@ -17,6 +17,7 @@ class EzyEventHandler {
 protected:
     EzyClient* mClient;
 public:
+    EzyEventHandler();
     virtual ~EzyEventHandler();
     virtual void handle(event::EzyEvent* event) = 0;
 public:

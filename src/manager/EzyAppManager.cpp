@@ -6,6 +6,9 @@
 EZY_NAMESPACE_START_WITH(manager)
 
 EzyAppManager::EzyAppManager() {
+    mAppList.clear();
+    mAppByIds.clear();
+    mAppByNames.clear();
 }
 
 EzyAppManager::~EzyAppManager() {

@@ -10,7 +10,6 @@
 
 #include <string>
 #include <atomic>
-#include <thread>
 #include <functional>
 #include "../EzyMacro.h"
 #include "../base/EzyRef.h"
@@ -19,8 +18,7 @@ EZY_NAMESPACE_START_WITH_ONLY(concurrent)
 
 class EzyScheduleAtFixedRate : public base::EzyRef {
 protected:
-    bool mActive;
-    std::thread mThread;
+    bool mActive;;
     std::string mThreadName;
     std::mutex mScheduleMutex;
 public:

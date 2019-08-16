@@ -21,6 +21,11 @@ enum EzySocketStatus {
     SocketReconnecting
 };
 
+bool isSocketConnectable(EzySocketStatus status);
+bool isSocketDisconnectable(EzySocketStatus status);
+bool isSocketReconnectable(EzySocketStatus status);
+bool isSocketDestroyable(EzySocketStatus status);
+
 typedef entity::EzyValue EzySocketData;
 
 class EzySocketEventQueue {

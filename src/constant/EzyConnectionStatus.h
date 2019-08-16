@@ -17,4 +17,8 @@ enum EzyConnectionStatus
 
 std::string getConnectionStatusName(int command);
 
+bool isClientConnectable(EzyConnectionStatus status);
+bool isClientReconnectable(EzyConnectionStatus status);
+bool isClientDestroyable(EzyConnectionStatus status);
+
 EZY_NAMESPACE_END_WITH

@@ -9,6 +9,10 @@
 
 EZY_NAMESPACE_START_WITH(handler)
 
+EzyEventHandler::EzyEventHandler() {
+    this->mClient = 0;
+}
+
 EzyEventHandler::~EzyEventHandler() {
     this->mClient = 0;
 }

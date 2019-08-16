@@ -78,9 +78,10 @@ public:
     virtual void sendMessage(EzySocketData* message);
     virtual void processEventMessages();
     virtual void disconnect(int reason);
-    virtual void onDisconnected(int reason);
+    virtual void onDisconnected(int reason = 0);
     virtual void setPingSchedule(EzyPingSchedule* pingSchedule);
     virtual void setHandlerManager(manager::EzyHandlerManager* handlerManager);
+    virtual void destroy();
 };
 
 EZY_NAMESPACE_END_WITH

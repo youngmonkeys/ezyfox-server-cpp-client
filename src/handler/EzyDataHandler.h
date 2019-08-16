@@ -29,6 +29,7 @@ class EzyDataHandler {
 protected:
     EzyClient* mClient;
 public:
+    EzyDataHandler();
     virtual ~EzyDataHandler();
     virtual void handle(entity::EzyArray* data) = 0;
 public:
@@ -54,6 +55,8 @@ protected:
     virtual void postHandle(entity::EzyArray* data);
     virtual request::EzyRequest* getLoginRequest() = 0;
 public:
+    EzyHandshakeHandler();
+    virtual ~EzyHandshakeHandler();
     void handle(entity::EzyArray* data);
 };
 
@@ -65,6 +68,17 @@ protected:
     virtual entity::EzyZone* newZone(entity::EzyArray* data);
     virtual void handleLoginSuccess(entity::EzyArray* joinedApps,
                                     entity::EzyValue* responseData);
+public:
+    void handle(entity::EzyArray* data);
+};
+
+//===============================================
+
+//===============================================
+
+class EzyLoginErrorHandler : public EzyDataHandler {
+protected:
+    virtual void handleLoginError(entity::EzyArray* data);
 public:
     void handle(entity::EzyArray* data);
 };

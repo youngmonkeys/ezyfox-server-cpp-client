@@ -39,24 +39,16 @@ EZY_NAMESPACE_END_WITH
 
 EZY_NAMESPACE_START
 
-class EzyClientStatusAware {
-public:
-    virtual constant::EzyConnectionStatus getStatus() = 0;
-    virtual void setStatus(constant::EzyConnectionStatus status) = 0;
-};
-
-class EzyClient : public socket::EzySender, public EzyClientStatusAware {
+class EzyClient : public socket::EzySender {
 protected:
-    std::mutex mStatusMutex;
     command::EzySetup* mSetup;
-    constant::EzyConnectionStatus mStatus;
-    socket::EzySocketClient* mSocketClient;
     std::set<int> mUnloggableCommands;
-    std::map<int, entity::EzyApp*> mAppsById;
+    socket::EzySocketClient* mSocketClient;
     request::EzyRequestSerializer* mRequestSerializer;
 protected:
     EZY_SYNTHESIZE(entity::EzyUser*, Me)
     EZY_SYNTHESIZE(entity::EzyZone*, Zone)
+    EZY_SYNTHESIZE(constant::EzyConnectionStatus, Status);
     EZY_SYNTHESIZE_READONLY(std::string, Name);
     EZY_SYNTHESIZE_READONLY(config::EzyClientConfig*, Config);
     EZY_SYNTHESIZE_READONLY(manager::EzyPingManager*, PingManager);
@@ -69,17 +61,15 @@ protected:
 public:
     EzyClient(config::EzyClientConfig* config);
     ~EzyClient();
+    command::EzySetup* setup();
     void connect(std::string host, int port);
     bool reconnect();
     void disconnect(int reason);
     void send(request::EzyRequest* request);
     void send(constant::EzyCommand cmd, entity::EzyArray* data);
-    command::EzySetup* setup();
-    void addApp(entity::EzyApp* app);
-    entity::EzyApp* getAppById(int appId);
-    constant::EzyConnectionStatus getStatus();
-    void setStatus(constant::EzyConnectionStatus status);
     void processEvents();
+    entity::EzyApp* getAppById(int appId);
+    void destroy();
 };
 
 EZY_NAMESPACE_END

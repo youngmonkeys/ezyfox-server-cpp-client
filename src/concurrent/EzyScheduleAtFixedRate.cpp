@@ -6,6 +6,7 @@
 //  Copyright © 2019 Young Monkeys. All rights reserved.
 //
 
+#include <thread>
 #include <chrono>
 #include "EzyThread.h"
 #include "EzyScheduleAtFixedRate.h"
@@ -27,12 +28,12 @@ void EzyScheduleAtFixedRate::schedule(std::function<void ()> task, int delay, in
     if(mActive)
         return;
     this->mActive = true;
-    this->mThread = std::thread(&EzyScheduleAtFixedRate::startLoop, this, task, delay, period);
-    this->mThread.detach();
+    this->retain();
+    std::thread newThread(&EzyScheduleAtFixedRate::startLoop, this, task, delay, period);
+    newThread.detach();
 }
 
 void EzyScheduleAtFixedRate::startLoop(std::function<void ()> task, int delay, int period) {
-    this->retain();
     this->startLoop0(task, delay, period);
     this->release();
 }
@@ -56,9 +57,12 @@ void EzyScheduleAtFixedRate::startLoop0(std::function<void ()> task, int delay, 
         auto endTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
         auto elapsedTime = (int)(endTime - startTime);
         int remainSleepTime = period - elapsedTime;
+        if(stoppable())
+            break;
         if(remainSleepTime > 0)
             std::this_thread::sleep_for(std::chrono::milliseconds(remainSleepTime));
     }
+    releasePool->releaseAll();
     gc::EzyAutoReleasePool::getInstance()->removePool();
 }
 

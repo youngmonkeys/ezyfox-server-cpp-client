@@ -17,8 +17,9 @@ static std::map<int, std::string> sDisconnectReasonNames = {
 };
 
 std::string getDisconnectReasonName(int reason) {
-    if(sDisconnectReasonNames.count(reason) > 0)
-        return sDisconnectReasonNames[reason];
+    auto it = sDisconnectReasonNames.find(reason);
+    if(it != sDisconnectReasonNames.end())
+        return it->second;
     return std::to_string(reason);
 }
 

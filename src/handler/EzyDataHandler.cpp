@@ -1,4 +1,5 @@
 #include "EzyDataHandler.h"
+#include "../logger/EzyLogger.h"
 #include "../EzyClient.h"
 #include "../request/EzyRequest.h"
 #include "../socket/EzyPingSchedule.h"
@@ -10,6 +11,10 @@
 #include "../handler/EzyAppDataHandlers.h"
 
 EZY_NAMESPACE_START_WITH(handler)
+
+EzyDataHandler::EzyDataHandler() {
+    this->mClient = 0;
+}
 
 EzyDataHandler::~EzyDataHandler() {
     this->mClient = 0;
@@ -25,6 +30,14 @@ void EzyPongHandler::handle(entity::EzyArray *data) {
 }
 
 //===============================================
+EzyHandshakeHandler::EzyHandshakeHandler() {
+    this->mPingSchedule = 0;
+}
+
+EzyHandshakeHandler::~EzyHandshakeHandler() {
+    this->mPingSchedule = 0;
+}
+
 void EzyHandshakeHandler::handle(entity::EzyArray* data) {
     mPingSchedule->start();
     handleLogin(data);
@@ -77,13 +90,23 @@ void EzyLoginSuccessHandler::handleLoginSuccess(entity::EzyArray* joinedApps,
 
 //===============================================
 
+void EzyLoginErrorHandler::handle(entity::EzyArray *data) {
+    mClient->disconnect(401);
+    handleLoginError(data);
+}
+
+void EzyLoginErrorHandler::handleLoginError(entity::EzyArray *data) {
+}
+
+//===============================================
+
 void EzyAccessAppHandler::handle(entity::EzyArray* data) {
     auto zone = mClient->getZone();
     auto appManager = zone->getAppManager();
     auto app = newApp(zone, data);
     appManager->addApp(app);
-    mClient->addApp(app);
     postHandle(app, data);
+    logger::log("access app: %s successfully", app->getName().c_str());
 }
 
 void EzyAccessAppHandler::postHandle(entity::EzyApp* app, entity::EzyArray* data) {

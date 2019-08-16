@@ -4,6 +4,26 @@
 
 EZY_NAMESPACE_START_WITH(socket)
 
+bool isSocketConnectable(EzySocketStatus status) {
+    return status == SocketNotConnect ||
+    status == SocketDisconnected ||
+    status == SocketConnectFailed;
+}
+
+bool isSocketDisconnectable(EzySocketStatus status) {
+    return status == SocketConnected || status == SocketDisconnecting;
+}
+
+bool isSocketReconnectable(EzySocketStatus status) {
+    return status == SocketDisconnected || status == SocketConnectFailed;
+}
+
+bool isSocketDestroyable(EzySocketStatus status) {
+    return status == SocketNotConnect ||
+    status == SocketDisconnected ||
+    status == SocketConnectFailed;
+}
+
 EzySocketEventQueue::EzySocketEventQueue() {
 }
 
