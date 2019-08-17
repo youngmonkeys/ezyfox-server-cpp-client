@@ -185,6 +185,7 @@ bool EzyTcpSocketClient::connectNow() {
 		logger::log("getaddrinfo failure %d", ret);
 #endif
         mConnectionFailedReason = constant::UnknownFailure;
+        freeaddrinfo(peer);
 		return false;
 	}
 

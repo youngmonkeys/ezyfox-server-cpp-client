@@ -2,6 +2,7 @@
 
 #include <queue>
 #include <vector>
+#include <condition_variable>
 #include "EzySocketCore.h"
 
 EZY_NAMESPACE_START_WITH(socket)

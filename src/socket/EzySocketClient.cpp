@@ -187,9 +187,6 @@ void EzySocketClient::disconnect(int reason) {
     if(mSocketStatuses->last() != SocketConnected)
         return;
     onDisconnected(mDisconnectReason = reason);
-//    closeSocket();
-//    mSocketReader->stop();
-//    mSocketStatuses->push(SocketDisconnected);
 }
 
 void EzySocketClient::sendMessage(EzySocketData* message) {

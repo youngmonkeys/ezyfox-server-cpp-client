@@ -42,7 +42,7 @@ void EzyScheduleAtFixedRate::startLoop0(std::function<void ()> task, int delay, 
     if(mThreadName.length() > 0)
         EzyThread::setCurrentThreadName(mThreadName);
     if(delay > 0)
-        std::this_thread::sleep_for(std::chrono::milliseconds(delay));
+        sleep(delay);
 #ifdef EZY_DEBUG
     auto releasePool = gc::EzyAutoReleasePool::getInstance()->newPool(mThreadName);
 #else
@@ -57,24 +57,35 @@ void EzyScheduleAtFixedRate::startLoop0(std::function<void ()> task, int delay, 
         auto endTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
         auto elapsedTime = (int)(endTime - startTime);
         int remainSleepTime = period - elapsedTime;
-        if(stoppable())
-            break;
         if(remainSleepTime > 0)
-            std::this_thread::sleep_for(std::chrono::milliseconds(remainSleepTime));
+            sleep(remainSleepTime);
     }
-    releasePool->releaseAll();
     gc::EzyAutoReleasePool::getInstance()->removePool();
 }
 
 void EzyScheduleAtFixedRate::stop() {
     std::unique_lock<std::mutex> lk(mScheduleMutex);
     this->mActive = false;
+    this->wakeup();
     this->release();
 }
 
 bool EzyScheduleAtFixedRate::stoppable() {
     std::unique_lock<std::mutex> lk(mScheduleMutex);
     return mActive == false;
+}
+
+void EzyScheduleAtFixedRate::sleep(int time) {
+    auto duration = std::chrono::milliseconds(time);
+    std::unique_lock<std::mutex> lk(mSleepMutex);
+    mSleepCondition.wait_for(lk, duration, [=] {
+        return !mActive;
+    });
+}
+
+void EzyScheduleAtFixedRate::wakeup() {
+    std::unique_lock<std::mutex> lk(mSleepMutex);
+    mSleepCondition.notify_one();
 }
 
 EZY_NAMESPACE_END_WITH

@@ -20,7 +20,8 @@ EzyPingSchedule::EzyPingSchedule(EzyClient* client) {
 }
 
 EzyPingSchedule::~EzyPingSchedule() {
-    stop();
+    if(mSchedule) mSchedule->stop();
+    this->mSchedule = 0;
     this->mClient = 0;
     this->mPingManager = 0;
     this->mSocketEventQueue = 0;
@@ -32,7 +33,7 @@ void EzyPingSchedule::start() {
     if(mSchedule) mSchedule->stop();
     mSchedule = new concurrent::EzyScheduleAtFixedRate("ezyfox-ping-schedule");
     auto period = mPingManager->getPingPeriod();
-    mSchedule->schedule([this]() {this->sendPingRequest();}, period, period);
+    mSchedule->schedule([=]() {this->sendPingRequest();}, period, period);
 }
 
 void EzyPingSchedule::stop() {
