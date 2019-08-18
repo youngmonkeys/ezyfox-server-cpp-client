@@ -60,6 +60,7 @@ void EzyClient::connect(std::string host, int port) {
         return;
     }
     preconnect();
+    setStatus(constant::Connecting);
     mSocketClient->connectTo(host, port);
 }
 

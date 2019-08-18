@@ -22,24 +22,20 @@ void EzyEventHandler::setClient(EzyClient* client) {
 }
 
 //==========================================================
-void EzyConnectionSuccessHandler::process(event::EzyEvent* evt)
-{
+void EzyConnectionSuccessHandler::process(event::EzyEvent* evt) {
     updateConnectionStatus();
     sendHandshakeRequest();
     postHandle();
 }
 
-void EzyConnectionSuccessHandler::updateConnectionStatus()
-{
-    mClient->setStatus(constant::EzyConnectionStatus::Connected);
+void EzyConnectionSuccessHandler::updateConnectionStatus() {
+    mClient->setStatus(constant::Connected);
 }
 
-void EzyConnectionSuccessHandler::postHandle()
-{
+void EzyConnectionSuccessHandler::postHandle() {
 }
 
-void EzyConnectionSuccessHandler::sendHandshakeRequest()
-{
+void EzyConnectionSuccessHandler::sendHandshakeRequest() {
     auto request = newHandshakeRequest();
     mClient->send(request);
 }
@@ -82,13 +78,11 @@ void EzyDisconnectionHandler::process(event::EzyDisconnectionEvent* event) {
     auto should = shouldReconnect(event);
     auto mustReconnect = reconnectConfig->isEnable() && should;
     auto reconnecting = false;
+    mClient->setStatus(constant::Disconnected);
     if (mustReconnect)
         reconnecting = mClient->reconnect();
     if (!reconnecting)
-    {
-        mClient->setStatus(constant::Disconnected);
         control(event);
-    }
 }
 
 void EzyDisconnectionHandler::preHandle(event::EzyDisconnectionEvent* event) {
@@ -110,13 +104,11 @@ void EzyConnectionFailureHandler::process(event::EzyConnectionFailureEvent* even
     auto should = shouldReconnect(event);
     auto mustReconnect = reconnectConfig->isEnable() && should;
     auto reconnecting = false;
+    mClient->setStatus(constant::Failure);
     if (mustReconnect)
         reconnecting = mClient->reconnect();
     if (!reconnecting)
-    {
-        mClient->setStatus(constant::Failure);
         control(event);
-    }
 }
 
 bool EzyConnectionFailureHandler::shouldReconnect(event::EzyConnectionFailureEvent* event) {
