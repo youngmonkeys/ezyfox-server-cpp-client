@@ -9,7 +9,6 @@
 #pragma once
 
 #include <vector>
-#include <atomic>
 #include "../EzyMacro.h"
 
 EZY_NAMESPACE_START
