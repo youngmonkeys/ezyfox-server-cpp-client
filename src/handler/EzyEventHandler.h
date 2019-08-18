@@ -49,8 +49,6 @@ protected:
     virtual std::string getStoredToken();
     void sendHandshakeRequest();
     request::EzyRequest* newHandshakeRequest();
-private:
-    void updateConnectionStatus();
 };
 //==========================================================
 

@@ -23,13 +23,9 @@ void EzyEventHandler::setClient(EzyClient* client) {
 
 //==========================================================
 void EzyConnectionSuccessHandler::process(event::EzyEvent* evt) {
-    updateConnectionStatus();
+    mClient->setStatus(constant::Connected);
     sendHandshakeRequest();
     postHandle();
-}
-
-void EzyConnectionSuccessHandler::updateConnectionStatus() {
-    mClient->setStatus(constant::Connected);
 }
 
 void EzyConnectionSuccessHandler::postHandle() {
