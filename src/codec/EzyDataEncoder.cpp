@@ -7,6 +7,7 @@ EzyDataEncoder::EzyDataEncoder() {
 }
 
 EzyDataEncoder::~EzyDataEncoder() {
+    mBuffer.clear();
 }
 
 const std::vector<char>& EzyDataEncoder::getBuffer() {

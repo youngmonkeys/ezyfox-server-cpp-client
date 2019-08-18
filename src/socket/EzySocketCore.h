@@ -30,7 +30,7 @@ typedef entity::EzyValue EzySocketData;
 
 class EzySocketEventQueue {
 protected:
-	std::mutex mMutex;
+	std::mutex mQueueMutex;
     std::vector<event::EzyEvent*> mEvents;
 public:
 	EzySocketEventQueue();

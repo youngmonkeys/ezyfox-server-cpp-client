@@ -9,11 +9,11 @@ EZY_NAMESPACE_START_WITH(codec)
 EzyArrayBuffer::EzyArrayBuffer(int type, int size) {
 	this->mSize = size;
     this->mType = type;
-	mArray.reserve(size);
+	this->mArray.reserve(size);
 }
 
 EzyArrayBuffer::~EzyArrayBuffer() {
-	mArray.clear();
+	this->mArray.clear();
 }
     
 void EzyArrayBuffer::pushValue(entity::EzyValue* value) {
@@ -51,16 +51,18 @@ entity::EzyValue* EzyArrayBuffer::toValue() {
 /****/
 
 EzyDataDecoder::EzyDataDecoder() {
-	mDataBuffer.reserve(16 * 1024); //16KB buffer
-	mDelegate = 0;
+	this->mDataBuffer.reserve(16 * 1024); //16KB buffer
+	this->mDelegate = 0;
 }
 
 EzyDataDecoder::~EzyDataDecoder() {
-	while (!mStack.empty()) {
+	while (mStack.size() > 0) {
 		auto item = mStack.top();
 		delete item;
 		mStack.pop();
 	}
+    this->mDataBuffer.clear();
+    this->mDelegate = 0;
 }
 
 void EzyDataDecoder::setDelegate(EzyDataDecoderDelegate* delegate) {

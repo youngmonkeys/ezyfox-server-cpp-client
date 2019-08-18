@@ -20,7 +20,6 @@ EzyReleasePool* EzyAutoReleasePool::newPool(std::string name) {
 
 EzyReleasePool* EzyAutoReleasePool::getPool() {
     std::unique_lock<std::mutex> lk(mPoolMutex);
-    
     size_t threadId = std::hash<std::thread::id>()(std::this_thread::get_id());
     auto it = mPools.find(threadId);
     EzyReleasePool* pret = 0;

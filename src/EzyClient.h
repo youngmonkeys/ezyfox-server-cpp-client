@@ -2,7 +2,6 @@
 
 #include <map>
 #include <set>
-#include <mutex>
 #include <string>
 #include "constant/EzyCommand.h"
 #include "socket/EzySender.h"

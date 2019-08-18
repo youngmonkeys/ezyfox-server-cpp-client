@@ -28,15 +28,16 @@ EzySocketEventQueue::EzySocketEventQueue() {
 }
 
 EzySocketEventQueue::~EzySocketEventQueue() {
-    clear();
+    EZY_SAFE_DELETE_VECTOR(mEvents);
 }
 
 void EzySocketEventQueue::addEvent(event::EzyEvent *event) {
+    std::unique_lock<std::mutex> lk(mQueueMutex);
     mEvents.push_back(event);
 }
 
 void EzySocketEventQueue::popAll(std::vector<event::EzyEvent*> &buffer) {
-	std::unique_lock<std::mutex> lk(mMutex);
+	std::unique_lock<std::mutex> lk(mQueueMutex);
 	for (int i = 0; i < mEvents.size(); ++i) {
         auto event = mEvents[i];
         event->autorelease();
@@ -46,7 +47,7 @@ void EzySocketEventQueue::popAll(std::vector<event::EzyEvent*> &buffer) {
 }
 
 void EzySocketEventQueue::clear() {
-	std::unique_lock<std::mutex> lk(mMutex);
+	std::unique_lock<std::mutex> lk(mQueueMutex);
     EZY_SAFE_DELETE_VECTOR(mEvents);
 }
 
