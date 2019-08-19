@@ -52,7 +52,7 @@ void EzyTcpSocketWriter::update() {
 					setActive(false);
 					return;
 				}
-				else{
+				else {
 #ifdef EZY_DEBUG
 					logger::log("send error");
 #endif

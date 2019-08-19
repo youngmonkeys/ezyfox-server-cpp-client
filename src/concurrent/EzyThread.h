@@ -1,5 +1,5 @@
 //
-//  EzyThread.hpp
+//  EzyThread.h
 //  ezyfox-server-cpp-client
 //
 //  Created by Dung Ta Van on 8/8/19.
