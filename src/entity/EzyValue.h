@@ -3,7 +3,6 @@
 #define RAPIDJSON_HAS_STDSTRING 1
 
 #include <sstream>
-#include "EzyMacro.h"
 #include "../base/EzyRef.h"
 #include "../rapidjson/rapidjson.h"
 #include "../rapidjson/document.h"

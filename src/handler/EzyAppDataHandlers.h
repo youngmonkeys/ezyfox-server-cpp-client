@@ -2,9 +2,6 @@
 
 #include <map>
 #include "../EzyMacro.h"
-
-#include <map>
-#include "../EzyMacro.h"
 #include "../event/EzyEvent.h"
 #include "../event/EzyEventType.h"
 #include "../constant/EzyCommand.h"

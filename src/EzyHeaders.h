@@ -31,6 +31,6 @@
 #include "manager/EzyPluginManager.h"
 #include "socket/EzyPingSchedule.h"
 #include "socket/EzyMainEventsLoop.h"
-#include "EzyClientConfig.h"
+#include "config/EzyClientConfig.h"
 #include "EzyClient.h"
 #include "EzyClients.h"

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "EzyMacro.h"
+#include "../EzyMacro.h"
 #include "EzyValue.h"
 
 EZY_NAMESPACE_START
