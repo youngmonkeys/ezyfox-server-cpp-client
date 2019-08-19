@@ -16,8 +16,7 @@ static std::map<int, std::string> sCommandNames = {
     {AppExit, "AppExit"},
     {AppAccessError, "AppAccessError"},
     {PluginInfo, "PluginInfo"},
-    {PluginRequestByName, "PluginRequestByName"},
-    {PluginRequestById, "PluginRequestById"}
+    {PluginRequest, "PluginRequest"}
 };
 
 std::string getCommandName(int command) {

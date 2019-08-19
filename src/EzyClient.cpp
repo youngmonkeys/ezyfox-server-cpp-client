@@ -4,6 +4,7 @@
 #include "entity/EzyZone.h"
 #include "entity/EzyUser.h"
 #include "entity/EzyApp.h"
+#include "entity/EzyPlugin.h"
 #include "entity/EzyArray.h"
 #include "command/EzySetup.h"
 #include "logger/EzyLogger.h"
@@ -13,6 +14,7 @@
 #include "manager/EzyHandlerManager.h"
 #include "manager/EzyPingManager.h"
 #include "manager/EzyAppManager.h"
+#include "manager/EzyPluginManager.h"
 #include "config/EzyClientConfig.h"
 #include "constant/EzyDisconnectReason.h"
 
@@ -144,6 +146,15 @@ entity::EzyApp* EzyClient::getAppById(int appId) {
         auto appManager = mZone->getAppManager();
         auto app = appManager->getAppById(appId);
         return app;
+    }
+    return 0;
+}
+
+entity::EzyPlugin* EzyClient::getPluginById(int pluginId) {
+    if(mZone) {
+        auto pluginManager = mZone->getPluginManager();
+        auto plugin = pluginManager->getPluginById(pluginId);
+        return plugin;
     }
     return 0;
 }

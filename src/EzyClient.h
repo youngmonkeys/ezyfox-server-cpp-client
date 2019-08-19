@@ -15,6 +15,7 @@ EZY_NAMESPACE_START_WITH_ONLY(entity)
 class EzyZone;
 class EzyUser;
 class EzyApp;
+class EzyPlugin;
 class EzyArray;
 EZY_NAMESPACE_END_WITH
 
@@ -68,6 +69,7 @@ public:
     void send(constant::EzyCommand cmd, entity::EzyArray* data);
     void processEvents();
     entity::EzyApp* getAppById(int appId);
+    entity::EzyPlugin* getPluginById(int pluginId);
     void destroy();
 };
 

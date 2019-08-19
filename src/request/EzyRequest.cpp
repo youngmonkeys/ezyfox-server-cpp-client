@@ -93,32 +93,17 @@ EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(AppRequest)
 
 //=======================================================
 
-EzyPluginRequestByIdRequest::EzyPluginRequestByIdRequest() {
+EzyPluginRequestRequest::EzyPluginRequestRequest() {
     this->mData = 0;
 }
 
-entity::EzyArray* EzyPluginRequestByIdRequest::serialize() {
+entity::EzyArray* EzyPluginRequestRequest::serialize() {
     auto array = new entity::EzyArray();
     array->addInt(mPluginId);
     array->addItem(mData);
     return array;
 }
 
-EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(PluginRequestById)
-
-//=======================================================
-
-EzyPluginRequestByNameRequest::EzyPluginRequestByNameRequest() {
-    this->mData = 0;
-}
-
-entity::EzyArray* EzyPluginRequestByNameRequest::serialize() {
-    auto array = new entity::EzyArray();
-    array->addString(mPluginName);
-    array->addItem(mData);
-    return array;
-}
-
-EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(PluginRequestByName)
+EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(PluginRequest)
 
 EZY_NAMESPACE_END_WITH

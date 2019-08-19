@@ -4,19 +4,25 @@
 #include "../handler/EzyEventHandler.h"
 #include "../handler/EzyAppDataHandler.h"
 #include "../handler/EzyAppDataHandlers.h"
+#include "../handler/EzyPluginDataHandler.h"
+#include "../handler/EzyPluginDataHandlers.h"
 
 EZY_NAMESPACE_START_WITH(command)
 
 EzySetup::EzySetup(manager::EzyHandlerManager* handlerManager) {
+    this->mAppSetups.clear();
+    this->mPluginSetups.clear();
     this->mHandlerManager = handlerManager;
 }
 
 EzySetup::~EzySetup() {
-    this->mHandlerManager = 0;
-    EZY_FOREACH_MAP(mAppSetups) {
+    EZY_FOREACH_MAP(mAppSetups)
         EZY_SAFE_DELETE(it->second);
-    }
-    mAppSetups.clear();
+    EZY_FOREACH_MAP(mPluginSetups)
+        EZY_SAFE_DELETE(it->second);
+    this->mAppSetups.clear();
+    this->mPluginSetups.clear();
+    this->mHandlerManager = 0;
 }
 
 EzySetup* EzySetup::addDataHandler(constant::EzyCommand cmd, handler::EzyDataHandler* dataHandler) {
@@ -39,6 +45,16 @@ EzyAppSetup* EzySetup::setupApp(std::string appName) {
     return appSetup;
 }
 
+EzyPluginSetup* EzySetup::setupPlugin(std::string pluginName) {
+    auto pluginSetup = mPluginSetups[pluginName];
+    if(!pluginSetup) {
+        auto pluginDataHandlers = mHandlerManager->getPluginDataHandlers(pluginName);
+        pluginSetup = new EzyPluginSetup(pluginDataHandlers, this);
+        mPluginSetups[pluginName] = pluginSetup;
+    }
+    return pluginSetup;
+}
+
 //============================
 
 EzyAppSetup::EzyAppSetup(handler::EzyAppDataHandlers* dataHandlers, EzySetup* parent) {
@@ -51,17 +67,33 @@ EzyAppSetup::~EzyAppSetup() {
     this->mDataHandlers = 0;
 }
 
-EzyAppSetup* EzyAppSetup::addDataHandler(int cmd, handler::EzyAppDataHandler* dataHandler) {
-    this->mDataHandlers->addHandler(cmd, dataHandler);
-    return this;
-}
-
 EzyAppSetup* EzyAppSetup::addDataHandler(std::string cmd, handler::EzyAppDataHandler* dataHandler) {
     this->mDataHandlers->addHandler(cmd, dataHandler);
     return this;
 }
 
 EzySetup* EzyAppSetup::done() {
+    return this->mParent;
+}
+
+//============================
+
+EzyPluginSetup::EzyPluginSetup(handler::EzyPluginDataHandlers* dataHandlers, EzySetup* parent) {
+    this->mDataHandlers = dataHandlers;
+    this->mParent = parent;
+}
+
+EzyPluginSetup::~EzyPluginSetup() {
+    this->mParent = 0;
+    this->mDataHandlers = 0;
+}
+
+EzyPluginSetup* EzyPluginSetup::addDataHandler(std::string cmd, handler::EzyPluginDataHandler* dataHandler) {
+    this->mDataHandlers->addHandler(cmd, dataHandler);
+    return this;
+}
+
+EzySetup* EzyPluginSetup::done() {
     return this->mParent;
 }
 

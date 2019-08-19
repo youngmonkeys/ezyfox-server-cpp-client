@@ -83,26 +83,13 @@ public:
     
 //==========================================
     
-class EzyPluginRequestByIdRequest : public EzyRequest {
+class EzyPluginRequestRequest : public EzyRequest {
 protected:
     EZY_SYNTHESIZE(int, PluginId);
     EZY_SYNTHESIZE(entity::EzyValue*, Data);
 public:
-    EzyPluginRequestByIdRequest();
-    static EzyPluginRequestByIdRequest* create();
-    entity::EzyArray* serialize();
-    constant::EzyCommand getCommand();
-};
-
-//==========================================
-
-class EzyPluginRequestByNameRequest : public EzyRequest {
-protected:
-    EZY_SYNTHESIZE(std::string, PluginName);
-    EZY_SYNTHESIZE(entity::EzyValue*, Data);
-public:
-    EzyPluginRequestByNameRequest();
-    static EzyPluginRequestByNameRequest* create();
+    EzyPluginRequestRequest();
+    static EzyPluginRequestRequest* create();
     entity::EzyArray* serialize();
     constant::EzyCommand getCommand();
 };

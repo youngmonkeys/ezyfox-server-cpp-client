@@ -17,14 +17,12 @@ class EzyAppDataHandler;
 
 class EzyAppDataHandlers {
 protected:
-        std::map<int, EzyAppDataHandler*> mHandlersByInt;
-        std::map<std::string, EzyAppDataHandler*> mHandlersByString;
+        std::map<std::string, EzyAppDataHandler*> mHandlers;
 public:
+    EzyAppDataHandlers();
     ~EzyAppDataHandlers();
-        void handleByInt(entity::EzyApp* app, entity::EzyArray* data);
-        void handleByString(entity::EzyApp* app, entity::EzyArray* data);
-        void addHandler(int cmd, EzyAppDataHandler* handler);
-        void addHandler(std::string cmd, EzyAppDataHandler* handler);
+    void handle(entity::EzyApp* app, entity::EzyArray* data);
+    void addHandler(std::string cmd, EzyAppDataHandler* handler);
 };
 
 EZY_NAMESPACE_END_WITH
