@@ -42,6 +42,16 @@ void EzyClients::addClient0(EzyClient* client) {
     mClients[client->getName()] = client;
 }
 
+void EzyClients::removeClient(EzyClient *client) {
+    std::unique_lock<std::mutex> lock(mMutex);
+    mClients.erase(client->getName());
+}
+
+void EzyClients::destroyClient(EzyClient *client) {
+    removeClient(client);
+    client->destroy();
+}
+
 EzyClient* EzyClients::getClient(std::string name) {
     std::unique_lock<std::mutex> lock(mMutex);
     return getClient0(name);

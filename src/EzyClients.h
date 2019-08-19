@@ -23,6 +23,8 @@ public:
     EZY_SINGLETON_GET_INSTANCE(EzyClients)
 public:
     void addClient(EzyClient* client);
+    void removeClient(EzyClient* client);
+    void destroyClient(EzyClient* client);
     EzyClient* newClient(config::EzyClientConfig* config);
     EzyClient* newDefaultClient(config::EzyClientConfig* config);
     EzyClient* getClient(std::string name);
