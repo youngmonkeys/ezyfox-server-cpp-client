@@ -3,7 +3,7 @@
 EZY_NAMESPACE_START_WITH(codec)
 	
 EzyDataEncoder::EzyDataEncoder() {
-	mBuffer.reserve(102400); // 100KB Buffer
+	mBuffer.reserve(16 * 1024); // 16KB Buffer
 }
 
 EzyDataEncoder::~EzyDataEncoder() {

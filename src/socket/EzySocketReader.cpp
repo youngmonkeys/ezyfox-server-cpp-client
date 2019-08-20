@@ -21,7 +21,7 @@ void EzySocketReader::run() {
 #ifdef USE_MESSAGE_HEADER
     mDecodeState = codec::prepareMessage;
     mDataSize = 0;
-    mByteBuffer.reserve(100 * 1024); // 100KB RAM
+    mByteBuffer.reserve(16 * 1024); // 16KB RAM
 #endif
     EzySocketAdapter::run();
 }

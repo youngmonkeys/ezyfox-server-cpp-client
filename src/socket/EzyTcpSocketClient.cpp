@@ -75,7 +75,7 @@ EzyTcpSocketReader::EzyTcpSocketReader() {
 EzyTcpSocketReader::~EzyTcpSocketReader() {
 }
 
-#define BUFFER_SIZE 102400
+#define BUFFER_SIZE 8192
 void EzyTcpSocketReader::update() {
     concurrent::EzyThread::setCurrentThreadName("ezyfox-socket-reader");
 	size_t rs = 0;
