@@ -47,14 +47,14 @@ void EzyTcpSocketWriter::update() {
 				}
 				else if (rs == 0) {
 #ifdef EZY_DEBUG
-                    logger::log("connection shutdown[2]");
+                    logger::log("connection shutdown[1] on writer");
 #endif
 					setActive(false);
 					return;
 				}
 				else {
 #ifdef EZY_DEBUG
-					logger::log("send error");
+					logger::log("connection shutdown[2] on writer when send error");
 #endif
 					setActive(false);
 					return;
@@ -98,14 +98,14 @@ void EzyTcpSocketReader::update() {
 		}
 		else if (rs == 0) {
 #ifdef EZY_DEBUG
-			logger::log("connection shutdown[1]");
+			logger::log("connection shutdown[1] on reader");
 #endif
 			setActive(false);
 			break;
 		}
 		else {
 #ifdef EZY_DEBUG
-			logger::log("received header error");
+			logger::log("connection shutdown[2] on reader");
 #endif
 			setActive(false);
 			break;
