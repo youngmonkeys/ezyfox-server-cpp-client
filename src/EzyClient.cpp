@@ -90,6 +90,7 @@ socket::EzySocketClient* EzyClient::newSocketClient() {
     socketClient->setPingSchedule(mPingSchedule);
     socketClient->setPingManager(mPingManager);
     socketClient->setHandlerManager(mHandlerManager);
+    socketClient->setConfig(mConfig->getSocket());
     socketClient->setReconnectConfig(mConfig->getReconnect());
     socketClient->setUnloggableCommands(mUnloggableCommands);
     return socketClient;

@@ -31,7 +31,7 @@ protected:
     
     char getHeader(uint32_t data);
 public:
-	EzyDataEncoder();
+	EzyDataEncoder(int reserveSize);
 	virtual ~EzyDataEncoder();
 
 	const std::vector<char>& getBuffer();

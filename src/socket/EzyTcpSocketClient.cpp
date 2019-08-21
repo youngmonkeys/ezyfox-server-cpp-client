@@ -4,12 +4,14 @@
 #include "../logger/EzyLogger.h"
 #include "../gc/EzyAutoReleasePool.h"
 #include "../concurrent/EzyThread.h"
+#include "../config/EzyClientConfig.h"
 #include "../constant/EzyConnectionFailedReason.h"
 #include "../constant/EzyDisconnectReason.h"
 
 EZY_NAMESPACE_START_WITH(socket)
 
-EzyTcpSocketWriter::EzyTcpSocketWriter() {
+EzyTcpSocketWriter::EzyTcpSocketWriter(config::EzySocketConfig* config)
+: EzySocketWriter(config) {
 }
 
 EzyTcpSocketWriter::~EzyTcpSocketWriter() {
@@ -69,17 +71,17 @@ void EzyTcpSocketWriter::update() {
 }
 
 /*****************************************/
-EzyTcpSocketReader::EzyTcpSocketReader() {
+EzyTcpSocketReader::EzyTcpSocketReader(config::EzySocketConfig* config)
+: EzySocketReader(config) {
 }
 
 EzyTcpSocketReader::~EzyTcpSocketReader() {
 }
 
-#define BUFFER_SIZE 8192
 void EzyTcpSocketReader::update() {
     concurrent::EzyThread::setCurrentThreadName("ezyfox-socket-reader");
 	size_t rs = 0;
-	char dataBuffer[BUFFER_SIZE];
+	char dataBuffer[mBufferSize];
 #ifdef EZY_DEBUG
     auto releasePool = gc::EzyAutoReleasePool::getInstance()->newPool("socket-reader");
 #else
@@ -92,7 +94,7 @@ void EzyTcpSocketReader::update() {
 		if (!isActive()) {
 			break;
 		}
-		rs = recv(mSocket, dataBuffer, BUFFER_SIZE, 0);
+		rs = recv(mSocket, dataBuffer, mBufferSize, 0);
 		if (rs > 0) {
 			acceptData(dataBuffer, rs);
 		}
@@ -151,8 +153,8 @@ void EzyTcpSocketClient::resetSocket() {
 }
 
 void EzyTcpSocketClient::createAdapters() {
-	mSocketReader = new EzyTcpSocketReader();
-	mSocketWriter = new EzyTcpSocketWriter();
+	mSocketReader = new EzyTcpSocketReader(mConfig);
+	mSocketWriter = new EzyTcpSocketWriter(mConfig);
 }
 
 void EzyTcpSocketClient::startAdapters() {

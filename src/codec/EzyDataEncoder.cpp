@@ -2,8 +2,8 @@
 
 EZY_NAMESPACE_START_WITH(codec)
 	
-EzyDataEncoder::EzyDataEncoder() {
-	mBuffer.reserve(16 * 1024); // 16KB Buffer
+EzyDataEncoder::EzyDataEncoder(int reserveSize) {
+	mBuffer.reserve(reserveSize);
 }
 
 EzyDataEncoder::~EzyDataEncoder() {

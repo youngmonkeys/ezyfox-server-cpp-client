@@ -20,6 +20,7 @@ EZY_NAMESPACE_START_WITH(socket)
 EzySocketClient::EzySocketClient() {
     mPort = 0;
     mHost = "";
+    mConfig = 0;
     mConnectTime = 0;
     mSocketReader = 0;
     mSocketWriter = 0;

@@ -16,7 +16,7 @@ enum EzyDecodeState {
 };
     
 class EzyArrayBuffer {
-private:
+protected:
 	int mType;
 	int mSize;
 	std::vector<entity::EzyValue*> mArray;
@@ -37,12 +37,10 @@ public:
 
 class EzyDataDecoder {
 protected:
-	EzyDataDecoderDelegate* mDelegate;
-
+    std::stack<EzyArrayBuffer*> mStack;
 	std::vector<char> mDataBuffer;
-
-	int processData(const char* buffer, int& dataSize);
-
+    EzyDataDecoderDelegate* mDelegate;
+protected:
 	uint8_t		readUInt8(const char* p);
 	uint16_t	readUInt16(const char* p);
 	uint32_t	readUInt32(const char* p);
@@ -69,10 +67,10 @@ protected:
 	void onReadMap(uint32_t size);
 	void onReadArray(uint32_t size);
 
-	std::stack<EzyArrayBuffer*> mStack;
 	void onReadValue(entity::EzyValue* object);
+    int processData(const char* buffer, int& dataSize);
 public:
-	EzyDataDecoder();
+	EzyDataDecoder(int reserveSize);
 	virtual ~EzyDataDecoder();
 
 	virtual void setDelegate(EzyDataDecoderDelegate* mDelegate);

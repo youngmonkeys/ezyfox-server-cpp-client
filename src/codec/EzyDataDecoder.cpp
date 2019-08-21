@@ -50,8 +50,8 @@ entity::EzyValue* EzyArrayBuffer::toValue() {
 
 /****/
 
-EzyDataDecoder::EzyDataDecoder() {
-	this->mDataBuffer.reserve(16 * 1024); //16KB buffer
+EzyDataDecoder::EzyDataDecoder(int reserveSize) {
+	this->mDataBuffer.reserve(reserveSize);
 	this->mDelegate = 0;
 }
 

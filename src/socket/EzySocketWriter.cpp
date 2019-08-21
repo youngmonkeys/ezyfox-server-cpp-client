@@ -2,11 +2,12 @@
 #include "EzySocketWriter.h"
 #include "../logger/EzyLogger.h"
 #include "../codec/EzyMessage.h"
+#include "../config/EzyClientConfig.h"
 
 EZY_NAMESPACE_START_WITH(socket)
 
-EzySocketWriter::EzySocketWriter() {
-    mEncoder = new codec::EzyDataEncoder();
+EzySocketWriter::EzySocketWriter(config::EzySocketConfig* config) {
+    mEncoder = new codec::EzyDataEncoder(config->getEncodeReserveSize());
 }
 
 EzySocketWriter::~EzySocketWriter() {

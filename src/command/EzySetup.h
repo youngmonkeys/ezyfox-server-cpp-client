@@ -38,6 +38,8 @@ public:
     EzyPluginSetup* setupPlugin(std::string pluginName);
 };
 
+//============================
+
 class EzyAppSetup {
 protected:
     EzySetup* mParent;
@@ -48,6 +50,8 @@ public:
     EzyAppSetup* addDataHandler(std::string cmd, handler::EzyAppDataHandler* dataHandler);
     EzySetup* done();
 };
+
+//============================
 
 class EzyPluginSetup {
 protected:
