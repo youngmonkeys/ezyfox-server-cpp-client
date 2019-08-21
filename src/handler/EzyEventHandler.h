@@ -17,6 +17,7 @@ class EzyEventHandler {
 protected:
     EzyClient* mClient;
 public:
+    EzyEventHandler();
     virtual ~EzyEventHandler();
     virtual void handle(event::EzyEvent* event) = 0;
 public:
@@ -48,8 +49,6 @@ protected:
     virtual std::string getStoredToken();
     void sendHandshakeRequest();
     request::EzyRequest* newHandshakeRequest();
-private:
-    void updateConnectionStatus();
 };
 //==========================================================
 

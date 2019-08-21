@@ -2,11 +2,12 @@
 
 EZY_NAMESPACE_START_WITH(codec)
 	
-EzyDataEncoder::EzyDataEncoder() {
-	mBuffer.reserve(102400); // 100KB Buffer
+EzyDataEncoder::EzyDataEncoder(int reserveSize) {
+	mBuffer.reserve(reserveSize);
 }
 
 EzyDataEncoder::~EzyDataEncoder() {
+    mBuffer.clear();
 }
 
 const std::vector<char>& EzyDataEncoder::getBuffer() {

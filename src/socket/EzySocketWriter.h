@@ -2,6 +2,10 @@
 
 #include "EzySocketAdapter.h"
 
+EZY_NAMESPACE_START_WITH_ONLY(config)
+class EzySocketConfig;
+EZY_NAMESPACE_END_WITH
+
 EZY_NAMESPACE_START_WITH(socket)
 
 class EzySocketWriter : public EzySocketAdapter {
@@ -10,7 +14,7 @@ protected:
 protected:
     void toBufferData(EzySocketData* data);
 public:
-    EzySocketWriter();
+    EzySocketWriter(config::EzySocketConfig* config);
     virtual ~EzySocketWriter();
 };
 

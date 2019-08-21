@@ -4,12 +4,14 @@
 #include "../logger/EzyLogger.h"
 #include "../gc/EzyAutoReleasePool.h"
 #include "../concurrent/EzyThread.h"
+#include "../config/EzyClientConfig.h"
 #include "../constant/EzyConnectionFailedReason.h"
 #include "../constant/EzyDisconnectReason.h"
 
 EZY_NAMESPACE_START_WITH(socket)
 
-EzyTcpSocketWriter::EzyTcpSocketWriter() {
+EzyTcpSocketWriter::EzyTcpSocketWriter(config::EzySocketConfig* config)
+: EzySocketWriter(config) {
 }
 
 EzyTcpSocketWriter::~EzyTcpSocketWriter() {
@@ -47,14 +49,14 @@ void EzyTcpSocketWriter::update() {
 				}
 				else if (rs == 0) {
 #ifdef EZY_DEBUG
-                    logger::log("connection shutdown[2]");
+                    logger::log("connection shutdown[1] on writer");
 #endif
 					setActive(false);
 					return;
 				}
-				else{
+				else {
 #ifdef EZY_DEBUG
-					logger::log("send error");
+					logger::log("connection shutdown[2] on writer when send error");
 #endif
 					setActive(false);
 					return;
@@ -69,17 +71,17 @@ void EzyTcpSocketWriter::update() {
 }
 
 /*****************************************/
-EzyTcpSocketReader::EzyTcpSocketReader() {
+EzyTcpSocketReader::EzyTcpSocketReader(config::EzySocketConfig* config)
+: EzySocketReader(config) {
 }
 
 EzyTcpSocketReader::~EzyTcpSocketReader() {
 }
 
-#define BUFFER_SIZE 102400
 void EzyTcpSocketReader::update() {
     concurrent::EzyThread::setCurrentThreadName("ezyfox-socket-reader");
 	size_t rs = 0;
-	char dataBuffer[BUFFER_SIZE];
+	char dataBuffer[mBufferSize];
 #ifdef EZY_DEBUG
     auto releasePool = gc::EzyAutoReleasePool::getInstance()->newPool("socket-reader");
 #else
@@ -92,20 +94,20 @@ void EzyTcpSocketReader::update() {
 		if (!isActive()) {
 			break;
 		}
-		rs = recv(mSocket, dataBuffer, BUFFER_SIZE, 0);
+		rs = recv(mSocket, dataBuffer, mBufferSize, 0);
 		if (rs > 0) {
 			acceptData(dataBuffer, rs);
 		}
 		else if (rs == 0) {
 #ifdef EZY_DEBUG
-			logger::log("connection shutdown[1]");
+			logger::log("connection shutdown[1] on reader");
 #endif
 			setActive(false);
 			break;
 		}
 		else {
 #ifdef EZY_DEBUG
-			logger::log("received header error");
+			logger::log("connection shutdown[2] on reader");
 #endif
 			setActive(false);
 			break;
@@ -151,8 +153,8 @@ void EzyTcpSocketClient::resetSocket() {
 }
 
 void EzyTcpSocketClient::createAdapters() {
-	mSocketReader = new EzyTcpSocketReader();
-	mSocketWriter = new EzyTcpSocketWriter();
+	mSocketReader = new EzyTcpSocketReader(mConfig);
+	mSocketWriter = new EzyTcpSocketWriter(mConfig);
 }
 
 void EzyTcpSocketClient::startAdapters() {
@@ -185,6 +187,7 @@ bool EzyTcpSocketClient::connectNow() {
 		logger::log("getaddrinfo failure %d", ret);
 #endif
         mConnectionFailedReason = constant::UnknownFailure;
+        freeaddrinfo(peer);
 		return false;
 	}
 

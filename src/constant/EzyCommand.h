@@ -20,8 +20,7 @@ enum EzyCommand {
     AppExit = 33,
     AppAccessError = 34,
     PluginInfo = 40,
-    PluginRequestByName = 41,
-    PluginRequestById = 42
+    PluginRequest = 41
 };
 
 static int sCommands[] = {
@@ -37,8 +36,7 @@ static int sCommands[] = {
     AppExit,
     AppAccessError,
     PluginInfo,
-    PluginRequestByName,
-    PluginRequestById
+    PluginRequest
 };
 
 std::string getCommandName(int command);

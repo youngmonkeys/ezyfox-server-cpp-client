@@ -2,6 +2,10 @@
 
 #include "EzySocketClient.h"
 
+EZY_NAMESPACE_START_WITH_ONLY(config)
+class EzySocketConfig;
+EZY_NAMESPACE_END_WITH
+
 EZY_NAMESPACE_START_WITH(socket)
 
 #ifdef USE_WINSOCK_2
@@ -16,7 +20,7 @@ public:
 protected:
 	virtual void update();
 public:
-	EzyTcpSocketWriter();
+	EzyTcpSocketWriter(config::EzySocketConfig* config);
 	virtual ~EzyTcpSocketWriter();
 };
 
@@ -26,7 +30,7 @@ protected:
 public:
 	EzyTcpSocket mSocket;
 public:
-	EzyTcpSocketReader();
+	EzyTcpSocketReader(config::EzySocketConfig* config);
 	virtual ~EzyTcpSocketReader();
 };
 

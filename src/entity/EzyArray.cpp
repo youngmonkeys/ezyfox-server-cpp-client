@@ -7,6 +7,7 @@
 EZY_NAMESPACE_START_WITH(entity)
 
 EzyArray::EzyArray() {
+    mData.clear();
 	mValueType = EzyValueType::TypeArray;
 }
 

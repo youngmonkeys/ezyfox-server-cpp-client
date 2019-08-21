@@ -11,6 +11,7 @@ EZY_NAMESPACE_START_WITH_ONLY(entity)
 class EzyUser;
 class EzyZone;
 class EzyApp;
+class EzyPlugin;
 EZY_NAMESPACE_END_WITH
 
 EZY_NAMESPACE_START_WITH_ONLY(socket)
@@ -23,12 +24,11 @@ EZY_NAMESPACE_END_WITH
 
 EZY_NAMESPACE_START_WITH(handler)
 
-class EzyAppDataHandlers;
-
 class EzyDataHandler {
 protected:
     EzyClient* mClient;
 public:
+    EzyDataHandler();
     virtual ~EzyDataHandler();
     virtual void handle(entity::EzyArray* data) = 0;
 public:
@@ -54,6 +54,8 @@ protected:
     virtual void postHandle(entity::EzyArray* data);
     virtual request::EzyRequest* getLoginRequest() = 0;
 public:
+    EzyHandshakeHandler();
+    virtual ~EzyHandshakeHandler();
     void handle(entity::EzyArray* data);
 };
 
@@ -71,6 +73,17 @@ public:
 
 //===============================================
 
+//===============================================
+
+class EzyLoginErrorHandler : public EzyDataHandler {
+protected:
+    virtual void handleLoginError(entity::EzyArray* data);
+public:
+    void handle(entity::EzyArray* data);
+};
+
+//===============================================
+
 class EzyAccessAppHandler : public EzyDataHandler {
 protected:
     virtual void postHandle(entity::EzyApp* app, entity::EzyArray* data);
@@ -81,21 +94,26 @@ public:
 
 //===============================================
 
-class EzyAbstractAppResponseHandler : public EzyDataHandler {
+class EzyPluginInfoHandler : public EzyDataHandler {
+protected:
+    virtual void postHandle(entity::EzyPlugin* plugin, entity::EzyArray* data);
+    virtual entity::EzyPlugin* newPlugin(entity::EzyZone* zone, entity::EzyArray* data);
+public:
+    void handle(entity::EzyArray* data);
+};
+
+//===============================================
+
+class EzyAppResponseHandler : public EzyDataHandler {
 public:
     virtual void handle(entity::EzyArray* data);
-protected:
-    virtual void handle(EzyAppDataHandlers* handlers, entity::EzyApp* app, entity::EzyArray* data) = 0;
 };
 
-class EzyAppResponseByIntHandler : public EzyAbstractAppResponseHandler {
-protected:
-    void handle(EzyAppDataHandlers* handlers, entity::EzyApp* app, entity::EzyArray* data);
-};
+//===============================================
 
-class EzyAppResponseByStringHandler : public EzyAbstractAppResponseHandler {
-protected:
-    void handle(EzyAppDataHandlers* handlers, entity::EzyApp* app, entity::EzyArray* data);
+class EzyPluginResponseHandler : public EzyDataHandler {
+public:
+    virtual void handle(entity::EzyArray* data);
 };
 
 //===============================================

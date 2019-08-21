@@ -4,57 +4,37 @@
 #include "../util/EzyMaps.h"
 #include "../entity/EzyArray.h"
 #include "../request/EzyRequest.h"
+#include "../handler/EzyPluginDataHandlers.h"
+#include "../manager/EzyHandlerManager.h"
 
 EZY_NAMESPACE_START_WITH(entity)
 
-EzyPlugin::EzyPlugin(EzyClient* client) {
-    this->mClient = client;
-    this->mZone = client->getZone();
+EzyPlugin::EzyPlugin(EzyZone* zone, int identifier, std::string name) {
+    this->mId = identifier;
+    this->mName = name;
+    this->mZone = zone;
+    this->mClient = zone->getClient();
+    this->mDataHandlers = mClient->getHandlerManager()->getPluginDataHandlers(name);
 }
 
 EzyPlugin::~EzyPlugin() {
+    this->mZone = 0;
+    this->mClient = 0;
+    this->mDataHandlers = 0;
 }
 
-void EzyPlugin::sendById(entity::EzyValue *data) {
-    auto request = new request::EzyPluginRequestByIdRequest();
+void EzyPlugin::send(entity::EzyValue *data) {
+    auto request = request::EzyPluginRequestRequest::create();
     request->setPluginId(mId);
     request->setData(data);
     mClient->send(request);
 }
 
-void EzyPlugin::sendById(int cmd, entity::EzyValue *data) {
-    auto array = new entity::EzyArray();
-    array->addInt(cmd);
-    array->addItem(data);
-    sendById(array);
-}
-
-void EzyPlugin::sendById(std::string cmd, entity::EzyValue *data) {
+void EzyPlugin::send(std::string cmd, entity::EzyValue *data) {
     auto array = new entity::EzyArray();
     array->addString(cmd);
     array->addItem(data);
-    sendById(array);
-}
-
-void EzyPlugin::sendByName(entity::EzyValue *data) {
-    auto request = new request::EzyPluginRequestByNameRequest();
-    request->setPluginName(mName);
-    request->setData(data);
-    mClient->send(request);
-}
-
-void EzyPlugin::sendByName(int cmd, entity::EzyValue *data) {
-    auto array = new entity::EzyArray();
-    array->addInt(cmd);
-    array->addItem(data);
-    sendByName(array);
-}
-
-void EzyPlugin::sendByName(std::string cmd, entity::EzyValue *data) {
-    auto array = new entity::EzyArray();
-    array->addString(cmd);
-    array->addItem(data);
-    sendByName(array);
+    send(array);
 }
 
 EZY_NAMESPACE_END_WITH

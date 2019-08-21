@@ -18,6 +18,9 @@ EzyApp::EzyApp(EzyZone* zone, int identifier, std::string name) {
 }
 
 EzyApp::~EzyApp() {
+    this->mZone = 0;
+    this->mClient = 0;
+    this->mDataHandlers = 0;
 }
 
 void EzyApp::send(entity::EzyValue *data) {
@@ -25,13 +28,6 @@ void EzyApp::send(entity::EzyValue *data) {
     request->setAppId(mId);
     request->setData(data);
     mClient->send(request);
-}
-
-void EzyApp::send(int cmd, entity::EzyValue *data) {
-    auto array = new entity::EzyArray();
-    array->addInt(cmd);
-    array->addItem(data);
-    send(array);
 }
 
 void EzyApp::send(std::string cmd, entity::EzyValue *data) {

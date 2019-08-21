@@ -2,12 +2,15 @@
 #include "EzySocketClient.h"
 #include "../logger/EzyLogger.h"
 #include "../entity/EzyJson.h"
+#include "../config/EzyClientConfig.h"
 
 EZY_NAMESPACE_START_WITH(socket)
 
-EzySocketReader::EzySocketReader() {
+EzySocketReader::EzySocketReader(config::EzySocketConfig* config) {
     mByteBuffer.clear();
-    mDecoder = new codec::EzyDataDecoder();
+    mBufferSize = config->getReadBufferSize();
+    mReserveSize = config->getReadReserveSize();
+    mDecoder = new codec::EzyDataDecoder(config->getDecodeReserveSize());
     mDecoder->setDelegate(this);
     mMessageHeader = new codec::EzyMessageHeader();
 }
@@ -21,7 +24,7 @@ void EzySocketReader::run() {
 #ifdef USE_MESSAGE_HEADER
     mDecodeState = codec::prepareMessage;
     mDataSize = 0;
-    mByteBuffer.reserve(100 * 1024); // 100KB RAM
+    mByteBuffer.reserve(mReserveSize);
 #endif
     EzySocketAdapter::run();
 }

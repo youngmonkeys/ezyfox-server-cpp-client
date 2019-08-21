@@ -5,6 +5,9 @@
 EZY_NAMESPACE_START_WITH(manager)
 
 EzyPluginManager::EzyPluginManager() {
+    mPluginList.clear();
+    mPluginByIds.clear();
+    mPluginByNames.clear();
 }
 
 EzyPluginManager::~EzyPluginManager() {

@@ -9,7 +9,13 @@ EzyClientConfig* EzyClientConfig::create() {
 
 EzyClientConfig::EzyClientConfig() {
     this->mClientName = "";
+    this->mSocket = new EzySocketConfig();
     this->mReconnect = new EzyReconnectConfig();
+}
+
+EzyClientConfig::~EzyClientConfig() {
+    EZY_SAFE_DELETE(mSocket);
+    EZY_SAFE_DELETE(mReconnect);
 }
 
 std::string EzyClientConfig::getClientName() {
@@ -18,14 +24,26 @@ std::string EzyClientConfig::getClientName() {
     return mClientName;
 }
 
+void EzyClientConfig::setSocket(EzySocketConfig *socket) {
+    EZY_SAFE_DELETE(mSocket);
+    this->mSocket = socket;
+}
+
 void EzyClientConfig::setReconnect(EzyReconnectConfig* reconnect) {
     EZY_SAFE_DELETE(mReconnect);
     this->mReconnect = reconnect;
 }
 
-EzyClientConfig::~EzyClientConfig() {
-    EZY_SAFE_DELETE(mReconnect);
+//============================
+
+EzySocketConfig::EzySocketConfig() {
+    this->mReadBufferSize = 8 * 1024;
+    this->mReadReserveSize = 16 * 1024;
+    this->mEncodeReserveSize = 16 * 1024;
+    this->mDecodeReserveSize = 16 * 1024;
 }
+
+//============================
 
 EzyReconnectConfig::EzyReconnectConfig() {
     this->mEnable = true;

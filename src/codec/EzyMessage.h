@@ -1,6 +1,6 @@
 #pragma once
 
-#include "EzyRef.h"
+#include "../base/EzyRef.h"
 
 #define MAX_SMALL_MESSAGE_SIZE 65535
 

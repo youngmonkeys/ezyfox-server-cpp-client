@@ -21,11 +21,16 @@ enum EzySocketStatus {
     SocketReconnecting
 };
 
+bool isSocketConnectable(EzySocketStatus status);
+bool isSocketDisconnectable(EzySocketStatus status);
+bool isSocketReconnectable(EzySocketStatus status);
+bool isSocketDestroyable(EzySocketStatus status);
+
 typedef entity::EzyValue EzySocketData;
 
 class EzySocketEventQueue {
 protected:
-	std::mutex mMutex;
+	std::mutex mQueueMutex;
     std::vector<event::EzyEvent*> mEvents;
 public:
 	EzySocketEventQueue();

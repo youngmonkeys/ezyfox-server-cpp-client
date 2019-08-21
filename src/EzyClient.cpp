@@ -4,6 +4,7 @@
 #include "entity/EzyZone.h"
 #include "entity/EzyUser.h"
 #include "entity/EzyApp.h"
+#include "entity/EzyPlugin.h"
 #include "entity/EzyArray.h"
 #include "command/EzySetup.h"
 #include "logger/EzyLogger.h"
@@ -12,6 +13,8 @@
 #include "request/EzyRequestSerializer.h"
 #include "manager/EzyHandlerManager.h"
 #include "manager/EzyPingManager.h"
+#include "manager/EzyAppManager.h"
+#include "manager/EzyPluginManager.h"
 #include "config/EzyClientConfig.h"
 #include "constant/EzyDisconnectReason.h"
 
@@ -22,7 +25,7 @@ EzyClient::EzyClient(config::EzyClientConfig* config) {
     mMe = 0;
     mConfig = config;
     mName = config->getClientName();
-    mSocketClient = 0;
+    mStatus = constant::Null;
     mPingManager = new manager::EzyPingManager();
     mPingSchedule = new socket::EzyPingSchedule(this);
     mHandlerManager = new manager::EzyHandlerManager(this);
@@ -34,7 +37,6 @@ EzyClient::EzyClient(config::EzyClientConfig* config) {
 }
 
 EzyClient::~EzyClient() {
-    mAppsById.clear();
     EZY_SAFE_DELETE(mConfig);
     EZY_SAFE_DELETE(mSetup);
     EZY_SAFE_DELETE(mRequestSerializer);
@@ -46,19 +48,26 @@ EzyClient::~EzyClient() {
     EZY_SAFE_DELETE(mMe);
 }
 
+void EzyClient::destroy() {
+    if(!isClientDestroyable(mStatus)) {
+        logger::log("client is not in a destroyable status");
+        return;
+    }
+    delete this;
+}
+
 void EzyClient::connect(std::string host, int port) {
-    auto connectable = true;
-    if(!connectable) {
+    if(!isClientConnectable(mStatus)) {
         logger::log("client has already connected to: %s:%d", host.c_str(), port);
         return;
     }
     preconnect();
+    setStatus(constant::Connecting);
     mSocketClient->connectTo(host, port);
 }
 
 bool EzyClient::reconnect() {
-    auto connectable = true;
-    if(!connectable) {
+    if(!isClientReconnectable(mStatus)) {
         auto host = mSocketClient->getHost();
         auto port = mSocketClient->getPort();
         logger::log("client has already connected to: %s:%d", host.c_str(), port);
@@ -81,6 +90,7 @@ socket::EzySocketClient* EzyClient::newSocketClient() {
     socketClient->setPingSchedule(mPingSchedule);
     socketClient->setPingManager(mPingManager);
     socketClient->setHandlerManager(mHandlerManager);
+    socketClient->setConfig(mConfig->getSocket());
     socketClient->setReconnectConfig(mConfig->getReconnect());
     socketClient->setUnloggableCommands(mUnloggableCommands);
     return socketClient;
@@ -132,23 +142,22 @@ command::EzySetup* EzyClient::setup() {
     return mSetup;
 }
 
-void EzyClient::addApp(entity::EzyApp *app) {
-    mAppsById[app->getId()] = app;
-}
-
 entity::EzyApp* EzyClient::getAppById(int appId) {
-    auto app = mAppsById[appId];
-    return app;
+    if(mZone) {
+        auto appManager = mZone->getAppManager();
+        auto app = appManager->getAppById(appId);
+        return app;
+    }
+    return 0;
 }
 
-void EzyClient::setStatus(constant::EzyConnectionStatus status) {
-    std::unique_lock<std::mutex> lock(mStatusMutex);
-    mStatus = status;
-}
-
-constant::EzyConnectionStatus EzyClient::getStatus() {
-    std::unique_lock<std::mutex> lock(mStatusMutex);
-    return mStatus;
+entity::EzyPlugin* EzyClient::getPluginById(int pluginId) {
+    if(mZone) {
+        auto pluginManager = mZone->getPluginManager();
+        auto plugin = pluginManager->getPluginById(pluginId);
+        return plugin;
+    }
+    return 0;
 }
 
 EZY_NAMESPACE_END

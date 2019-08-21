@@ -1,5 +1,5 @@
 //
-//  EzyMainEventsLoop.hpp
+//  EzyMainEventsLoop.h
 //  ezyfox-server-cpp-client
 //
 //  Created by Dung Ta Van on 8/4/19.
@@ -9,7 +9,6 @@
 #pragma once
 
 #include <vector>
-#include <atomic>
 #include "../EzyMacro.h"
 
 EZY_NAMESPACE_START

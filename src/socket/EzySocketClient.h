@@ -7,6 +7,7 @@
 #include "../util/EzyValueStack.h"
 
 EZY_NAMESPACE_START_WITH_ONLY(config)
+class EzySocketConfig;
 class EzyReconnectConfig;
 EZY_NAMESPACE_END_WITH
 
@@ -52,6 +53,7 @@ protected:
     EZY_SYNTHESIZE_READONLY(int, Port);
     EZY_SYNTHESIZE_WRITEONLY(std::set<int>, UnloggableCommands);
     EZY_SYNTHESIZE_WRITEONLY(manager::EzyPingManager*, PingManager);
+    EZY_SYNTHESIZE_WRITEONLY(config::EzySocketConfig*, Config);
     EZY_SYNTHESIZE_WRITEONLY(config::EzyReconnectConfig*, ReconnectConfig);
 protected:
     virtual bool connectNow();
@@ -78,9 +80,10 @@ public:
     virtual void sendMessage(EzySocketData* message);
     virtual void processEventMessages();
     virtual void disconnect(int reason);
-    virtual void onDisconnected(int reason);
+    virtual void onDisconnected(int reason = 0);
     virtual void setPingSchedule(EzyPingSchedule* pingSchedule);
     virtual void setHandlerManager(manager::EzyHandlerManager* handlerManager);
+    virtual void destroy();
 };
 
 EZY_NAMESPACE_END_WITH

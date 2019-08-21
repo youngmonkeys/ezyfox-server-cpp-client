@@ -4,8 +4,8 @@ EZY_NAMESPACE_START_WITH(manager)
 
 EzyPingManager::EzyPingManager() {
     this->mPingPeriod = 5000;
-    this->mMaxLostPingCount = 5;
     this->mLostPingCount = 0;
+    this->mMaxLostPingCount = 5;
 }
 
 int EzyPingManager::increaseLostPingCount() {
