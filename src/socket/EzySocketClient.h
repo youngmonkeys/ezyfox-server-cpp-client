@@ -4,7 +4,7 @@
 #include "EzySocketWriter.h"
 #include "EzySocketReader.h"
 #include "EzySocketDelegate.h"
-#include "../util/EzyValueStack.h"
+#include "../util/EzyStack.h"
 
 EZY_NAMESPACE_START_WITH_ONLY(config)
 class EzySocketConfig;
@@ -47,7 +47,7 @@ protected:
     std::vector<event::EzyEvent*> mLocalEventQueue;
     std::vector<EzySocketData*> mLocalMessageQueue;
     std::vector<EzySocketStatus> mLocalSocketStatuses;
-    util::EzyValueStack<EzySocketStatus>* mSocketStatuses;
+    util::EzyStack<EzySocketStatus>* mSocketStatuses;
 protected:
     EZY_SYNTHESIZE_READONLY(std::string, Host);
     EZY_SYNTHESIZE_READONLY(int, Port);

@@ -15,7 +15,7 @@
 EZY_NAMESPACE_START_WITH(util)
 
 template <class V>
-class EzyValueStack {
+class EzyStack {
 protected:
     std::mutex mStackMutex;
     V mTopValue;
@@ -23,8 +23,8 @@ protected:
     V mDefaultValue;
     std::vector<V> mValues;
 public:
-    EzyValueStack(V defValue = 0);
-    ~EzyValueStack();
+    EzyStack(V defValue = 0);
+    ~EzyStack();
     V top();
     V last();
     V pop();
@@ -36,7 +36,7 @@ public:
 };
 
 template <class V>
-EzyValueStack<V>::EzyValueStack(V defaultValue) {
+EzyStack<V>::EzyStack(V defaultValue) {
     mTopValue = defaultValue;
     mLastValue = defaultValue;
     mDefaultValue = defaultValue;
@@ -44,24 +44,24 @@ EzyValueStack<V>::EzyValueStack(V defaultValue) {
 }
 
 template <class V>
-EzyValueStack<V>::~EzyValueStack<V>() {
+EzyStack<V>::~EzyStack<V>() {
     mValues.clear();
 }
 
 template <class V>
-V EzyValueStack<V>::top() {
+V EzyStack<V>::top() {
     std::unique_lock<std::mutex> lk(mStackMutex);
     return mTopValue;
 }
 
 template <class V>
-V EzyValueStack<V>::last() {
+V EzyStack<V>::last() {
     std::unique_lock<std::mutex> lk(mStackMutex);
     return mLastValue;
 }
 
 template <class V>
-V EzyValueStack<V>::pop() {
+V EzyStack<V>::pop() {
     std::unique_lock<std::mutex> lk(mStackMutex);
     size_t size = mValues.size();
     if(size > 0) {
@@ -75,7 +75,7 @@ V EzyValueStack<V>::pop() {
 }
 
 template <class V>
-void EzyValueStack<V>::popAll(std::vector<V> &buffer) {
+void EzyStack<V>::popAll(std::vector<V> &buffer) {
     std::unique_lock<std::mutex> lk(mStackMutex);
     for(int i = (int)mValues.size() - 1 ; i >= 0 ; --i) {
         buffer.push_back(mValues[i]);
@@ -84,7 +84,7 @@ void EzyValueStack<V>::popAll(std::vector<V> &buffer) {
 }
 
 template <class V>
-void EzyValueStack<V>::push(V value) {
+void EzyStack<V>::push(V value) {
     std::unique_lock<std::mutex> lk(mStackMutex);
     mTopValue = value;
     mLastValue = value;
@@ -92,7 +92,7 @@ void EzyValueStack<V>::push(V value) {
 }
 
 template <class V>
-void EzyValueStack<V>::clear() {
+void EzyStack<V>::clear() {
     std::unique_lock<std::mutex> lk(mStackMutex);
     mTopValue = mDefaultValue;
     mLastValue = mDefaultValue;
@@ -100,7 +100,7 @@ void EzyValueStack<V>::clear() {
 }
 
 template <class V>
-void EzyValueStack<V>::purgeAll() {
+void EzyStack<V>::purgeAll() {
     std::unique_lock<std::mutex> lk(mStackMutex);
     for (int i = 0 ; i < mValues.size() ; ++i) {
         delete mValues[i];
@@ -110,7 +110,7 @@ void EzyValueStack<V>::purgeAll() {
 }
 
 template <class V>
-int EzyValueStack<V>::size() {
+int EzyStack<V>::size() {
     std::unique_lock<std::mutex> lk(mStackMutex);
     int size = mValues.size();
     return size;

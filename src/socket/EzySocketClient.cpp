@@ -1,7 +1,7 @@
 #include <thread>
 #include "EzySocketClient.h"
 #include "EzyPingSchedule.h"
-#include "../util/EzyValueStack.h"
+#include "../util/EzyStack.h"
 #include "../logger/EzyLogger.h"
 #include "../event/EzyEvent.h"
 #include "../gc/EzyAutoReleasePool.h"
@@ -39,7 +39,7 @@ EzySocketClient::EzySocketClient() {
     mDisconnectReason = constant::UnknownDisconnection;
     mConnectionFailedReason = constant::UnknownFailure;
     mSocketEventQueue = new EzySocketEventQueue();
-    mSocketStatuses = new util::EzyValueStack<EzySocketStatus>(SocketNotConnect);
+    mSocketStatuses = new util::EzyStack<EzySocketStatus>(SocketNotConnect);
 }
 
 EzySocketClient::~EzySocketClient() {
