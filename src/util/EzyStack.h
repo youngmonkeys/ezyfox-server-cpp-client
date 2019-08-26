@@ -112,8 +112,8 @@ void EzyStack<V>::purgeAll() {
 template <class V>
 int EzyStack<V>::size() {
     std::unique_lock<std::mutex> lk(mStackMutex);
-    int size = mValues.size();
-    return size;
+    int stackSize = mValues.size();
+    return stackSize;
 }
 
 EZY_NAMESPACE_END_WITH
