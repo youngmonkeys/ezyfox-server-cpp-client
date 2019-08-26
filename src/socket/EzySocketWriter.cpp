@@ -35,4 +35,8 @@ void EzySocketWriter::toBufferData(EzySocketData* data) {
 #endif
 }
 
+void EzySocketWriter::offerMessage(EzySocketData* data) {
+    mSocketPool->offer(data);
+}
+
 EZY_NAMESPACE_END_WITH

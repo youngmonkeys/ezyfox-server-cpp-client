@@ -113,7 +113,11 @@ void EzySocketReader::onReceivedMessage(entity::EzyValue* value) {
         setActive(false);
         return;
     }
-    pushMessage(value);
+    mSocketPool->push(value);
+}
+
+void EzySocketReader::popMessages(std::vector<EzySocketData*>& buffer) {
+    mSocketPool->popAll(buffer);
 }
 
 EZY_NAMESPACE_END_WITH

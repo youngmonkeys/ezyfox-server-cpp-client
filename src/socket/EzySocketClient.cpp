@@ -191,7 +191,7 @@ void EzySocketClient::disconnect(int reason) {
 }
 
 void EzySocketClient::sendMessage(EzySocketData* message) {
-    mSocketWriter->pushMessage(message);
+    mSocketWriter->offerMessage(message);
 }
 
 void EzySocketClient::processEventMessages() {

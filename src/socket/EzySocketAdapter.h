@@ -27,9 +27,6 @@ public:
 	virtual void stop();
     virtual bool isActive();
     virtual bool isStopped();
-	virtual void pushMessage(EzySocketData* data);
-    virtual EzySocketData* popMessage();
-    virtual void popMessages(std::vector<EzySocketData*>& buffer);
 };
 
 EZY_NAMESPACE_END_WITH

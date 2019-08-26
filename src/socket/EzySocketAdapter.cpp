@@ -68,16 +68,4 @@ bool EzySocketAdapter::isStopped() {
     return mStopped;
 }
 
-void EzySocketAdapter::pushMessage(EzySocketData* data) {
-	mSocketPool->push(data);
-}
-
-EzySocketData* EzySocketAdapter::popMessage() {
-	return mSocketPool->pop();
-}
-
-void EzySocketAdapter::popMessages(std::vector<EzySocketData*>& buffer) {
-    mSocketPool->popAll(buffer);
-}
-
 EZY_NAMESPACE_END_WITH

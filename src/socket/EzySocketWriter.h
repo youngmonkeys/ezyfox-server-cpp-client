@@ -16,6 +16,7 @@ protected:
 public:
     EzySocketWriter(config::EzySocketConfig* config);
     virtual ~EzySocketWriter();
+    virtual void offerMessage(EzySocketData* data);
 };
 
 EZY_NAMESPACE_END_WITH

@@ -21,6 +21,7 @@ public:
     virtual EzySocketData* pop();
     virtual void popAll(std::vector<EzySocketData*>& buffer);
     virtual void push(EzySocketData* data);
+    virtual void offer(EzySocketData* data);
     virtual void clear();
     virtual void destroy();
 protected:

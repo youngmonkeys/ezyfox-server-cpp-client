@@ -12,10 +12,13 @@ EzySocketPool::~EzySocketPool() {
 }
 
 void EzySocketPool::push(EzySocketData* data) {
-    {
-        std::unique_lock<std::mutex> lk(mPoolMutex);
-        mDataQueue.push(data);
-    }
+    std::unique_lock<std::mutex> lk(mPoolMutex);
+    mDataQueue.push(data);
+}
+
+void EzySocketPool::offer(EzySocketData* data) {
+    std::unique_lock<std::mutex> lk(mPoolMutex);
+    mDataQueue.push(data);
     mPoolCondition.notify_one();
 }
 
