@@ -32,6 +32,7 @@ public:
     EzySocketReader(config::EzySocketConfig* config);
     virtual ~EzySocketReader();
     virtual void run();
+    virtual void popMessages(std::vector<EzySocketData*>& buffer);
 };
 
 EZY_NAMESPACE_END_WITH

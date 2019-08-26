@@ -65,7 +65,7 @@ void EzySocketReader::onDataReceived() {
 }
 
 void EzySocketReader::onUpdateDataHeader() {
-    if(mByteBuffer.size() >= 1) {
+    if(mByteBuffer.size() > 0) {
         char headerByte;
         memcpy(&headerByte, mByteBuffer.data(), sizeof(headerByte));
         mMessageHeader->parse(headerByte);
@@ -113,7 +113,11 @@ void EzySocketReader::onReceivedMessage(entity::EzyValue* value) {
         setActive(false);
         return;
     }
-    pushMessage(value);
+    mSocketPool->push(value);
+}
+
+void EzySocketReader::popMessages(std::vector<EzySocketData*>& buffer) {
+    mSocketPool->popAll(buffer);
 }
 
 EZY_NAMESPACE_END_WITH

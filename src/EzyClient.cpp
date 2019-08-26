@@ -6,7 +6,7 @@
 #include "entity/EzyApp.h"
 #include "entity/EzyPlugin.h"
 #include "entity/EzyArray.h"
-#include "command/EzySetup.h"
+#include "setup/EzySetup.h"
 #include "logger/EzyLogger.h"
 #include "socket/EzyTcpSocketClient.h"
 #include "socket/EzyPingSchedule.h"
@@ -30,7 +30,7 @@ EzyClient::EzyClient(config::EzyClientConfig* config) {
     mPingSchedule = new socket::EzyPingSchedule(this);
     mHandlerManager = new manager::EzyHandlerManager(this);
     mRequestSerializer = new request::EzyRequestSerializer();
-    mSetup = new command::EzySetup(mHandlerManager);
+    mSetup = new setup::EzySetup(mHandlerManager);
     mUnloggableCommands.insert(constant::Ping);
     mUnloggableCommands.insert(constant::Pong);
     mSocketClient = newSocketClient();
@@ -101,8 +101,7 @@ void EzyClient::disconnect(int reason) {
 }
 
 void EzyClient::processEvents() {
-    if(mSocketClient)
-        mSocketClient->processEventMessages();
+    mSocketClient->processEventMessages();
 }
 
 void EzyClient::send(request::EzyRequest *request) {
@@ -138,7 +137,7 @@ void EzyClient::printSentData(int cmd, entity::EzyArray *data) {
 #endif
 }
 
-command::EzySetup* EzyClient::setup() {
+setup::EzySetup* EzyClient::setup() {
     return mSetup;
 }
 

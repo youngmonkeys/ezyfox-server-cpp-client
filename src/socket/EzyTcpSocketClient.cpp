@@ -133,6 +133,75 @@ EzyTcpSocketClient::~EzyTcpSocketClient() {
 #endif
 }
 
+bool EzyTcpSocketClient::connectNow() {
+    addrinfo hints, *peer;
+    memset(&hints, 0, sizeof(struct addrinfo));
+#ifdef __linux
+#if defined(ANDROID)
+    hints.ai_flags = AI_PASSIVE;
+#else
+    hints.ai_flags = AI_ALL;
+#endif
+#else
+    hints.ai_flags = AI_ALL;
+#endif
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    
+    char service[128];
+    sprintf(service, "%d", mPort);
+    if (int ret = getaddrinfo(mHost.c_str(), service, &hints, &peer) != 0) {
+#ifdef EZY_DEBUG
+        logger::log("getaddrinfo failure %d", ret);
+#endif
+        mConnectionFailedReason = constant::UnknownFailure;
+        freeaddrinfo(peer);
+        return false;
+    }
+    
+    for (auto tpeer = peer; tpeer; tpeer = tpeer->ai_next) {
+        mSocket = ::socket(tpeer->ai_family, tpeer->ai_socktype, tpeer->ai_protocol);
+        if (mSocket == SYS_SOCKET_INVALID) {
+#ifdef EZY_DEBUG
+            logger::log("create socket failure");
+#endif
+            continue;
+        }
+        
+        int rs = connect(mSocket, tpeer->ai_addr, tpeer->ai_addrlen);
+        if (rs == 0) {
+            freeaddrinfo(peer);
+            return true;
+        }
+#ifdef USE_WINSOCK_2
+        closesocket(mSocket);
+#else
+        close(mSocket);
+#endif
+    }
+    
+    freeaddrinfo(peer);
+    mConnectionFailedReason = constant::UnknownFailure;
+    return false;
+}
+
+void EzyTcpSocketClient::createAdapters() {
+    mSocketReader = new EzyTcpSocketReader(mConfig);
+    mSocketWriter = new EzyTcpSocketWriter(mConfig);
+}
+
+void EzyTcpSocketClient::startAdapters() {
+    ((EzyTcpSocketWriter*)mSocketWriter)->mSocket = mSocket;
+    mSocketWriter->start();
+    ((EzyTcpSocketReader*)mSocketReader)->mSocket = mSocket;
+    mSocketReader->start();
+}
+
+void EzyTcpSocketClient::resetSocket() {
+    std::unique_lock<std::mutex> lk(mSocketMutex);
+    mSocket = SYS_SOCKET_INVALID;
+}
+
 void EzyTcpSocketClient::closeSocket() {
 	std::unique_lock<std::mutex> lk(mSocketMutex);
 	if (mSocket != SYS_SOCKET_INVALID) {
@@ -145,76 +214,6 @@ void EzyTcpSocketClient::closeSocket() {
 #endif
 		mSocket = SYS_SOCKET_INVALID;
 	}
-}
-
-void EzyTcpSocketClient::resetSocket() {
-	std::unique_lock<std::mutex> lk(mSocketMutex);
-	mSocket = SYS_SOCKET_INVALID;
-}
-
-void EzyTcpSocketClient::createAdapters() {
-	mSocketReader = new EzyTcpSocketReader(mConfig);
-	mSocketWriter = new EzyTcpSocketWriter(mConfig);
-}
-
-void EzyTcpSocketClient::startAdapters() {
-	((EzyTcpSocketWriter*)mSocketWriter)->mSocket = mSocket;
-	mSocketWriter->start();
-	((EzyTcpSocketReader*)mSocketReader)->mSocket = mSocket;
-	mSocketReader->start();
-}
-
-
-bool EzyTcpSocketClient::connectNow() {
-	addrinfo hints, *peer;
-	memset(&hints, 0, sizeof(struct addrinfo));
-#ifdef __linux
-#if defined(ANDROID)
-	hints.ai_flags = AI_PASSIVE;
-#else
-	hints.ai_flags = AI_ALL;
-#endif
-#else
-	hints.ai_flags = AI_ALL;
-#endif
-	hints.ai_family = AF_UNSPEC;
-	hints.ai_socktype = SOCK_STREAM;
-
-	char service[128];
-	sprintf(service, "%d", mPort);
-	if (int ret = getaddrinfo(mHost.c_str(), service, &hints, &peer) != 0) {
-#ifdef EZY_DEBUG
-		logger::log("getaddrinfo failure %d", ret);
-#endif
-        mConnectionFailedReason = constant::UnknownFailure;
-        freeaddrinfo(peer);
-		return false;
-	}
-
-	for (auto tpeer = peer; tpeer; tpeer = tpeer->ai_next) {
-        mSocket = ::socket(tpeer->ai_family, tpeer->ai_socktype, tpeer->ai_protocol);
-		if (mSocket == SYS_SOCKET_INVALID) {
-#ifdef EZY_DEBUG
-			logger::log("create socket failure");
-#endif
-			continue;
-		}
-
-		int rs = connect(mSocket, tpeer->ai_addr, tpeer->ai_addrlen);
-		if (rs == 0) {
-            freeaddrinfo(peer);
-            return true;
-		}	
-#ifdef USE_WINSOCK_2
-		closesocket(mSocket);
-#else
-		close(mSocket);
-#endif	
-	}
-    
-	freeaddrinfo(peer);
-    mConnectionFailedReason = constant::UnknownFailure;
-	return false;
 }
 
 EZY_NAMESPACE_END_WITH

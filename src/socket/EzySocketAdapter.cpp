@@ -21,13 +21,6 @@ EzySocketAdapter::~EzySocketAdapter() {
     EZY_SAFE_DELETE(mSocketPool)
 }
 
-void EzySocketAdapter::run() {
-	update();
-    gc::EzyAutoReleasePool::getInstance()->removePool();
-    setStopped(true);
-    release();
-}
-
 void EzySocketAdapter::start() {
     std::unique_lock<std::mutex> lk(mAdapterMutex);
 	if (!mActive) {
@@ -37,6 +30,13 @@ void EzySocketAdapter::start() {
 		std::thread newThread(&EzySocketAdapter::run, this);
 		newThread.detach();
 	}
+}
+
+void EzySocketAdapter::run() {
+    update();
+    gc::EzyAutoReleasePool::getInstance()->removePool();
+    setStopped(true);
+    release();
 }
 
 void EzySocketAdapter::stop() {
@@ -66,18 +66,6 @@ bool EzySocketAdapter::isActive() {
 bool EzySocketAdapter::isStopped() {
     std::unique_lock<std::mutex> lk(mAdapterMutex);
     return mStopped;
-}
-
-void EzySocketAdapter::pushMessage(EzySocketData* data) {
-	mSocketPool->push(data);
-}
-
-EzySocketData* EzySocketAdapter::popMessage() {
-	return mSocketPool->pop();
-}
-
-void EzySocketAdapter::popMessages(std::vector<EzySocketData*>& buffer) {
-    mSocketPool->popAll(buffer);
 }
 
 EZY_NAMESPACE_END_WITH

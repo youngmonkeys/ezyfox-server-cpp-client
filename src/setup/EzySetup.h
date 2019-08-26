@@ -19,7 +19,7 @@ EZY_NAMESPACE_START_WITH_ONLY(manager)
 class EzyHandlerManager;
 EZY_NAMESPACE_END_WITH
 
-EZY_NAMESPACE_START_WITH(command)
+EZY_NAMESPACE_START_WITH(setup)
 
 class EzyAppSetup;
 class EzyPluginSetup;
