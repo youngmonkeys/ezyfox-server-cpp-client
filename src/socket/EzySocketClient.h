@@ -46,7 +46,7 @@ protected:
     manager::EzyHandlerManager* mHandlerManager;
     std::vector<event::EzyEvent*> mLocalEventQueue;
     std::vector<EzySocketData*> mLocalMessageQueue;
-    std::vector<EzySocketStatus> mSocketStatusesBuffer;
+    std::vector<EzySocketStatus> mLocalSocketStatuses;
     util::EzyValueStack<EzySocketStatus>* mSocketStatuses;
 protected:
     EZY_SYNTHESIZE_READONLY(std::string, Host);

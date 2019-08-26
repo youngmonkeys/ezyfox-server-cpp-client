@@ -16,15 +16,15 @@ protected:
     std::mutex mAdapterMutex;
 	EzySocketPool* mSocketPool;
 protected:
+    virtual void run();
 	virtual void update();
+    virtual void setActive(bool active);
+    virtual void setStopped(bool stopped);
 public:
 	EzySocketAdapter();
 	virtual ~EzySocketAdapter();
 	virtual void start();
-    virtual void run();
 	virtual void stop();
-    virtual void setActive(bool active);
-    virtual void setStopped(bool stopped);
     virtual bool isActive();
     virtual bool isStopped();
 	virtual void pushMessage(EzySocketData* data);

@@ -7,7 +7,7 @@
 #include "../handler/EzyPluginDataHandler.h"
 #include "../handler/EzyPluginDataHandlers.h"
 
-EZY_NAMESPACE_START_WITH(command)
+EZY_NAMESPACE_START_WITH(setup)
 
 EzySetup::EzySetup(manager::EzyHandlerManager* handlerManager) {
     this->mAppSetups.clear();

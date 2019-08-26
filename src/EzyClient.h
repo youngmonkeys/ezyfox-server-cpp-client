@@ -33,7 +33,7 @@ class EzySocketClient;
 class EzyPingSchedule;
 EZY_NAMESPACE_END_WITH
 
-EZY_NAMESPACE_START_WITH_ONLY(command)
+EZY_NAMESPACE_START_WITH_ONLY(setup)
 class EzySetup;
 EZY_NAMESPACE_END_WITH
 
@@ -41,7 +41,7 @@ EZY_NAMESPACE_START
 
 class EzyClient : public socket::EzySender {
 protected:
-    command::EzySetup* mSetup;
+    setup::EzySetup* mSetup;
     std::set<int> mUnloggableCommands;
     socket::EzySocketClient* mSocketClient;
     request::EzyRequestSerializer* mRequestSerializer;
@@ -61,7 +61,7 @@ protected:
 public:
     EzyClient(config::EzyClientConfig* config);
     ~EzyClient();
-    command::EzySetup* setup();
+    setup::EzySetup* setup();
     void connect(std::string host, int port);
     bool reconnect();
     void disconnect(int reason);

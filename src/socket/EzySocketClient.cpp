@@ -34,7 +34,7 @@ EzySocketClient::EzySocketClient() {
     mDataHandlers = 0;
     mLocalEventQueue.clear();
     mLocalMessageQueue.clear();
-    mSocketStatusesBuffer.clear();
+    mLocalSocketStatuses.clear();
     mUnloggableCommands.clear();
     mDisconnectReason = constant::UnknownDisconnection;
     mConnectionFailedReason = constant::UnknownFailure;
@@ -128,7 +128,7 @@ void EzySocketClient::connect1(long sleepTime) {
             realSleepTime = 2000 - dt;
     }
     if (realSleepTime >= 0)
-        std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime - dt));
+        std::this_thread::sleep_for(std::chrono::milliseconds(realSleepTime));
     mSocketStatuses->push(SocketConnecting);
     bool success = this->connectNow();
     mConnectTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
@@ -203,9 +203,9 @@ void EzySocketClient::processEventMessages() {
 }
 
 void EzySocketClient::processStatuses() {
-    mSocketStatuses->popAll(mSocketStatusesBuffer);
-    for (int i = 0 ; i < mSocketStatusesBuffer.size() ; ++i) {
-        auto status = mSocketStatusesBuffer[i];
+    mSocketStatuses->popAll(mLocalSocketStatuses);
+    for (int i = 0 ; i < mLocalSocketStatuses.size() ; ++i) {
+        auto status = mLocalSocketStatuses[i];
         if(status == SocketConnected) {
             auto evt = event::EzyConnectionSuccessEvent::create();
             this->mSocketEventQueue->addEvent(evt);
@@ -221,7 +221,7 @@ void EzySocketClient::processStatuses() {
             break;
         }
     }
-    mSocketStatusesBuffer.clear();
+    mLocalSocketStatuses.clear();
 }
 
 void EzySocketClient::processEvents() {

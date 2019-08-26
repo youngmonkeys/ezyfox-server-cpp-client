@@ -65,7 +65,7 @@ void EzySocketReader::onDataReceived() {
 }
 
 void EzySocketReader::onUpdateDataHeader() {
-    if(mByteBuffer.size() >= 1) {
+    if(mByteBuffer.size() > 0) {
         char headerByte;
         memcpy(&headerByte, mByteBuffer.data(), sizeof(headerByte));
         mMessageHeader->parse(headerByte);

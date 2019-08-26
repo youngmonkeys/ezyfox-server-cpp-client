@@ -15,7 +15,7 @@
 #include "entity/EzyUser.h"
 #include "entity/EzyZone.h"
 #include "entity/EzyApp.h"
-#include "command/EzySetup.h"
+#include "setup/EzySetup.h"
 #include "handler/EzyDataHandler.h"
 #include "handler/EzyDataHandlers.h"
 #include "handler/EzyEventHandler.h"
