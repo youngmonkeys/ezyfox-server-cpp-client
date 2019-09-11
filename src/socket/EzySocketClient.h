@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzySocketClient_h
+#define EzySocketClient_h
 
 #include <set>
 #include "EzySocketWriter.h"
@@ -87,3 +88,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzySocketClient_h */

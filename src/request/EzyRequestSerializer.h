@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyRequestSerializer_h
+#define EzyRequestSerializer_h
 
 #include "EzyRequest.h"
 #include "../entity/EzyArray.h"
@@ -13,3 +14,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyRequestSerializer_h */

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzySocketDefine_h
+#define EzySocketDefine_h
 
 //mac
 #if defined(EZY_TARGET_OS_MAC) || defined(__APPLE__)
@@ -88,3 +89,4 @@
 
 #define USE_MESSAGE_HEADER 1
 
+#endif /* EzySocketDefine_h */

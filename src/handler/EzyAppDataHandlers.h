@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyAppDataHandlers_h
+#define EzyAppDataHandlers_h
 
 #include <map>
 #include "../EzyMacro.h"
@@ -26,3 +27,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyAppDataHandlers_h */

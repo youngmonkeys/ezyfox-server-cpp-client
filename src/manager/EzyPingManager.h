@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyPingManager_h
+#define EzyPingManager_h
 
 #include <mutex>
 #include "../EzyMacro.h"
@@ -20,3 +21,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyPingManager_h */

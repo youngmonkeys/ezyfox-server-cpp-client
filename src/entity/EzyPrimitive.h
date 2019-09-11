@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyPrimitive_h
+#define EzyPrimitive_h
 
 #include "EzyValue.h"
 #include "../codec/EzyDataEncoder.h"
@@ -37,3 +38,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyPrimitive_h */

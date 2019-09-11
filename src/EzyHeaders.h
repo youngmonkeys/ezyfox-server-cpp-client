@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyHeaders_h
+#define EzyHeaders_h
 
 #include "logger/EzyLogger.h"
 #include "util/EzyMaps.h"
@@ -34,3 +35,5 @@
 #include "config/EzyClientConfig.h"
 #include "EzyClient.h"
 #include "EzyClients.h"
+
+#endif /* EzyHeaders_h */

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyConnectionFailedReason_h
+#define EzyConnectionFailedReason_h
 
 #include <string>
 #include "../EzyMacro.h"
@@ -16,3 +17,5 @@ enum EzyConnectionFailedReason {
 std::string getConnectionFailedReasonName(int reason);
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyConnectionFailedReason_h */

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyTcpSocketClient_h
+#define EzyTcpSocketClient_h
 
 #include "EzySocketClient.h"
 
@@ -51,3 +52,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyTcpSocketClient_h */

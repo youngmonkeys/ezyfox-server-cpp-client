@@ -6,7 +6,8 @@
 //  Copyright © 2019 Young Monkeys. All rights reserved.
 //
 
-#pragma once
+#ifndef EzyScheduleAtFixedRate_h
+#define EzyScheduleAtFixedRate_h
 
 #include <string>
 #include <mutex>
@@ -39,3 +40,5 @@ protected:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyScheduleAtFixedRate_h */

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyJson_h
+#define EzyJson_h
 
 #include "EzyValue.h"
 #include "../codec/EzyDataEncoder.h"
@@ -27,3 +28,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyJson_h */

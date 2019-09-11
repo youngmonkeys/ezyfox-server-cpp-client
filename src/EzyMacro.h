@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyMacro_h
+#define EzyMacro_h
 
 #define EZY_NAMESPACE com::tvd12::ezyfoxserver::client
 
@@ -194,3 +195,5 @@ public: \
 
 #define EZY_FOREACH_MAP(map)\
 for(auto it = map.begin() ; it != map.end() ; ++it)
+
+#endif /* EzyMacro_h */

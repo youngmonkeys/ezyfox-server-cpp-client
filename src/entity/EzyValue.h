@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyValue_h
+#define EzyValue_h
 
 #define RAPIDJSON_HAS_STDSTRING 1
 
@@ -54,3 +55,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyValue_h */

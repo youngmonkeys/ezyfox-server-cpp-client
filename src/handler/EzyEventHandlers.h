@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyEventHandlers_h
+#define EzyEventHandlers_h
 
 #include <map>
 #include "../EzyMacro.h"
@@ -26,3 +27,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyEventHandlers_h */

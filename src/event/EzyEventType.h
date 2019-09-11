@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyEventType_h
+#define EzyEventType_h
 
 #include <string>
 #include "../EzyMacro.h"
@@ -19,3 +20,5 @@ enum EzyEventType {
 std::string getEventTypeName(int eventType);
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyEventType_h */

@@ -6,7 +6,8 @@
 //  Copyright © 2019 Young Monkeys. All rights reserved.
 //
 
-#pragma once
+#ifndef EzyMainEventsLoop_h
+#define EzyMainEventsLoop_h
 
 #include <vector>
 #include "../EzyMacro.h"
@@ -35,3 +36,4 @@ protected:
 
 EZY_NAMESPACE_END_WITH
 
+#endif /* EzyMainEventsLoop_h */

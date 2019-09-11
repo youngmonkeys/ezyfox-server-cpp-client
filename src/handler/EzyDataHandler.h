@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyDataHandler_h
+#define EzyDataHandler_h
 
 #include "../EzyMacro.h"
 #include "../entity/EzyArray.h"
@@ -119,3 +120,5 @@ public:
 //===============================================
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyDataHandler_h */

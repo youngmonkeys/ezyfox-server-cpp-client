@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyAppDataHandler_h
+#define EzyAppDataHandler_h
 
 #include "../EzyMacro.h"
 #include "../entity/EzyValue.h"
@@ -30,3 +31,5 @@ void EzyAbstractAppDataHandler<T>::handle(entity::EzyApp* app, entity::EzyValue*
 }
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyAppDataHandler_h */

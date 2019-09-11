@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyLogger_h
+#define EzyLogger_h
 
 #include "../EzyMacro.h"
 
@@ -10,3 +11,4 @@ void hex(const char* buf, int len);
 
 EZY_NAMESPACE_END_WITH
 
+#endif /* EzyLogger_h */

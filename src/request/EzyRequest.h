@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyRequest_h
+#define EzyRequest_h
 
 #include <string>
 #include "../EzyMacro.h"
@@ -97,3 +98,4 @@ public:
 EZY_NAMESPACE_END_WITH
 
 
+#endif /* EzyRequest_h */

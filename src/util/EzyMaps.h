@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyMaps_h
+#define EzyMaps_h
 
 #include <map>
 #include <vector>
@@ -24,3 +25,5 @@ std::vector<V*> EzyMaps::getValues(std::map<K,V*> map) {
 }
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyMaps_h */

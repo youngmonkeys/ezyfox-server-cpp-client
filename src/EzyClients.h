@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyClients_h
+#define EzyClients_h
 
 #include <string>
 #include <map>
@@ -37,3 +38,4 @@ protected:
 };
 EZY_NAMESPACE_END
 
+#endif /* EzyClients_h */

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzySender_h
+#define EzySender_h
 
 #include "../EzyMacro.h"
 #include "../request/EzyRequest.h"
@@ -11,3 +12,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzySender_h */

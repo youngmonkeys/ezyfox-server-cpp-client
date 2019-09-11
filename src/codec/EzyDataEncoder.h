@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyDataEncoder_h
+#define EzyDataEncoder_h
 
 #ifndef __STDINT_LIMITS
 #define __STDINT_LIMITS
@@ -54,3 +55,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyDataEncoder_h */

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyAutoReleasePool_h
+#define EzyAutoReleasePool_h
 
 #include <map>
 #include "../EzyMacro.h"
@@ -31,3 +32,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyAutoReleasePool_h */

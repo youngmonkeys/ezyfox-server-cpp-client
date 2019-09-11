@@ -6,7 +6,8 @@
 //  Copyright © 2019 Young Monkeys. All rights reserved.
 //
 
-#pragma once
+#ifndef EzyPluginDataHandler_h
+#define EzyPluginDataHandler_h
 
 #include "../EzyMacro.h"
 #include "../entity/EzyValue.h"
@@ -39,3 +40,4 @@ void EzyAbstractPluginDataHandler<T>::handle(entity::EzyPlugin* app, entity::Ezy
 
 EZY_NAMESPACE_END_WITH
 
+#endif /* EzyPluginDataHandler_h */

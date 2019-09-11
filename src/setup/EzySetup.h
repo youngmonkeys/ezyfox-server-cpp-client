@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzySetup_h
+#define EzySetup_h
 
 #include <string>
 #include <map>
@@ -66,3 +67,5 @@ public:
 
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzySetup_h */

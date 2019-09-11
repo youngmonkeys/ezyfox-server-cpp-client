@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyConnectionStatus_h
+#define EzyConnectionStatus_h
 
 #include <string>
 #include "../EzyMacro.h"
@@ -22,3 +23,5 @@ bool isClientReconnectable(EzyConnectionStatus status);
 bool isClientDestroyable(EzyConnectionStatus status);
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyConnectionStatus_h */

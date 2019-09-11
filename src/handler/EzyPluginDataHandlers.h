@@ -6,7 +6,8 @@
 //  Copyright © 2019 Young Monkeys. All rights reserved.
 //
 
-#pragma once
+#ifndef EzyPluginDataHandlers_h
+#define EzyPluginDataHandlers_h
 
 #include <map>
 #include "../EzyMacro.h"
@@ -34,3 +35,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyPluginDataHandlers_h */

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyArray_h
+#define EzyArray_h
 
 #include "EzyValue.h"
 #include "../codec/EzyDataEncoder.h"
@@ -48,3 +49,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyArray_h */
