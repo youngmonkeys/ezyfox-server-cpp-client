@@ -1,5 +1,6 @@
 #include "EzyApp.h"
 #include "EzyArray.h"
+#include "EzyObject.h"
 #include "EzyZone.h"
 #include "../request/EzyRequest.h"
 #include "../util/EzyMaps.h"
@@ -28,6 +29,10 @@ void EzyApp::send(entity::EzyValue *data) {
     request->setAppId(mId);
     request->setData(data);
     mClient->send(request);
+}
+
+void EzyApp::send(std::string cmd) {
+    send(cmd, new entity::EzyObject());
 }
 
 void EzyApp::send(std::string cmd, entity::EzyValue *data) {

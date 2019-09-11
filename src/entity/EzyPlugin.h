@@ -27,6 +27,7 @@ public:
     EzyPlugin(EzyZone* zone, int identifier, std::string name);
     ~EzyPlugin();
     void send(entity::EzyValue* data);
+    void send(std::string cmd);
     void send(std::string cmd, entity::EzyValue* data);
 };
 
