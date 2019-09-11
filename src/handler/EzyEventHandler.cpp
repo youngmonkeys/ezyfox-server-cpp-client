@@ -85,6 +85,9 @@ void EzyDisconnectionHandler::preHandle(event::EzyDisconnectionEvent* event) {
 }
 
 bool EzyDisconnectionHandler::shouldReconnect(event::EzyDisconnectionEvent* event) {
+    auto reason = event->getReason();
+    if(reason == constant::AnotherSessionLogin)
+        return false;
     return true;
 }
 
