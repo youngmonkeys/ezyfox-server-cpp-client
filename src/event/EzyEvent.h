@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyEvent_h
+#define EzyEvent_h
 
 #include "../EzyMacro.h"
 #include "../base/EzyRef.h"
@@ -74,3 +75,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyEvent_h */

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyClientConfig_h
+#define EzyClientConfig_h
 
 #include <string>
 #include "../EzyMacro.h"
@@ -47,3 +48,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyClientConfig_h */

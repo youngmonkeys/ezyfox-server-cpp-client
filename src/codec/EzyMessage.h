@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyMessage_h
+#define EzyMessage_h
 
 #include "../base/EzyRef.h"
 
@@ -25,3 +26,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyMessage_h */

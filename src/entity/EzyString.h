@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyString_h
+#define EzyString_h
 
 #include "EzyValue.h"
 #include "../EzyMacro.h"
@@ -25,3 +26,4 @@ public:
 
 EZY_NAMESPACE_END_WITH
 
+#endif /* EzyString_h */

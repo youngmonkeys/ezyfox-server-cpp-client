@@ -6,7 +6,8 @@
 //  Copyright © 2019 Young Monkeys. All rights reserved.
 //
 
-#pragma once
+#ifndef EzyStack_h
+#define EzyStack_h
 
 #include <mutex>
 #include <vector>
@@ -117,3 +118,5 @@ int EzyStack<V>::size() {
 }
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyStack_h */

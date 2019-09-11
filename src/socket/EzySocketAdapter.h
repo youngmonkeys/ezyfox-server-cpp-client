@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzySocketAdapter_h
+#define EzySocketAdapter_h
 
 #include <vector>
 #include <mutex>
@@ -30,3 +31,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzySocketAdapter_h */

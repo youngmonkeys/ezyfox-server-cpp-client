@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyPingSchedule_h
+#define EzyPingSchedule_h
 
 #include <mutex>
 #include "../EzyMacro.h"
@@ -43,3 +44,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyPingSchedule_h */

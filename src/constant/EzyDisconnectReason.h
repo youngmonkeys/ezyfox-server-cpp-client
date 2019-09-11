@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyDisconnectReason_h
+#define EzyDisconnectReason_h
 
 #include <string>
 #include "../EzyMacro.h"
@@ -22,3 +23,5 @@ enum EzyDisconnectReason
 std::string getDisconnectReasonName(int reason);
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyDisconnectReason_h */

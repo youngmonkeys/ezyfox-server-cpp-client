@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyAppManager_h
+#define EzyAppManager_h
 
 #include <map>
 #include <vector>
@@ -28,3 +29,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyAppManager_h */

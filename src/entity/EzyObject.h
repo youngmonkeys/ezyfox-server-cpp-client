@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyObject_h
+#define EzyObject_h
 
 #include <map>
 #include <vector>
@@ -49,3 +50,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyObject_h */

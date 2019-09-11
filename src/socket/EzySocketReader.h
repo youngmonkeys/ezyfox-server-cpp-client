@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzySocketReader_h
+#define EzySocketReader_h
 
 #include "EzySocketAdapter.h"
 #include "../codec/EzyDataDecoder.h"
@@ -36,3 +37,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzySocketReader_h */

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzySocketCore_h
+#define EzySocketCore_h
 
 #include <mutex>
 #include "../EzyMacro.h"
@@ -43,3 +44,4 @@ public:
 
 EZY_NAMESPACE_END_WITH
 
+#endif /* EzySocketCore_h */

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyCommand_h
+#define EzyCommand_h
 
 #include <string>
 #include "../EzyMacro.h"
@@ -42,3 +43,5 @@ static int sCommands[] = {
 std::string getCommandName(int command);
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyCommand_h */

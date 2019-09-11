@@ -6,7 +6,8 @@
 //  Copyright © 2019 Young Monkeys. All rights reserved.
 //
 
-#pragma once
+#ifndef EzySocketDelegate_h
+#define EzySocketDelegate_h
 
 #include "../EzyMacro.h"
 
@@ -18,3 +19,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzySocketDelegate_h */

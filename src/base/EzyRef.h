@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyRef_h
+#define EzyRef_h
 
 #include <mutex>
 #include "../EzyMacro.h"
@@ -18,3 +19,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyRef_h */

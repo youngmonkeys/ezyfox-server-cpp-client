@@ -6,7 +6,8 @@
 //  Copyright © 2019 Young Monkeys. All rights reserved.
 //
 
-#pragma once
+#ifndef EzyThread_h
+#define EzyThread_h
 
 #include <string>
 #include "../EzyMacro.h"
@@ -19,3 +20,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyThread_h */

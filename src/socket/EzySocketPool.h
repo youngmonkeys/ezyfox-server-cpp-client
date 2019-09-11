@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzySocketPool_h
+#define EzySocketPool_h
 
 #include <queue>
 #include <vector>
@@ -29,3 +30,5 @@ protected:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzySocketPool_h */

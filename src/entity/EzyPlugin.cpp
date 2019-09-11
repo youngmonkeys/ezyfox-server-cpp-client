@@ -1,8 +1,9 @@
 #include "EzyPlugin.h"
+#include "EzyArray.h"
+#include "EzyObject.h"
 #include "EzyZone.h"
 #include "../EzyClient.h"
 #include "../util/EzyMaps.h"
-#include "../entity/EzyArray.h"
 #include "../request/EzyRequest.h"
 #include "../handler/EzyPluginDataHandlers.h"
 #include "../manager/EzyHandlerManager.h"
@@ -28,6 +29,10 @@ void EzyPlugin::send(entity::EzyValue *data) {
     request->setPluginId(mId);
     request->setData(data);
     mClient->send(request);
+}
+
+void EzyPlugin::send(std::string cmd) {
+    send(cmd, new entity::EzyObject());
 }
 
 void EzyPlugin::send(std::string cmd, entity::EzyValue *data) {

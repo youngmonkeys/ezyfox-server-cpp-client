@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyApp_h
+#define EzyApp_h
 
 #include <string>
 #include "../EzyMacro.h"
@@ -27,7 +28,10 @@ public:
     EzyApp(EzyZone* zone, int identifier, std::string name);
     ~EzyApp();
     void send(entity::EzyValue* data);
+    void send(std::string cmd);
     void send(std::string cmd, entity::EzyValue* data);
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyApp_h */

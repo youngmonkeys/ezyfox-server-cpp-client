@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EzyDataDecoder_h
+#define EzyDataDecoder_h
 
 #include <vector>
 #include <cstdint>
@@ -80,3 +81,5 @@ public:
 };
 
 EZY_NAMESPACE_END_WITH
+
+#endif /* EzyDataDecoder_h */
