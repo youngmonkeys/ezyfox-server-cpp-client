@@ -22,6 +22,7 @@ public:
     ~EzyAppManager();
     void clear();
     void addApp(entity::EzyApp* app);
+    entity::EzyApp* removeApp(int appId);
     entity::EzyApp* getApp();
     std::vector<entity::EzyApp*> getApps();
     entity::EzyApp* getAppById(int appId);

@@ -64,13 +64,12 @@ void EzyHandshakeHandler::postHandle(entity::EzyArray* data) {
 //===============================================
 
 void EzyLoginSuccessHandler::handle(entity::EzyArray *data) {
-    auto joinedApps = data->getArray(4);
-    auto responseData = data->getItem(5);
+    auto responseData = data->getItem(4);
     auto user = newUser(data);
     auto zone = newZone(data);
     mClient->setMe(user);
     mClient->setZone(zone);
-    handleLoginSuccess(joinedApps, responseData);
+    handleLoginSuccess(responseData);
 }
 
 entity::EzyUser* EzyLoginSuccessHandler::newUser(entity::EzyArray* data) {
@@ -87,8 +86,7 @@ entity::EzyZone* EzyLoginSuccessHandler::newZone(entity::EzyArray* data) {
     return zone;
 }
 
-void EzyLoginSuccessHandler::handleLoginSuccess(entity::EzyArray* joinedApps,
-                                                entity::EzyValue* responseData) {
+void EzyLoginSuccessHandler::handleLoginSuccess(entity::EzyValue* responseData) {
 }
 
 //===============================================
@@ -103,7 +101,7 @@ void EzyLoginErrorHandler::handleLoginError(entity::EzyArray *data) {
 
 //===============================================
 
-void EzyAccessAppHandler::handle(entity::EzyArray* data) {
+void EzyAppAccessHandler::handle(entity::EzyArray* data) {
     auto zone = mClient->getZone();
     auto appManager = zone->getAppManager();
     auto app = newApp(zone, data);
@@ -112,14 +110,29 @@ void EzyAccessAppHandler::handle(entity::EzyArray* data) {
     logger::log("access app: %s successfully", app->getName().c_str());
 }
 
-void EzyAccessAppHandler::postHandle(entity::EzyApp* app, entity::EzyArray* data) {
+void EzyAppAccessHandler::postHandle(entity::EzyApp* app, entity::EzyArray* data) {
 }
 
-entity::EzyApp* EzyAccessAppHandler::newApp(entity::EzyZone* zone, entity::EzyArray* data) {
+entity::EzyApp* EzyAppAccessHandler::newApp(entity::EzyZone* zone, entity::EzyArray* data) {
     auto appId = data->getInt(0);
     auto appName = data->getString(1);
     auto app = new entity::EzyApp(zone, (int)appId, appName);
     return app;
+}
+
+//===============================================
+
+void EzyAppExitHandler::handle(entity::EzyArray* data) {
+    auto zone = mClient->getZone();
+    auto appManager = zone->getAppManager();
+    auto appId = data->getInt(0);
+    auto reasonId = data->getInt(1);
+    auto app = appManager->removeApp((int)appId);
+    logger::log("user exit app: %s, reason: %d", app->getName().c_str(), reasonId);
+    postHandle(app, data);
+}
+
+void EzyAppExitHandler::postHandle(entity::EzyApp* app, entity::EzyArray* data) {
 }
 
 //===============================================

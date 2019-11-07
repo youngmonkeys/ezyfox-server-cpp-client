@@ -93,6 +93,16 @@ EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(AppRequest)
 
 //=======================================================
 
+entity::EzyArray* EzyAppExitRequest::serialize() {
+    auto array = new entity::EzyArray();
+    array->addInt(mAppId);
+    return array;
+}
+
+EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(AppExit)
+
+//=======================================================
+
 EzyPluginRequestRequest::EzyPluginRequestRequest() {
     this->mData = 0;
 }

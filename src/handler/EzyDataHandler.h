@@ -66,8 +66,7 @@ class EzyLoginSuccessHandler : public EzyDataHandler {
 protected:
     virtual entity::EzyUser* newUser(entity::EzyArray* data);
     virtual entity::EzyZone* newZone(entity::EzyArray* data);
-    virtual void handleLoginSuccess(entity::EzyArray* joinedApps,
-                                    entity::EzyValue* responseData);
+    virtual void handleLoginSuccess(entity::EzyValue* responseData);
 public:
     void handle(entity::EzyArray* data);
 };
@@ -85,10 +84,19 @@ public:
 
 //===============================================
 
-class EzyAccessAppHandler : public EzyDataHandler {
+class EzyAppAccessHandler : public EzyDataHandler {
 protected:
     virtual void postHandle(entity::EzyApp* app, entity::EzyArray* data);
     virtual entity::EzyApp* newApp(entity::EzyZone* zone, entity::EzyArray* data);
+public:
+    void handle(entity::EzyArray* data);
+};
+
+//===============================================
+
+class EzyAppExitHandler : public EzyDataHandler {
+protected:
+    virtual void postHandle(entity::EzyApp* app, entity::EzyArray* data);
 public:
     void handle(entity::EzyArray* data);
 };
