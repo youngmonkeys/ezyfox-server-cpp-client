@@ -128,8 +128,10 @@ void EzyAppExitHandler::handle(entity::EzyArray* data) {
     auto appId = data->getInt(0);
     auto reasonId = data->getInt(1);
     auto app = appManager->removeApp((int)appId);
-    logger::log("user exit app: %s, reason: %d", app->getName().c_str(), reasonId);
-    postHandle(app, data);
+    if(app) {
+        postHandle(app, data);
+        logger::log("user exit app: %s, reason: %d", app->getName().c_str(), reasonId);
+    }
 }
 
 void EzyAppExitHandler::postHandle(entity::EzyApp* app, entity::EzyArray* data) {
