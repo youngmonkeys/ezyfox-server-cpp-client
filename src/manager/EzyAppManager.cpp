@@ -15,6 +15,17 @@ EzyAppManager::~EzyAppManager() {
     clear();
 }
 
+entity::EzyApp* EzyAppManager::removeApp(int appId) {
+    auto app = mAppByIds[appId];
+    if(app) {
+        mAppByIds.erase(appId);
+        mAppByNames.erase(app->getName());
+        auto appIndex = std::find(mAppList.begin(), mAppList.end(), app);
+        mAppList.erase(appIndex);
+    }
+    return app;
+}
+
 void EzyAppManager::addApp(entity::EzyApp* app) {
     mAppList.push_back(app);
     mAppByIds[app->getId()] = app;

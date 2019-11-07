@@ -20,6 +20,7 @@ enum EzyCommand {
     AppRequest = 31,
     AppExit = 33,
     AppAccessError = 34,
+    AppRequestError = 35,
     PluginInfo = 40,
     PluginRequest = 41
 };
@@ -36,6 +37,7 @@ static int sCommands[] = {
     AppRequest,
     AppExit,
     AppAccessError,
+    AppRequestError,
     PluginInfo,
     PluginRequest
 };

@@ -15,6 +15,7 @@ static std::map<int, std::string> sCommandNames = {
     {AppRequest, "AppRequest"},
     {AppExit, "AppExit"},
     {AppAccessError, "AppAccessError"},
+    {AppRequestError, "AppRequestError"},
     {PluginInfo, "PluginInfo"},
     {PluginRequest, "PluginRequest"}
 };

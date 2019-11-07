@@ -68,6 +68,17 @@ public:
     entity::EzyArray* serialize();
     constant::EzyCommand getCommand();
 };
+
+//==========================================
+
+class EzyAppExitRequest : public EzyRequest {
+protected:
+    EZY_SYNTHESIZE(int, AppId);
+public:
+    static EzyAppExitRequest* create();
+    entity::EzyArray* serialize();
+    constant::EzyCommand getCommand();
+};
     
 //==========================================
 

@@ -42,7 +42,8 @@ handler::EzyDataHandlers* EzyHandlerManager::newDataHandlers() {
     auto handlers = new handler::EzyDataHandlers(mClient);
     handlers->addHandler(constant::Pong, new handler::EzyPongHandler());
     handlers->addHandler(constant::Login, new handler::EzyLoginSuccessHandler());
-    handlers->addHandler(constant::AppAccess, new handler::EzyAccessAppHandler());
+    handlers->addHandler(constant::AppAccess, new handler::EzyAppAccessHandler());
+    handlers->addHandler(constant::AppExit, new handler::EzyAppExitHandler());
     handlers->addHandler(constant::AppRequest, new handler::EzyAppResponseHandler());
     handlers->addHandler(constant::PluginInfo, new handler::EzyPluginInfoHandler());
     handlers->addHandler(constant::PluginRequest, new handler::EzyPluginResponseHandler());
