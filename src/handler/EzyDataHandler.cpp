@@ -164,6 +164,10 @@ void EzyAppResponseHandler::handle(entity::EzyArray* data) {
     auto appId = data->getInt(0);
     auto responseData = data->getArray(1);
     auto app = mClient->getAppById((int)appId);
+    if(!app) {
+        logger::log("receive message when has not joined app yet");
+        return;
+    }
     auto dataHandlers = app->getDataHandlers();
     dataHandlers->handle(app, responseData);
 }
