@@ -18,11 +18,11 @@ EzyTcpSocketWriter::~EzyTcpSocketWriter() {
 }
 
 void EzyTcpSocketWriter::update() {
-    concurrent::EzyThread::setCurrentThreadName("ezyfox-socket-writer");
+    concurrent::EzyThread::setCurrentThreadName("ezyfox-tcp-writer");
 	size_t rs;
 	size_t sentData;
 #ifdef EZY_DEBUG
-    auto releasePool = gc::EzyAutoReleasePool::getInstance()->newPool("socket-writer");
+    auto releasePool = gc::EzyAutoReleasePool::getInstance()->newPool("tcp-writer");
 #else
     auto releasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
 #endif
@@ -79,11 +79,11 @@ EzyTcpSocketReader::~EzyTcpSocketReader() {
 }
 
 void EzyTcpSocketReader::update() {
-    concurrent::EzyThread::setCurrentThreadName("ezyfox-socket-reader");
+    concurrent::EzyThread::setCurrentThreadName("ezyfox-tcp-reader");
 	size_t rs = 0;
 	char dataBuffer[mBufferSize];
 #ifdef EZY_DEBUG
-    auto releasePool = gc::EzyAutoReleasePool::getInstance()->newPool("socket-reader");
+    auto releasePool = gc::EzyAutoReleasePool::getInstance()->newPool("tcp-reader");
 #else
     auto releasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
 #endif

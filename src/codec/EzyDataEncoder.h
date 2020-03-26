@@ -15,9 +15,8 @@ EZY_NAMESPACE_START_WITH(codec)
 
 class EzyDataEncoder {
 protected:
-    
     std::vector<char> mBuffer;
-    
+public:
 	void writeNativeBytes(const char* bytes, int32_t size);
 	void writeNativeInt8(int8_t value);
 	void writeNativeInt16(int16_t value);
@@ -29,8 +28,6 @@ protected:
 	void writeNativeUInt64(uint64_t value);
 	void writeNativeFloat(float f);
 	void writeNativeDouble(double d);
-    
-    char getHeader(uint32_t data);
 public:
 	EzyDataEncoder(int reserveSize);
 	virtual ~EzyDataEncoder();

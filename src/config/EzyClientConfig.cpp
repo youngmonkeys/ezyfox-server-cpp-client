@@ -41,6 +41,7 @@ EzySocketConfig::EzySocketConfig() {
     this->mReadReserveSize = 16 * 1024;
     this->mEncodeReserveSize = 16 * 1024;
     this->mDecodeReserveSize = 16 * 1024;
+    this->mUdpDecodeReserveSize = 8 * 1024;
 }
 
 //============================

@@ -20,12 +20,12 @@ protected:
     codec::EzyDecodeState mDecodeState;
     codec::EzyMessageHeader* mMessageHeader;
     
+    virtual void preInsertData();
     virtual void onDataReceived();
     virtual void onUpdateDataHeader();
     virtual void onUpdateDataSize();
     virtual void onUpdateData();
 #endif
-    
     codec::EzyDataDecoder* mDecoder;
     virtual void acceptData(const char* data, size_t size);
     virtual void onReceivedMessage(entity::EzyValue* value);

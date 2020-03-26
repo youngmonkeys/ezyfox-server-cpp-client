@@ -22,7 +22,8 @@ enum EzyCommand {
     AppAccessError = 34,
     AppRequestError = 35,
     PluginInfo = 40,
-    PluginRequest = 41
+    PluginRequest = 41,
+    UdpHandshake = 50
 };
 
 static int sCommands[] = {

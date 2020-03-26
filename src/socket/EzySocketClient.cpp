@@ -51,6 +51,8 @@ EzySocketClient::~EzySocketClient() {
     mSocketEventQueue->clear();
     EZY_SAFE_DELETE(mSocketStatuses);
     EZY_SAFE_DELETE(mSocketEventQueue);
+    EZY_SAFE_DELETE(mSocketReader);
+    EZY_SAFE_DELETE(mSocketWriter);
 }
 
 void EzySocketClient::destroy() {
@@ -170,6 +172,9 @@ void EzySocketClient::clearAdapter(EzySocketAdapter* adapter) {
     }
 }
 
+void EzySocketClient::clearComponents(int disconnectReason){
+}
+
 void EzySocketClient::resetSocket() {
 }
 
@@ -181,6 +186,7 @@ void EzySocketClient::onDisconnected(int reason) {
     mSocketEventQueue->clear();
     closeSocket();
     clearAdapters();
+    clearComponents(reason);
     mSocketStatuses->push(SocketDisconnected);
 }
 
@@ -253,11 +259,15 @@ void EzySocketClient::processReceivedMessages() {
 
 void EzySocketClient::processReceivedMessages0() {
     mPingManager->setLostPingCount(0);
-    mSocketReader->popMessages(mLocalMessageQueue);
+    popReadMessages();
     for (int i = 0 ; i < mLocalMessageQueue.size() ; ++i) {
         processReceivedMessage(mLocalMessageQueue[i]);
     }
     mLocalMessageQueue.clear();
+}
+
+void EzySocketClient::popReadMessages() {
+    mSocketReader->popMessages(mLocalMessageQueue);
 }
 
 void EzySocketClient::processReceivedMessage(EzySocketData* message) {

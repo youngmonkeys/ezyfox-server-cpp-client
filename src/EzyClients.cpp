@@ -18,7 +18,7 @@ EzyClient* EzyClients::newClient0(config::EzyClientConfig* config) {
     auto clientName = config->getClientName();
     auto client = mClients[clientName];
     if(!client) {
-        client = new EzyClient(config);
+        client = EzyClient::create(config);
         addClient0(client);
         if(mDefaultClientName.length() == 0)
             mDefaultClientName = client->getName();

@@ -32,6 +32,7 @@ protected:
     EZY_SYNTHESIZE(int, ReadReserveSize);
     EZY_SYNTHESIZE(int, EncodeReserveSize);
     EZY_SYNTHESIZE(int, DecodeReserveSize);
+    EZY_SYNTHESIZE(int, UdpDecodeReserveSize);
 public:
     EzySocketConfig();
 };

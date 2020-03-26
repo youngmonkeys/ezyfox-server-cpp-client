@@ -1,6 +1,9 @@
 #include "EzyDataHandler.h"
 #include "../logger/EzyLogger.h"
 #include "../EzyClient.h"
+#include "../EzyUTClient.h"
+#include "../constant/EzyStatusCode.h"
+#include "../constant/EzyConnectionStatus.h"
 #include "../request/EzyRequest.h"
 #include "../socket/EzyPingSchedule.h"
 #include "../entity/EzyZone.h"
@@ -12,6 +15,7 @@
 #include "../manager/EzyPluginManager.h"
 #include "../handler/EzyAppDataHandlers.h"
 #include "../handler/EzyPluginDataHandlers.h"
+#include "../socket/EzyUTSocketClient.h"
 
 EZY_NAMESPACE_START_WITH(handler)
 
@@ -43,8 +47,14 @@ EzyHandshakeHandler::~EzyHandshakeHandler() {
 
 void EzyHandshakeHandler::handle(entity::EzyArray* data) {
     mPingSchedule->start();
+    preHandle(data);
     handleLogin(data);
     postHandle(data);
+}
+
+void EzyHandshakeHandler::preHandle(entity::EzyArray *data) {
+    mClient->setSessionId(data->getInt(2));
+    mClient->setSessionToken(data->getString(1));
 }
 
 void EzyHandshakeHandler::handleLogin(entity::EzyArray* data) {
@@ -182,5 +192,30 @@ void EzyPluginResponseHandler::handle(entity::EzyArray* data) {
     dataHandlers->handle(plugin, responseData);
 }
 
+//===============================================
+
+void EzyUdpHandshakeHandler::handle(entity::EzyArray* data) {
+    auto responseCode = data->getInt(0);
+    auto socket = (socket::EzyUTSocketClient*)((EzyUTClient*)mClient)->getSocket();
+    if(responseCode == constant::Ok) {
+        socket->udpSetStatus(socket::SocketConnected);
+        onAuthenticated(data);
+    }
+    else {
+        socket->udpSetStatus(socket::SocketConnectFailed);
+        onAuthenticationError(data);
+    }
+}
+
+void EzyUdpHandshakeHandler::onAuthenticated(entity::EzyArray* data) {
+    logger::log("udp authenticated");
+}
+
+void EzyUdpHandshakeHandler::onAuthenticationError(entity::EzyArray* data) {
+    auto responseCode = data->getInt(0);
+    logger::log("udp authentication error: %d", responseCode);
+}
+
+//===============================================
 
 EZY_NAMESPACE_END_WITH

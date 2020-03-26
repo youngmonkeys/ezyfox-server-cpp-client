@@ -47,6 +47,7 @@ handler::EzyDataHandlers* EzyHandlerManager::newDataHandlers() {
     handlers->addHandler(constant::AppRequest, new handler::EzyAppResponseHandler());
     handlers->addHandler(constant::PluginInfo, new handler::EzyPluginInfoHandler());
     handlers->addHandler(constant::PluginRequest, new handler::EzyPluginResponseHandler());
+    handlers->addHandler(constant::UdpHandshake, new handler::EzyUdpHandshakeHandler());
     return handlers;
 }
 

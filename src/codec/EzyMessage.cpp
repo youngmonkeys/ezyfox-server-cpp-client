@@ -7,6 +7,9 @@ EzyMessageHeader::EzyMessageHeader() {
     mBigSize = false;
     mEncrypted = false;
     mCompressed = false;
+    mRawBytes = false;
+    mUdpHandshake = false;
+    mHasNext = false;
 }
     
 EzyMessageHeader::EzyMessageHeader(uint32_t dataSize) {
@@ -14,6 +17,9 @@ EzyMessageHeader::EzyMessageHeader(uint32_t dataSize) {
     mEncrypted = false;
     mCompressed = false;
     mBigSize = dataSize > MAX_SMALL_MESSAGE_SIZE;
+    mRawBytes = false;
+    mUdpHandshake = false;
+    mHasNext = false;
 }
     
 EzyMessageHeader::~EzyMessageHeader() {
@@ -36,6 +42,9 @@ void EzyMessageHeader::parse(char headerByte) {
     mEncrypted      = (headerByte & 1 << 1) > 0;
     mCompressed     = (headerByte & 1 << 2) > 0;
     mText           = (headerByte & 1 << 3) > 0;
+    mRawBytes       = (headerByte & 1 << 4) > 0;
+    mUdpHandshake   = (headerByte & 1 << 5) > 0;
+    mHasNext        = (headerByte & 1 << 7) > 0;
 }
     
 char EzyMessageHeader::getByte() {
@@ -44,6 +53,9 @@ char EzyMessageHeader::getByte() {
     headerByte      |= mEncrypted    ? 1 << 1 : 0;
     headerByte      |= mCompressed   ? 1 << 2 : 0;
     headerByte      |= mText         ? 1 << 3 : 0;
+    headerByte      |= mRawBytes     ? 1 << 4 : 0;
+    headerByte      |= mUdpHandshake ? 1 << 5 : 0;
+    headerByte      |= mHasNext      ? 1 << 7 : 0;
     return headerByte;
 }
 

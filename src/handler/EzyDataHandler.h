@@ -52,6 +52,7 @@ protected:
     void handleLogin(entity::EzyArray* data);
 protected:
     virtual void setClient(EzyClient* client);
+    virtual void preHandle(entity::EzyArray* data);
     virtual void postHandle(entity::EzyArray* data);
     virtual request::EzyRequest* getLoginRequest() = 0;
 public:
@@ -123,6 +124,16 @@ public:
 class EzyPluginResponseHandler : public EzyDataHandler {
 public:
     virtual void handle(entity::EzyArray* data);
+};
+
+//===============================================
+
+class EzyUdpHandshakeHandler : public EzyDataHandler {
+public:
+    virtual void handle(entity::EzyArray* data);
+protected:
+    virtual void onAuthenticated(entity::EzyArray* data);
+    virtual void onAuthenticationError(entity::EzyArray* data);
 };
 
 //===============================================

@@ -34,6 +34,7 @@ void EzySocketReader::acceptData(const char* data, size_t size) {
         return;
     }
 #ifdef USE_MESSAGE_HEADER
+    preInsertData();
     mByteBuffer.insert(mByteBuffer.end(), data, data + size);
     onDataReceived();
 #else
@@ -41,8 +42,10 @@ void EzySocketReader::acceptData(const char* data, size_t size) {
 #endif
 }
 
-
 #ifdef USE_MESSAGE_HEADER
+void EzySocketReader::preInsertData() {
+}
+
 void EzySocketReader::onDataReceived() {
     if (mByteBuffer.size() <= 0) {
         return;

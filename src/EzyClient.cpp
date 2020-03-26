@@ -20,12 +20,21 @@
 
 EZY_NAMESPACE_START
 
-EzyClient::EzyClient(config::EzyClientConfig* config) {
+EzyClient::EzyClient() {
     mZone = 0;
     mMe = 0;
+    mStatus = constant::Null;
+}
+
+EzyClient* EzyClient::create(config::EzyClientConfig *config) {
+    auto pRet = new EzyClient();
+    pRet->init(config);
+    return pRet;
+}
+
+void EzyClient::init(config::EzyClientConfig *config) {
     mConfig = config;
     mName = config->getClientName();
-    mStatus = constant::Null;
     mPingManager = new manager::EzyPingManager();
     mPingSchedule = new socket::EzyPingSchedule(this);
     mHandlerManager = new manager::EzyHandlerManager(this);
@@ -86,7 +95,7 @@ void EzyClient::preconnect() {
 }
 
 socket::EzySocketClient* EzyClient::newSocketClient() {
-    auto socketClient = new socket::EzyTcpSocketClient();
+    auto socketClient = newTcpSocketClient();
     socketClient->setPingSchedule(mPingSchedule);
     socketClient->setPingManager(mPingManager);
     socketClient->setHandlerManager(mHandlerManager);
@@ -94,6 +103,10 @@ socket::EzySocketClient* EzyClient::newSocketClient() {
     socketClient->setReconnectConfig(mConfig->getReconnect());
     socketClient->setUnloggableCommands(mUnloggableCommands);
     return socketClient;
+}
+
+socket::EzySocketClient* EzyClient::newTcpSocketClient() {
+    return new socket::EzyTcpSocketClient();
 }
 
 void EzyClient::disconnect(int reason) {
@@ -157,6 +170,36 @@ entity::EzyPlugin* EzyClient::getPluginById(int pluginId) {
         return plugin;
     }
     return 0;
+}
+
+socket::EzySocketClient* EzyClient::getSocket() {
+    return mSocketClient;
+}
+
+void EzyClient::setSessionId(int64_t sessionId) {
+    mSessionId = sessionId;
+    mSocketClient->setSessionId(mSessionId);
+}
+
+void EzyClient::setSessionToken(std::string token) {
+    mSessionToken = token;
+    mSocketClient->setSessionToken(mSessionToken);
+}
+
+void EzyClient::udpConnect(int port) {
+    logger::log("only support TCP, use EzyUTClient instead");
+}
+
+void EzyClient::udpConnect(std::string host, int port) {
+    logger::log("only support TCP, use EzyUTClient instead");
+}
+
+void EzyClient::udpSend(request::EzyRequest* request) {
+    logger::log("only support TCP, use EzyUTClient instead");
+}
+
+void EzyClient::udpSend(constant::EzyCommand cmd, entity::EzyArray* data) {
+    logger::log("only support TCP, use EzyUTClient instead");
 }
 
 EZY_NAMESPACE_END

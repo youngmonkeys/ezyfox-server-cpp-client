@@ -51,6 +51,8 @@ protected:
     EZY_SYNTHESIZE(entity::EzyZone*, Zone)
     EZY_SYNTHESIZE(constant::EzyConnectionStatus, Status);
     EZY_SYNTHESIZE_READONLY(std::string, Name);
+    EZY_SYNTHESIZE_READONLY(int64_t, SessionId);
+    EZY_SYNTHESIZE_READONLY(std::string, SessionToken);
     EZY_SYNTHESIZE_READONLY(config::EzyClientConfig*, Config);
     EZY_SYNTHESIZE_READONLY(manager::EzyPingManager*, PingManager);
     EZY_SYNTHESIZE_READONLY(socket::EzyPingSchedule*, PingSchedule);
@@ -59,9 +61,14 @@ protected:
     void preconnect();
     socket::EzySocketClient* newSocketClient();
     void printSentData(int cmd, entity::EzyArray* data);
+protected:
+    virtual void init(config::EzyClientConfig* config);
+    virtual socket::EzySocketClient* newTcpSocketClient();
 public:
-    EzyClient(config::EzyClientConfig* config);
-    ~EzyClient();
+    static EzyClient* create(config::EzyClientConfig* config);
+public:
+    EzyClient();
+    virtual ~EzyClient();
     setup::EzySetup* setup();
     void connect(std::string host, int port);
     bool reconnect();
@@ -71,7 +78,15 @@ public:
     void processEvents();
     entity::EzyApp* getAppById(int appId);
     entity::EzyPlugin* getPluginById(int pluginId);
+    socket::EzySocketClient* getSocket();
+    void setSessionId(int64_t sessionId);
+    void setSessionToken(std::string token);
     void destroy();
+public:
+    virtual void udpConnect(int port);
+    virtual void udpConnect(std::string host, int port);
+    virtual void udpSend(request::EzyRequest* request);
+    virtual void udpSend(constant::EzyCommand cmd, entity::EzyArray* data);
 };
 
 EZY_NAMESPACE_END

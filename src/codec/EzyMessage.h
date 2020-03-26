@@ -13,6 +13,9 @@ protected:
     EZY_SYNTHESIZE_BOOL(Encrypted) //bit 2
     EZY_SYNTHESIZE_BOOL_READONLY(Compressed) //bit 3
     EZY_SYNTHESIZE_BOOL(Text) //bit 4
+    EZY_SYNTHESIZE_BOOL(RawBytes) //bit 5
+    EZY_SYNTHESIZE_BOOL(UdpHandshake) //bit 6
+    EZY_SYNTHESIZE_BOOL(HasNext) //bit 8
 public:
     EzyMessageHeader();
     EzyMessageHeader(uint32_t dataSize);

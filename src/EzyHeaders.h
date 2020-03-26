@@ -5,6 +5,8 @@
 #include "util/EzyMaps.h"
 #include "concurrent/EzyThread.h"
 #include "constant/EzyCommand.h"
+#include "constant/EzyStatusCode.h"
+#include "constant/EzyTransportType.h"
 #include "constant/EzyConnectionStatus.h"
 #include "constant/EzyConnectionFailedReason.h"
 #include "constant/EzyDisconnectReason.h"
@@ -34,6 +36,7 @@
 #include "socket/EzyMainEventsLoop.h"
 #include "config/EzyClientConfig.h"
 #include "EzyClient.h"
+#include "EzyUTClient.h"
 #include "EzyClients.h"
 
 #endif /* EzyHeaders_h */

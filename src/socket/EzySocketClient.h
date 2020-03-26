@@ -52,6 +52,8 @@ protected:
 protected:
     EZY_SYNTHESIZE_READONLY(std::string, Host);
     EZY_SYNTHESIZE_READONLY(int, Port);
+    EZY_SYNTHESIZE_WRITEONLY(int64_t, SessionId);
+    EZY_SYNTHESIZE_WRITEONLY(std::string, SessionToken);
     EZY_SYNTHESIZE_WRITEONLY(std::set<int>, UnloggableCommands);
     EZY_SYNTHESIZE_WRITEONLY(manager::EzyPingManager*, PingManager);
     EZY_SYNTHESIZE_WRITEONLY(config::EzySocketConfig*, Config);
@@ -65,8 +67,10 @@ protected:
     virtual void startAdapters();
     virtual void createAdapters();
     virtual void clearAdapter(EzySocketAdapter* adapter);
+    virtual void clearComponents(int disconnectReason);
     virtual void processEvents();
     virtual void processStatuses();
+    virtual void popReadMessages();
     virtual void processReceivedMessages();
     virtual void processReceivedMessages0();
     virtual void processReceivedMessage(EzySocketData* message);
