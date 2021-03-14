@@ -196,8 +196,10 @@ void EzyPluginResponseHandler::handle(entity::EzyArray* data) {
 
 void EzyUdpHandshakeHandler::handle(entity::EzyArray* data) {
     auto responseCode = data->getInt(0);
-    auto socket = (socket::EzyUTSocketClient*)((EzyUTClient*)mClient)->getSocket();
+    auto utClient = (EzyUTClient*)mClient;
+    auto socket = (socket::EzyUTSocketClient*)(utClient)->getSocket();
     if(responseCode == constant::Ok) {
+        utClient->setUdpStatus(constant::Connected);
         socket->udpSetStatus(socket::SocketConnected);
         onAuthenticated(data);
     }

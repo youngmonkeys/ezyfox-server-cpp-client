@@ -13,7 +13,6 @@
 #include "entity/EzyPrimitive.h"
 #include "entity/EzyObject.h"
 #include "entity/EzyArray.h"
-#include "entity/EzyJson.h"
 #include "entity/EzyString.h"
 #include "entity/EzyUser.h"
 #include "entity/EzyZone.h"

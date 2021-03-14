@@ -1,7 +1,6 @@
 #include "EzySocketReader.h"
 #include "EzySocketClient.h"
 #include "../logger/EzyLogger.h"
-#include "../entity/EzyJson.h"
 #include "../config/EzyClientConfig.h"
 
 EZY_NAMESPACE_START_WITH(socket)

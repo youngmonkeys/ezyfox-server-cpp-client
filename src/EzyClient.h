@@ -50,6 +50,7 @@ protected:
     EZY_SYNTHESIZE(entity::EzyUser*, Me)
     EZY_SYNTHESIZE(entity::EzyZone*, Zone)
     EZY_SYNTHESIZE(constant::EzyConnectionStatus, Status);
+    EZY_SYNTHESIZE(constant::EzyConnectionStatus, UdpStatus);
     EZY_SYNTHESIZE_READONLY(std::string, Name);
     EZY_SYNTHESIZE_READONLY(int64_t, SessionId);
     EZY_SYNTHESIZE_READONLY(std::string, SessionToken);
@@ -76,12 +77,15 @@ public:
     void send(request::EzyRequest* request);
     void send(constant::EzyCommand cmd, entity::EzyArray* data);
     void processEvents();
+    entity::EzyApp* getApp();
     entity::EzyApp* getAppById(int appId);
     entity::EzyPlugin* getPluginById(int pluginId);
     socket::EzySocketClient* getSocket();
     void setSessionId(int64_t sessionId);
     void setSessionToken(std::string token);
     void destroy();
+    bool isConnected();
+    bool isUdpConnected();
 public:
     virtual void udpConnect(int port);
     virtual void udpConnect(std::string host, int port);

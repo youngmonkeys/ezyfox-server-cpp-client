@@ -5,8 +5,6 @@
 
 #include <sstream>
 #include "../base/EzyRef.h"
-#include "../rapidjson/rapidjson.h"
-#include "../rapidjson/document.h"
 #include "../codec/EzyDataEncoder.h"
 
 EZY_NAMESPACE_START_WITH(entity)
@@ -42,7 +40,6 @@ protected:
 	virtual void printToOutStream(std::ostringstream& stream, int padding);
 	virtual void printPadding(std::ostringstream& stream, int padding);
 #endif
-	virtual void toValue(rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator);
 public:
 	EzyValue();
 	virtual ~EzyValue();
@@ -51,7 +48,8 @@ public:
 	virtual void printDebug();
 #endif
     int getType();
-	std::string toJson();
+public:
+	virtual std::string toString() const = 0;
 };
 
 EZY_NAMESPACE_END_WITH

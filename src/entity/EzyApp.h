@@ -30,6 +30,8 @@ public:
     void send(entity::EzyValue* data);
     void send(std::string cmd);
     void send(std::string cmd, entity::EzyValue* data);
+    void udpSend(std::string cmd);
+    void udpSend(std::string cmd, entity::EzyValue* data);
 };
 
 EZY_NAMESPACE_END_WITH

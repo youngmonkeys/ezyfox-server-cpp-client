@@ -20,10 +20,6 @@ void EzyString::printToOutStream(std::ostringstream& stream, int padding) {
 }
 #endif
 
-void EzyString::toValue(rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator) {
-    value.SetString(mData, allocator);
-}
-
 void EzyString::setString(const std::string& str) {
     mData = str;
 }
@@ -36,6 +32,10 @@ void EzyString::setData(const char* buffer, int size) {
 
 const std::string& EzyString::getString() {
     return mData;
+}
+
+std::string EzyString::toString() const {
+    return std::string("\"").append(mData).append("\"");
 }
 
 EZY_NAMESPACE_END_WITH

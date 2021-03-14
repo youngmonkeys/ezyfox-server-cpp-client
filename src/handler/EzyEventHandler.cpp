@@ -75,6 +75,7 @@ void EzyDisconnectionHandler::process(event::EzyDisconnectionEvent* event) {
     auto mustReconnect = reconnectConfig->isEnable() && should;
     auto reconnecting = false;
     mClient->setStatus(constant::Disconnected);
+    mClient->setUdpStatus(constant::Disconnected);
     if (mustReconnect)
         reconnecting = mClient->reconnect();
     if (!reconnecting)

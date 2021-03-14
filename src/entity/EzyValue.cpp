@@ -4,8 +4,6 @@
 #include "EzyArray.h"
 #include "EzyObject.h"
 #include "../logger/EzyLogger.h"
-#include "../rapidjson/stringbuffer.h"
-#include "../rapidjson/prettywriter.h"
 
 EZY_NAMESPACE_START_WITH(entity)
 	
@@ -48,25 +46,8 @@ void EzyValue::printPadding(std::ostringstream& stream, int padding) {
 }
 #endif
 
-void EzyValue::toValue(rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator) {
-	value.SetNull();
-}
-
 int EzyValue::getType() {
     return mValueType;
-}
-
-std::string EzyValue::toJson() {
-
-	rapidjson::Document doc;
-	this->toValue(doc, doc.GetAllocator());
-
-	rapidjson::StringBuffer buffer;
-	buffer.Clear();
-	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-	doc.Accept(writer);
-	std::string json = buffer.GetString();
-	return json;
 }
 
 EZY_NAMESPACE_END_WITH

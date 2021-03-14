@@ -461,7 +461,7 @@ void EzyDataDecoder::onReadValue(entity::EzyValue* object) {
 }
 
 void EzyDataDecoder::onReadNil() {
-    auto value = new entity::EzyValue();
+    auto value = new entity::EzyArray();
 	this->onReadValue(value);
 }
 

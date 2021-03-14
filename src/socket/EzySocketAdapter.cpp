@@ -3,7 +3,6 @@
 #include "EzySocketAdapter.h"
 #include "../logger/EzyLogger.h"
 #include "../entity/EzyValue.h"
-#include "../entity/EzyJson.h"
 #include "../entity/EzyObject.h"
 #include "../gc/EzyAutoReleasePool.h"
 

@@ -18,11 +18,10 @@ class EzyPrimitive : public EzyValue {
 #ifdef EZY_DEBUG
 	virtual void printToOutStream(std::ostringstream& stream, int padding);
 #endif
-	virtual void toValue(rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator);
 public:
 	EzyPrimitive();
 	virtual ~EzyPrimitive();
-    virtual void writeToBuffer(codec::EzyDataEncoder* encoder);
+    virtual void writeToBuffer(codec::EzyDataEncoder* encoder) override;
 
 	void setBool(bool b);
 	void setFloat(float f);
@@ -35,6 +34,8 @@ public:
 	double getDouble();
 	int64_t getInt();
 	uint64_t getUInt();
+public:
+    std::string toString() const override;
 };
 
 EZY_NAMESPACE_END_WITH

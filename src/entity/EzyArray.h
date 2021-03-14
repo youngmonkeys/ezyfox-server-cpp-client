@@ -12,7 +12,6 @@ protected:
 #ifdef EZY_DEBUG
 	virtual void printToOutStream(std::ostringstream& stream, int padding);
 #endif
-	virtual void toValue(rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator);
 public:
 	EzyArray();
 	virtual ~EzyArray();
@@ -46,6 +45,8 @@ public:
     EzyArray* getArray(int index, EzyArray* defValue);
 
 	static EzyArray* create();
+public:
+    std::string toString() const override;
 };
 
 EZY_NAMESPACE_END_WITH

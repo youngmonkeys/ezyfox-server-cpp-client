@@ -24,6 +24,7 @@ EzyClient::EzyClient() {
     mZone = 0;
     mMe = 0;
     mStatus = constant::Null;
+    mUdpStatus = constant::Null;
 }
 
 EzyClient* EzyClient::create(config::EzyClientConfig *config) {
@@ -154,6 +155,15 @@ setup::EzySetup* EzyClient::setup() {
     return mSetup;
 }
 
+entity::EzyApp* EzyClient::getApp() {
+    if(mZone) {
+        auto appManager = mZone->getAppManager();
+        auto app = appManager->getApp();
+        return app;
+    }
+    return 0;
+}
+
 entity::EzyApp* EzyClient::getAppById(int appId) {
     if(mZone) {
         auto appManager = mZone->getAppManager();
@@ -184,6 +194,14 @@ void EzyClient::setSessionId(int64_t sessionId) {
 void EzyClient::setSessionToken(std::string token) {
     mSessionToken = token;
     mSocketClient->setSessionToken(mSessionToken);
+}
+
+bool EzyClient::isConnected() {
+    return mStatus == constant::Connected;
+}
+
+bool EzyClient::isUdpConnected() {
+    return mUdpStatus == constant::Connected;
 }
 
 void EzyClient::udpConnect(int port) {

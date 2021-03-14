@@ -48,18 +48,6 @@ void EzyObject::printToOutStream(std::ostringstream& outStream, int padding) {
 }
 #endif
 
-void EzyObject::toValue(rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator) {
-	value.SetObject();
-	for (auto it = mData.begin(); it != mData.end(); it++) {
-		rapidjson::Value key(it->first, allocator);
-
-		rapidjson::Value obj;
-		it->second->toValue(obj, allocator);
-
-		value.AddMember(key, obj, allocator);
-	}
-}
-
 void EzyObject::addItem(const std::string& key, EzyValue* item) {
 	auto it = mData.find(key);
 	if (it != mData.end()) {
@@ -225,6 +213,20 @@ EzyArray* EzyObject::setArray(const std::string& key, EzyArray* value) {
 		this->addItem(key, value);
 	}
 	return value;
+}
+
+std::string EzyObject::toString() const {
+    auto index = 0;
+    auto builder = std::string("{");
+    for (auto it = mData.begin(); it != mData.end(); it++) {
+        builder
+            .append("\"").append(it->first).append("\"")
+            .append(":").append(it->second->toString());
+        if((index ++) < mData.size() - 1) {
+            builder.append(",");
+        }
+    }
+    return builder.append("}");
 }
 
 EZY_NAMESPACE_END_WITH

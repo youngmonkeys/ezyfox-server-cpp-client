@@ -27,7 +27,6 @@ EzyUdpSocketWriter::~EzyUdpSocketWriter() {
 
 void EzyUdpSocketWriter::update() {
     concurrent::EzyThread::setCurrentThreadName("ezyfox-udp-writer");
-    size_t rs;
     size_t sentData;
 #ifdef EZY_DEBUG
     auto releasePool = gc::EzyAutoReleasePool::getInstance()->newPool("udp-writer");
@@ -45,24 +44,7 @@ void EzyUdpSocketWriter::update() {
             sentData = 0;
             toBufferData(sendData);
             const std::vector<char>& sendBuffer = mEncoder->getBuffer();
-            
-            while (true) {
-                rs = send(mSocket, sendBuffer.data() + sentData, sendBuffer.size() - sentData, 0);
-                if (rs == 0) {
-#ifdef EZY_DEBUG
-                    logger::log("udp connection shutdown[1] on writer");
-#endif
-                    setActive(false);
-                    return;
-                }
-                else if(rs < 0) {
-#ifdef EZY_DEBUG
-                    logger::log("udp connection shutdown[2] on writer when send error");
-#endif
-                    setActive(false);
-                    return;
-                }
-            }
+            send(mSocket, sendBuffer.data() + sentData, sendBuffer.size() - sentData, 0);
         }
         else {
             setActive(false);
@@ -105,20 +87,6 @@ void EzyUdpSocketReader::update() {
         rs = recv(mSocket, dataBuffer, mBufferSize, 0);
         if (rs > 0) {
             acceptData(dataBuffer, rs);
-        }
-        else if (rs == 0) {
-#ifdef EZY_DEBUG
-            logger::log("udp connection shutdown[1] on reader");
-#endif
-            setActive(false);
-            break;
-        }
-        else {
-#ifdef EZY_DEBUG
-            logger::log("udp connection shutdown[2] on reader");
-#endif
-            setActive(false);
-            break;
         }
     }
 }

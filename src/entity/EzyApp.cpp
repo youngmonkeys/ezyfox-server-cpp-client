@@ -42,4 +42,18 @@ void EzyApp::send(std::string cmd, entity::EzyValue *data) {
     send(array);
 }
 
+void EzyApp::udpSend(std::string cmd) {
+    udpSend(cmd, new entity::EzyObject());
+}
+
+void EzyApp::udpSend(std::string cmd, entity::EzyValue* data) {
+    auto commandData = new entity::EzyArray();
+    commandData->addString(cmd);
+    commandData->addItem(data);
+    auto requestData = new entity::EzyArray();
+    requestData->addInt(mId);
+    requestData->addArray(commandData);
+    mClient->udpSend(constant::AppRequest, requestData);
+}
+
 EZY_NAMESPACE_END_WITH

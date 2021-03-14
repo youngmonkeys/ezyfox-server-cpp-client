@@ -201,9 +201,9 @@ void EzySocketClient::sendMessage(EzySocketData* message) {
 }
 
 void EzySocketClient::processEventMessages() {
+    processReceivedMessages();
     processStatuses();
     processEvents();
-    processReceivedMessages();
     mReleasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
     mReleasePool->releaseAll();
 }

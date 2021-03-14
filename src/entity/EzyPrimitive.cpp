@@ -90,35 +90,6 @@ void EzyPrimitive::printToOutStream(std::ostringstream& stream, int padding) {
 }
 #endif
 
-void EzyPrimitive::toValue(rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator) {
-	switch (mValueType)
-	{
-	case EzyValueType::TypeBool: {
-		value.SetBool(data.boolValue);
-		return;
-	}
-	case EzyValueType::TypeFloat: {
-		value.SetFloat(data.floatValue);
-		return;
-	}
-	case EzyValueType::TypeDouble: {
-		value.SetDouble(data.doubleValue);
-		return;
-	}
-	case EzyValueType::TypeInt: {
-		value.SetInt64(data.i64Value);
-		return;
-	}
-	case EzyValueType::TypeUInt: {
-		value.SetUint64(data.ui64Value);
-		return;
-	}
-	default:
-		value.SetNull();
-		break;
-	}
-}
-
 void EzyPrimitive::setBool(bool b) {
 	mValueType = EzyValueType::TypeBool;
 	data.boolValue = b;
@@ -162,6 +133,29 @@ int64_t EzyPrimitive::getInt() {
 
 uint64_t EzyPrimitive::getUInt() {
 	return data.ui64Value;
+}
+
+std::string EzyPrimitive::toString() const {
+    switch (mValueType) {
+        case EzyValueType::TypeBool: {
+            return data.boolValue ? "true" : "false";
+        }
+        case EzyValueType::TypeFloat: {
+            return std::to_string(data.floatValue);
+        }
+        case EzyValueType::TypeDouble: {
+            return std::to_string(data.doubleValue);
+        }
+        case EzyValueType::TypeInt: {
+            return std::to_string(data.i64Value);
+        }
+        case EzyValueType::TypeUInt: {
+            return std::to_string(data.ui64Value);
+        }
+        default: {
+            return "null";
+        }
+    }
 }
 
 EZY_NAMESPACE_END_WITH
