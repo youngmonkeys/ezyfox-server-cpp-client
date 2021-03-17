@@ -61,6 +61,7 @@ protected:
     virtual void preHandle(event::EzyDisconnectionEvent* event);
     virtual bool shouldReconnect(event::EzyDisconnectionEvent* event);
     virtual void control(event::EzyDisconnectionEvent* event);
+    virtual void postHandle(event::EzyDisconnectionEvent* event);
 };
 //==========================================================
 

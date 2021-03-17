@@ -80,6 +80,7 @@ void EzyDisconnectionHandler::process(event::EzyDisconnectionEvent* event) {
         reconnecting = mClient->reconnect();
     if (!reconnecting)
         control(event);
+    postHandle(event);
 }
 
 void EzyDisconnectionHandler::preHandle(event::EzyDisconnectionEvent* event) {
@@ -93,6 +94,9 @@ bool EzyDisconnectionHandler::shouldReconnect(event::EzyDisconnectionEvent* even
 }
 
 void EzyDisconnectionHandler::control(event::EzyDisconnectionEvent* event) {
+}
+
+void EzyDisconnectionHandler::postHandle(event::EzyDisconnectionEvent* event) {
 }
 
 //==========================================================
