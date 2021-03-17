@@ -332,7 +332,7 @@ int EzyDataDecoder::processData(const char* buffer, int& dataSize) {
 		//float 64
 		if (dataSize >= 9) {
 			double d = readDouble(buffer + 1);
-			this->onReadFloat(d);
+			this->onReadDouble(d);
 			return 9;
 		}
 		return 0;

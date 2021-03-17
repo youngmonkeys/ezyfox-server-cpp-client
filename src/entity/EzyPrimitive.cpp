@@ -120,19 +120,95 @@ bool EzyPrimitive::getBool() {
 }
 
 float EzyPrimitive::getFloat() {
-	return data.floatValue;
+    switch (mValueType) {
+        case EzyValueType::TypeBool: {
+            return data.boolValue ? 1 : 0;
+        }
+        case EzyValueType::TypeFloat: {
+            return data.floatValue;
+        }
+        case EzyValueType::TypeDouble: {
+            return data.doubleValue;
+        }
+        case EzyValueType::TypeInt: {
+            return data.i64Value;
+        }
+        case EzyValueType::TypeUInt: {
+            return data.ui64Value;
+        }
+        default: {
+            return data.floatValue;
+        }
+    }
 }
 
 double EzyPrimitive::getDouble() {
-	return data.doubleValue;
+    switch (mValueType) {
+        case EzyValueType::TypeBool: {
+            return data.boolValue ? 1 : 0;
+        }
+        case EzyValueType::TypeFloat: {
+            return data.floatValue;
+        }
+        case EzyValueType::TypeDouble: {
+            return data.doubleValue;
+        }
+        case EzyValueType::TypeInt: {
+            return data.i64Value;
+        }
+        case EzyValueType::TypeUInt: {
+            return data.ui64Value;
+        }
+        default: {
+            return data.doubleValue;
+        }
+    }
 }
 
 int64_t EzyPrimitive::getInt() {
-	return data.i64Value;
+    switch (mValueType) {
+        case EzyValueType::TypeBool: {
+            return data.boolValue ? 1 : 0;
+        }
+        case EzyValueType::TypeFloat: {
+            return data.floatValue;
+        }
+        case EzyValueType::TypeDouble: {
+            return data.doubleValue;
+        }
+        case EzyValueType::TypeInt: {
+            return data.i64Value;
+        }
+        case EzyValueType::TypeUInt: {
+            return data.ui64Value;
+        }
+        default: {
+            return data.i64Value;
+        }
+    }
 }
 
 uint64_t EzyPrimitive::getUInt() {
-	return data.ui64Value;
+    switch (mValueType) {
+        case EzyValueType::TypeBool: {
+            return data.boolValue ? 1 : 0;
+        }
+        case EzyValueType::TypeFloat: {
+            return data.floatValue;
+        }
+        case EzyValueType::TypeDouble: {
+            return data.doubleValue;
+        }
+        case EzyValueType::TypeInt: {
+            return data.i64Value;
+        }
+        case EzyValueType::TypeUInt: {
+            return data.ui64Value;
+        }
+        default: {
+            return data.ui64Value;
+        }
+    }
 }
 
 std::string EzyPrimitive::toString() const {
