@@ -1,0 +1,60 @@
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.1.3'
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    defaultConfig {
+        minSdkVersion 28
+        compileSdkVersion 28
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            debuggable false
+            jniDebuggable false
+            externalNativeBuild {
+                ndkBuild {
+                    arguments "NDK_DEBUG=0"
+                }
+            }
+        }
+
+        debug {
+            debuggable true
+            jniDebuggable true
+            externalNativeBuild {
+                ndkBuild {
+                    arguments "NDK_DEBUG=1"
+                }
+            }
+        }
+    }
+
+    externalNativeBuild {
+        if (PROP_BUILD_TYPE == 'ndk-build') {
+            ndkBuild {
+                path "jni/Android.mk"
+            }
+        }
+        else if (PROP_BUILD_TYPE == 'cmake') {
+            cmake {
+                path "../../CMakeLists.txt"
+            }
+        }
+    }
+}
+
+repositories {
+    google()
+    jcenter()
+}
