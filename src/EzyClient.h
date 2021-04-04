@@ -73,7 +73,7 @@ public:
     setup::EzySetup* setup();
     void connect(std::string host, int port);
     bool reconnect();
-    void disconnect(int reason);
+    void disconnect(int reason = -1);
     void send(request::EzyRequest* request);
     void send(constant::EzyCommand cmd, entity::EzyArray* data);
     void processEvents();

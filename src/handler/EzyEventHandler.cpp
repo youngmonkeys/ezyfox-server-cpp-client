@@ -72,7 +72,10 @@ void EzyDisconnectionHandler::process(event::EzyDisconnectionEvent* event) {
     auto config = mClient->getConfig();
     auto reconnectConfig = config->getReconnect();
     auto should = shouldReconnect(event);
-    auto mustReconnect = reconnectConfig->isEnable() && should;
+    auto mustReconnect = reconnectConfig->isEnable() &&
+        event->getReason() != constant::Unauthorized &&
+        event->getReason() != constant::Close &&
+        should;
     auto reconnecting = false;
     mClient->setStatus(constant::Disconnected);
     mClient->setUdpStatus(constant::Disconnected);

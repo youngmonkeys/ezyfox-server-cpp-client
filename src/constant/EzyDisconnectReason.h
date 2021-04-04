@@ -8,6 +8,7 @@ EZY_NAMESPACE_START_WITH_ONLY(constant)
 
 enum EzyDisconnectReason
 {
+    Close = -1,
     UnknownDisconnection = 0,
     Idle = 1,
     NotLoggedIn = 2,
@@ -17,7 +18,8 @@ enum EzyDisconnectReason
     MaxRequestPerSecond = 6,
     MaxRequestSize = 7,
     ServerError = 8,
-    ServerNotResponding = 400
+    ServerNotResponding = 400,
+    Unauthorized = 401
 };
 
 std::string getDisconnectReasonName(int reason);

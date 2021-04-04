@@ -4,6 +4,7 @@
 #include "../EzyUTClient.h"
 #include "../constant/EzyStatusCode.h"
 #include "../constant/EzyConnectionStatus.h"
+#include "../constant/EzyDisconnectReason.h"
 #include "../request/EzyRequest.h"
 #include "../socket/EzyPingSchedule.h"
 #include "../entity/EzyZone.h"
@@ -102,7 +103,7 @@ void EzyLoginSuccessHandler::handleLoginSuccess(entity::EzyValue* responseData) 
 //===============================================
 
 void EzyLoginErrorHandler::handle(entity::EzyArray *data) {
-    mClient->disconnect(401);
+    mClient->disconnect(constant::Unauthorized);
     handleLoginError(data);
 }
 
