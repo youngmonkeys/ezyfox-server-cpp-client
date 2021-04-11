@@ -205,6 +205,7 @@ void EzyUdpHandshakeHandler::handle(entity::EzyArray* data) {
         onAuthenticated(data);
     }
     else {
+        utClient->setUdpStatus(constant::Failure);
         socket->udpSetStatus(socket::SocketConnectFailed);
         onAuthenticationError(data);
     }

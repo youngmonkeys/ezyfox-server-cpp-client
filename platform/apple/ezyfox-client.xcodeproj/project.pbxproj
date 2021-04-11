@@ -326,19 +326,19 @@
 			children = (
 				F195516F26060B9500402511 /* EzyPluginDataHandlers.h */,
 				F195517026060B9500402511 /* EzyEventHandler.h */,
+				F195517726060B9500402511 /* EzyEventHandler.cpp */,
 				F195517126060B9500402511 /* EzyEventHandlers.cpp */,
 				F195517226060B9500402511 /* EzyDataHandlers.cpp */,
 				F195517326060B9500402511 /* EzyPluginDataHandler.h */,
 				F195517426060B9500402511 /* EzyDataHandlers.h */,
 				F195517526060B9500402511 /* EzyEventHandlers.h */,
 				F195517626060B9500402511 /* EzyAppDataHandler.h */,
-				F195517726060B9500402511 /* EzyEventHandler.cpp */,
+				F195517D26060B9500402511 /* EzyAppDataHandler.cpp */,
 				F195517826060B9500402511 /* EzyDataHandler.h */,
 				F195517926060B9500402511 /* EzyAppDataHandlers.cpp */,
 				F195517A26060B9500402511 /* EzyAppDataHandlers.h */,
 				F195517B26060B9500402511 /* EzyPluginDataHandlers.cpp */,
 				F195517C26060B9500402511 /* EzyPluginDataHandler.cpp */,
-				F195517D26060B9500402511 /* EzyAppDataHandler.cpp */,
 				F195517E26060B9500402511 /* EzyDataHandler.cpp */,
 			);
 			path = handler;
@@ -443,8 +443,8 @@
 				F19551BB26060B9600402511 /* EzyTransportType.h */,
 				F19551BC26060B9600402511 /* EzyConnectionFailedReason.h */,
 				F19551BD26060B9600402511 /* EzyDisconnectReason.h */,
-				F19551BE26060B9600402511 /* EzyCommand.h */,
 				F19551BF26060B9600402511 /* EzyDisconnectReason.cpp */,
+				F19551BE26060B9600402511 /* EzyCommand.h */,
 				F19551C026060B9600402511 /* EzyConnectionFailedReason.cpp */,
 			);
 			path = constant;
