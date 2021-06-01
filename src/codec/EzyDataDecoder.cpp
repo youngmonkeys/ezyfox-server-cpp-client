@@ -3,6 +3,7 @@
 #include "EzyArray.h"
 #include "EzyObject.h"
 #include "EzyString.h"
+#include "EzyByteArray.h"
 
 EZY_NAMESPACE_START_WITH(codec)
 
@@ -502,7 +503,7 @@ void EzyDataDecoder::onReadString(const char* str, uint32_t size) {
 }
 
 void EzyDataDecoder::onReadBin(const char* str, uint32_t size) {
-	auto value = new entity::EzyString();
+	auto value = new entity::EzyByteArray();
 	value->setData(str, size);
 	this->onReadValue(value);
 }

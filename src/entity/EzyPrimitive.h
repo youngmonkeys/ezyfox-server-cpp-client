@@ -16,7 +16,7 @@ class EzyPrimitive : public EzyValue {
 		uint64_t ui64Value;
 	} data;
 #ifdef EZY_DEBUG
-	virtual void printToOutStream(std::ostringstream& stream, int padding);
+	virtual void printToOutStream(std::ostringstream& stream, int padding) override;
 #endif
 public:
 	EzyPrimitive();

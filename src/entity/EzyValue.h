@@ -19,6 +19,7 @@ enum EzyValueType {
 	TypeString = 6,
 	TypeDict = 7,
 	TypeArray = 8,
+    TypeByteArray = 9,
     TypeJson = 101,
 };
 

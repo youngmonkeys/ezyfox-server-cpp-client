@@ -10,13 +10,13 @@ class EzyArray : public EzyValue {
 protected:
 	std::vector<EzyValue*> mData;
 #ifdef EZY_DEBUG
-	virtual void printToOutStream(std::ostringstream& stream, int padding);
+	virtual void printToOutStream(std::ostringstream& stream, int padding) override;
 #endif
 public:
 	EzyArray();
 	virtual ~EzyArray();
 
-    virtual void writeToBuffer(codec::EzyDataEncoder* encoder);
+    virtual void writeToBuffer(codec::EzyDataEncoder* encoder) override;
 
 	int size();
 	void clear();
@@ -31,6 +31,7 @@ public:
 	void addInt(int64_t value);
 	void addUInt(uint64_t value);
 	void addString(const std::string& value);
+    void addByteArray(const std::string& value);
 	EzyObject* addObject(EzyObject* value = 0);
 	EzyArray* addArray(EzyArray* value = 0);
 

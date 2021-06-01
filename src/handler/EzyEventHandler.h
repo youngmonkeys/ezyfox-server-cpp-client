@@ -45,7 +45,7 @@ protected:
 protected:
     virtual void postHandle();
     virtual std::string getClientId();
-    virtual std::string getClientKey();
+    virtual std::string generateClientKey();
     virtual bool isEnableEncryption();
     virtual std::string getStoredToken();
     void sendHandshakeRequest();

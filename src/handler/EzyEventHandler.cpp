@@ -39,7 +39,7 @@ void EzyConnectionSuccessHandler::sendHandshakeRequest() {
 request::EzyRequest* EzyConnectionSuccessHandler::newHandshakeRequest() {
     auto request = request::EzyHandshakeRequest::create();
     request->setClientId(getClientId());
-    request->setClientKey(getClientKey());
+    request->setClientKey(generateClientKey());
     request->setClientType("CPP");
     request->setClientVersion("1.0.0");
     request->setEnableEncryption(isEnableEncryption());
@@ -51,7 +51,7 @@ std::string EzyConnectionSuccessHandler::getClientId() {
     return "unset";
 }
 
-std::string EzyConnectionSuccessHandler::getClientKey() {
+std::string EzyConnectionSuccessHandler::generateClientKey() {
     return "";
 }
 

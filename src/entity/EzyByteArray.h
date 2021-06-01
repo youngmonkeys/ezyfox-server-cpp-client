@@ -1,12 +1,12 @@
-#ifndef EzyString_h
-#define EzyString_h
+#ifndef EzyByteArray_h
+#define EzyByteArray_h
 
 #include "EzyValue.h"
 #include "../EzyMacro.h"
 
 EZY_NAMESPACE_START_WITH(entity)
 
-class EzyString : public EzyValue {
+class EzyByteArray : public EzyValue {
 protected:
     std::string mData;
 #ifdef EZY_DEBUG
@@ -14,17 +14,17 @@ protected:
 #endif
     
 public:
-    EzyString();
-    virtual ~EzyString();
+    EzyByteArray();
+    virtual ~EzyByteArray();
     virtual void writeToBuffer(codec::EzyDataEncoder* writer) override;
     
-    void setString(const std::string& str);
+    void setData(std::string data);
     void setData(const char* data, int size);
-    const std::string& getString();
+    const std::string getData();
 public:
     std::string toString() const override;
 };
 
 EZY_NAMESPACE_END_WITH
 
-#endif /* EzyString_h */
+#endif /* EzyByteArray_h */

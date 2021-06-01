@@ -3,6 +3,7 @@
 
 #include "logger/EzyLogger.h"
 #include "util/EzyMaps.h"
+#include "codec/EzyEncryption.h"
 #include "concurrent/EzyThread.h"
 #include "constant/EzyCommand.h"
 #include "constant/EzyStatusCode.h"
@@ -13,6 +14,7 @@
 #include "entity/EzyPrimitive.h"
 #include "entity/EzyObject.h"
 #include "entity/EzyArray.h"
+#include "entity/EzyByteArray.h"
 #include "entity/EzyString.h"
 #include "entity/EzyUser.h"
 #include "entity/EzyZone.h"

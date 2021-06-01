@@ -2,6 +2,7 @@
 #include "EzyArray.h"
 #include "EzyPrimitive.h"
 #include "EzyString.h"
+#include "EzyByteArray.h"
 
 EZY_NAMESPACE_START_WITH(entity)
 
@@ -191,6 +192,12 @@ void EzyObject::setString(const std::string& key, const std::string& value) {
 	auto item = new EzyString();
 	item->setString(value);
 	this->addItem(key, item);
+}
+
+void EzyObject::setByteArray(const std::string& key, const std::string& value) {
+    auto item = new EzyByteArray();
+    item->setData(value);
+    this->addItem(key, item);
 }
 
 EzyObject* EzyObject::setObject(const std::string& key, EzyObject* value) {

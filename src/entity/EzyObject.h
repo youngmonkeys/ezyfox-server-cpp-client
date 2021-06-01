@@ -12,12 +12,12 @@ class EzyObject : public EzyValue {
 protected:
 	std::map<std::string, EzyValue*> mData;
 #ifdef EZY_DEBUG
-	virtual void printToOutStream(std::ostringstream& stream, int padding);
+	virtual void printToOutStream(std::ostringstream& stream, int padding) override;
 #endif
 public:
 	EzyObject();
 	virtual ~EzyObject();
-	virtual void writeToBuffer(codec::EzyDataEncoder* encoder);
+	virtual void writeToBuffer(codec::EzyDataEncoder* encoder) override;
 
 	bool isExistKey(const std::string& key);
 	int size();
@@ -42,6 +42,7 @@ public:
 	void setInt(const std::string& key, int64_t value);
 	void setUInt(const std::string& key, uint64_t value);
 	void setString(const std::string& key, const std::string& value);
+    void setByteArray(const std::string& key, const std::string& value);
 	EzyObject* setObject(const std::string& key, EzyObject* value = 0);
 	EzyArray* setArray(const std::string& key, EzyArray* value = 0);
 
