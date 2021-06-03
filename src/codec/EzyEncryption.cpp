@@ -9,16 +9,17 @@
 #include <openssl/pem.h>
 #include <openssl/x509.h>
 #include <openssl/err.h>
+#include <openssl/aes.h>
 #include <stdio.h>
 #include <string.h>
 #include "EzyEncryption.h"
 
-#define rsaSizeGTH 2048
+#define RSA_SIZE 2048
+#define IV_SIZE 16
+#define BLOCK_SIZE 16
 
 static const std::string beginPublicKey = "-----BEGIN PUBLIC KEY-----";
 static const std::string endPublicKey = "-----BEGIN PUBLIC KEY-----";
-static const std::string base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-static const char padCharacter = '=';
 
 EZY_NAMESPACE_START_WITH(codec)
 
@@ -46,7 +47,7 @@ EzyKeyPair* EzyRSA::generateKeyPair() {
     RSA* keyPair = RSA_new();
     BIGNUM* publicKeyExponent = BN_new();
     BN_set_word(publicKeyExponent, RSA_F4);
-    RSA_generate_key_ex(keyPair, rsaSizeGTH, publicKeyExponent, NULL);
+    RSA_generate_key_ex(keyPair, RSA_SIZE, publicKeyExponent, NULL);
     
     BIO *privateKeyBIO = BIO_new(BIO_s_mem());
     BIO *publicKeyBIO = BIO_new(BIO_s_mem());
@@ -80,7 +81,6 @@ EzyKeyPair* EzyRSA::generateKeyPair() {
 }
 
 std::string EzyRSA::decrypt(const char* message, int size, std::string privateKey) {
-    std::string decrypt_text;
     RSA* rsa = RSA_new();
     BIO* keybio = BIO_new_mem_buf((unsigned char*)privateKey.c_str(), -1);
     rsa = PEM_read_bio_RSAPrivateKey(keybio, &rsa, NULL, NULL);
@@ -98,6 +98,7 @@ std::string EzyRSA::decrypt(const char* message, int size, std::string privateKe
     int flagLength = 0;
     int textSize = 0;
     char *error = (char*)malloc(128);
+    std::string decryptText;
     while (position < size) {
         flagLength = left >= rsaSize ? rsaSize : left;
         left -= flagLength;
@@ -110,7 +111,7 @@ std::string EzyRSA::decrypt(const char* message, int size, std::string privateKe
                                   rsa,
                                   RSA_PKCS1_PADDING);
         if (decryptedSize >= 0) {
-            decrypt_text.append(std::string(decryption, decryptedSize));
+            decryptText.append(decryption, decryptedSize);
             textSize += decryptedSize;
             position += rsaSize;
         }
@@ -128,7 +129,7 @@ std::string EzyRSA::decrypt(const char* message, int size, std::string privateKe
     EZY_SAFE_FREE(error);
     BIO_free_all(keybio);
     RSA_free(rsa);
-    return hasError ? 0 : decrypt_text;
+    return hasError ? 0 : decryptText;
 }
 
 std::string EzyRSA::decodePublicKey(const char *publicKey, int size) {
@@ -138,5 +139,56 @@ std::string EzyRSA::decodePublicKey(const char *publicKey, int size) {
     copy.erase(std::remove(copy.begin(), copy.end(), '\n'), copy.end());
     return copy;
 }
+
+//====================================================
+EzyAES::EzyAES() {
+}
+
+char* EzyAES::decrypt(const char *message, int size, std::string key, int& outputSize) {
+    AES_KEY aes;
+    int decryptedKeyResult = AES_set_decrypt_key((unsigned char*)key.c_str(),
+                                                 (int)key.length() * 8,
+                                                 &aes);
+    if (decryptedKeyResult < 0) {
+        ERR_load_crypto_strings();
+        char *error = (char*)malloc(128);
+        ERR_error_string(ERR_get_error(), error);
+        fprintf(stderr, "error decrypting message: %s\n", error);
+        EZY_SAFE_FREE(error);
+        return 0;
+    }
+    unsigned char* iv = (unsigned char*)malloc(IV_SIZE);
+    memcpy(iv, message, IV_SIZE);
+    int contentSize = size - IV_SIZE;
+    unsigned char* content = ((unsigned char*)malloc(contentSize));
+    memcpy(content, message + IV_SIZE, contentSize);
+    unsigned char* output = (unsigned char*)malloc(contentSize);
+    memset(output, 0, contentSize);
+    AES_cbc_encrypt(content, output, contentSize, &aes, iv, AES_DECRYPT);
+    outputSize = unpad(output, 0, contentSize);
+    EZY_SAFE_FREE(iv);
+    EZY_SAFE_FREE(content);
+    return (char*)output;
+}
+
+int EzyAES::unpad(unsigned char* input, int offset, int size) {
+    int idx = offset + size;
+    char lastByte = input[idx - 1];
+    int padValue = (int)lastByte & 0x0ff;
+    if ((padValue < 0x01) || (padValue > BLOCK_SIZE)) {
+        return -1;
+    }
+    int start = idx - padValue;
+    if (start < offset) {
+        return -1;
+    }
+    for (int i = start; i < idx; i++) {
+        if (input[i] != lastByte) {
+            return -1;
+        }
+    }
+    return start;
+}
+
 
 EZY_NAMESPACE_END_WITH

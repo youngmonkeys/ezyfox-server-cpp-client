@@ -88,6 +88,7 @@ public:
     virtual void onDisconnected(int reason = 0);
     virtual void setPingSchedule(EzyPingSchedule* pingSchedule);
     virtual void setHandlerManager(manager::EzyHandlerManager* handlerManager);
+    virtual void setSessionKey(std::string sessionKey);
     virtual void destroy();
 };
 

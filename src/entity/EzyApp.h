@@ -27,9 +27,9 @@ protected:
 public:
     EzyApp(EzyZone* zone, int identifier, std::string name);
     ~EzyApp();
-    void send(entity::EzyValue* data);
-    void send(std::string cmd);
-    void send(std::string cmd, entity::EzyValue* data);
+    void send(entity::EzyValue* data, bool encrypted = false);
+    void send(std::string cmd, bool encrypted = false);
+    void send(std::string cmd, entity::EzyValue* data, bool encrypted = false);
     void udpSend(std::string cmd);
     void udpSend(std::string cmd, entity::EzyValue* data);
 };

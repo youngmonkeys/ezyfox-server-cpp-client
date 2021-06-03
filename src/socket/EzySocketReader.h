@@ -16,10 +16,11 @@ protected:
     int mDataSize;
     int mBufferSize;
     int mReserveSize;
+    std::string mDecryptionKey;
     std::vector<char> mByteBuffer;
     codec::EzyDecodeState mDecodeState;
     codec::EzyMessageHeader* mMessageHeader;
-    
+protected:
     virtual void preInsertData();
     virtual void onDataReceived();
     virtual void onUpdateDataHeader();
@@ -34,6 +35,7 @@ public:
     virtual ~EzySocketReader();
     virtual void run();
     virtual void popMessages(std::vector<EzySocketData*>& buffer);
+    virtual void setDecryptionKey(std::string decryptionKey);
 };
 
 EZY_NAMESPACE_END_WITH

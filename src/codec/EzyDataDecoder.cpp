@@ -49,7 +49,7 @@ entity::EzyValue* EzyArrayBuffer::toValue() {
     return 0;
 }
 
-/****/
+//=================================================
 
 EzyDataDecoder::EzyDataDecoder(int reserveSize) {
 	this->mDataBuffer.reserve(reserveSize);

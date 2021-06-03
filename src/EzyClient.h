@@ -54,6 +54,7 @@ protected:
     EZY_SYNTHESIZE_READONLY(std::string, Name);
     EZY_SYNTHESIZE_READONLY(int64_t, SessionId);
     EZY_SYNTHESIZE_READONLY(std::string, SessionToken);
+    EZY_SYNTHESIZE_READONLY(std::string, SessionKey);
     EZY_SYNTHESIZE_READONLY(config::EzyClientConfig*, Config);
     EZY_SYNTHESIZE_READONLY(manager::EzyPingManager*, PingManager);
     EZY_SYNTHESIZE_READONLY(socket::EzyPingSchedule*, PingSchedule);
@@ -74,8 +75,8 @@ public:
     void connect(std::string host, int port);
     bool reconnect();
     void disconnect(int reason = -1);
-    void send(request::EzyRequest* request);
-    void send(constant::EzyCommand cmd, entity::EzyArray* data);
+    void send(request::EzyRequest* request, bool encrypted = false);
+    void send(constant::EzyCommand cmd, entity::EzyArray* data, bool encrypted = false);
     void processEvents();
     entity::EzyApp* getApp();
     entity::EzyApp* getAppById(int appId);
@@ -83,6 +84,7 @@ public:
     socket::EzySocketClient* getSocket();
     void setSessionId(int64_t sessionId);
     void setSessionToken(std::string token);
+    void setSessionKey(std::string sessionKey);
     void destroy();
     bool isConnected();
     bool isUdpConnected();

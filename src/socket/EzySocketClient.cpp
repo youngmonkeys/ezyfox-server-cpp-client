@@ -286,6 +286,10 @@ void EzySocketClient::processReceivedMessage(EzySocketData* message) {
     }
 }
 
+void EzySocketClient::setSessionKey(std::string sessionKey) {
+    mSocketReader->setDecryptionKey(sessionKey);
+}
+
 void EzySocketClient::printReceivedData(int cmd, entity::EzyArray* data) {
 #ifdef EZY_DEBUG
     if(mUnloggableCommands.count(cmd) > 0)
