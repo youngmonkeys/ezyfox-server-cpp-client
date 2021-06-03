@@ -12,11 +12,12 @@
 #include <openssl/aes.h>
 #include <stdio.h>
 #include <string.h>
+#include <cstdlib>
 #include "EzyEncryption.h"
 
 #define RSA_SIZE 2048
 #define IV_SIZE 16
-#define BLOCK_SIZE 16
+#define MAX_BYTE_VALUE 128
 
 static const std::string beginPublicKey = "-----BEGIN PUBLIC KEY-----";
 static const std::string endPublicKey = "-----BEGIN PUBLIC KEY-----";
@@ -146,10 +147,10 @@ EzyAES::EzyAES() {
 
 char* EzyAES::decrypt(const char *message, int size, std::string key, int& outputSize) {
     AES_KEY aes;
-    int decryptedKeyResult = AES_set_decrypt_key((unsigned char*)key.c_str(),
+    int setKeyResult = AES_set_decrypt_key((unsigned char*)key.c_str(),
                                                  (int)key.length() * 8,
                                                  &aes);
-    if (decryptedKeyResult < 0) {
+    if (setKeyResult < 0) {
         ERR_load_crypto_strings();
         char *error = (char*)malloc(128);
         ERR_error_string(ERR_get_error(), error);
@@ -171,11 +172,45 @@ char* EzyAES::decrypt(const char *message, int size, std::string key, int& outpu
     return (char*)output;
 }
 
+char* EzyAES::encrypt(const char *message, int size, std::string key, int& outputSize) {
+    srand ((unsigned)time(NULL));
+    unsigned char *iv = (unsigned char*)malloc(AES_BLOCK_SIZE);
+    for(int i = 0 ; i < AES_BLOCK_SIZE ; ++i) {
+        iv[i] = rand() % MAX_BYTE_VALUE;
+    }
+    AES_KEY aes;
+    int blockCount = size / AES_BLOCK_SIZE + 1;
+    int encryptedSize = blockCount * AES_BLOCK_SIZE;
+
+    int keyBitSize = (int)key.length() * 8;
+    int setKeyResult = AES_set_encrypt_key((unsigned char*)key.c_str(), keyBitSize, &aes);
+    if (setKeyResult < 0) {
+        char *error = (char*)malloc(128);
+        ERR_error_string(ERR_get_error(), error);
+        fprintf(stderr, "unable to set encryption key in AES: %s\n", error);
+        EZY_SAFE_FREE(error);
+        return 0;
+    }
+    
+    int padding = size % AES_BLOCK_SIZE > 0 ? encryptedSize - size : AES_BLOCK_SIZE;
+    unsigned char *messageWithPadding = (unsigned char*)malloc(encryptedSize);
+    memset(messageWithPadding, padding, encryptedSize);
+    memcpy(messageWithPadding, message, size);
+    unsigned char* output = (unsigned char*)malloc(AES_BLOCK_SIZE + encryptedSize);
+    memcpy(output, iv, AES_BLOCK_SIZE);
+    AES_cbc_encrypt(messageWithPadding, output + AES_BLOCK_SIZE, encryptedSize, &aes, iv, AES_ENCRYPT);
+
+    EZY_SAFE_FREE(iv);
+    EZY_SAFE_FREE(messageWithPadding);
+    outputSize = encryptedSize + AES_BLOCK_SIZE;
+    return (char*)output;
+}
+
 int EzyAES::unpad(unsigned char* input, int offset, int size) {
     int idx = offset + size;
     char lastByte = input[idx - 1];
     int padValue = (int)lastByte & 0x0ff;
-    if ((padValue < 0x01) || (padValue > BLOCK_SIZE)) {
+    if ((padValue < 0x01) || (padValue > AES_BLOCK_SIZE)) {
         return -1;
     }
     int start = idx - padValue;

@@ -51,4 +51,27 @@ void EzySocketEventQueue::clear() {
     EZY_SAFE_DELETE_VECTOR(mEvents);
 }
 
+// ==============================
+EzySocketPacket::EzySocketPacket(EzySocketData* data, bool encrypted) {
+    mData = data;
+    mEncrypted = encrypted;
+}
+
+EzySocketPacket::~EzySocketPacket() {
+    mData = 0;
+}
+
+EzySocketPacket* EzySocketPacket::create(EzySocketData *data, bool encrypted) {
+    auto pRet = new EzySocketPacket(data, encrypted);
+    return pRet;
+}
+
+EzySocketData* EzySocketPacket::getData() {
+    return mData;
+}
+
+bool EzySocketPacket::isEncrypted() {
+    return mEncrypted;
+}
+
 EZY_NAMESPACE_END_WITH

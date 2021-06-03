@@ -41,7 +41,7 @@ class EzyAES {
 public:
     EZY_SINGLETON_GET_INSTANCE(EzyAES)
 public:
-    std::string encrypt(const char* message, int size, std::string key);
+    char* encrypt(const char* message, int size, std::string key, int& outputSize);
     char* decrypt(const char* message, int size, std::string key, int& outputSize);
 private:
     int unpad(unsigned char* input, int offset, int size);

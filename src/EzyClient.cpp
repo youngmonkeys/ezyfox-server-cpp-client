@@ -127,7 +127,7 @@ void EzyClient::send(request::EzyRequest *request, bool encrypted) {
 void EzyClient::send(constant::EzyCommand cmd, entity::EzyArray* data, bool encrypted) {
     auto array = mRequestSerializer->serialize(cmd, data);
     if(mSocketClient) {
-        mSocketClient->sendMessage(array);
+        mSocketClient->sendMessage(array, encrypted);
         printSentData(cmd, data);
     }
 }

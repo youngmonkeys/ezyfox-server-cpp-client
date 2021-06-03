@@ -39,10 +39,14 @@ void EzyUdpSocketWriter::update() {
             return;
         }
         
-        EzySocketData* sendData = mSocketPool->take();
+        EzySocketPacket* socketPacket = mSocketPool->take();
+        EzySocketData* sendData = 0;
+        if(socketPacket) {
+            sendData = socketPacket->getData();
+        }
         if (sendData) {
             sentData = 0;
-            toBufferData(sendData);
+            toBufferData(sendData, false);
             const std::vector<char>& sendBuffer = mEncoder->getBuffer();
             send(mSocket, sendBuffer.data() + sentData, sendBuffer.size() - sentData, 0);
         }
@@ -263,7 +267,7 @@ void EzyUdpSocketClient::disconnect(int reason) {
 }
 
 void EzyUdpSocketClient::sendMessage(EzySocketData* message) {
-    mSocketWriter->offerMessage(message);
+    mSocketWriter->offerMessage(message, false);
 }
 
 void EzyUdpSocketClient::setStatus(EzySocketStatus status) {

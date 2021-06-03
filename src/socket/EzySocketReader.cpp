@@ -8,6 +8,7 @@ EZY_NAMESPACE_START_WITH(socket)
 
 EzySocketReader::EzySocketReader(config::EzySocketConfig* config) {
     mByteBuffer.clear();
+    mDecryptionKey.clear();
     mBufferSize = config->getReadBufferSize();
     mReserveSize = config->getReadReserveSize();
     mDecoder = new codec::EzyDataDecoder(config->getDecodeReserveSize());
@@ -102,7 +103,7 @@ void EzySocketReader::onUpdateData() {
     if (mByteBuffer.size() >= mDataSize) {
         auto data = (char*)mByteBuffer.data();
         auto actualDataSize = mDataSize;
-        if(mMessageHeader->isEncrypted()) {
+        if(mMessageHeader->isEncrypted() && mDecryptionKey.size() > 0) {
             data = codec::EzyAES::getInstance()->decrypt(data,
                                                          mDataSize,
                                                          mDecryptionKey,

@@ -13,11 +13,13 @@ class EzySocketWriter : public EzySocketAdapter {
 protected:
     codec::EzyDataEncoder* mEncoder;
 protected:
-    void toBufferData(EzySocketData* data);
+    EZY_SYNTHESIZE_WRITEONLY(std::string, EncryptionKey);
+protected:
+    void toBufferData(EzySocketData* data, bool encrypted);
 public:
     EzySocketWriter(config::EzySocketConfig* config);
     virtual ~EzySocketWriter();
-    virtual void offerMessage(EzySocketData* data);
+    virtual void offerMessage(EzySocketData* data, bool encrypted);
 };
 
 EZY_NAMESPACE_END_WITH

@@ -33,6 +33,7 @@ public:
 	virtual ~EzyDataEncoder();
 
 	const std::vector<char>& getBuffer();
+    void replaceBuffer(const char* newContent, uint32_t size);
 	void clear();
 
 	void writeNil();

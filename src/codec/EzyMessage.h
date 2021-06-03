@@ -18,14 +18,14 @@ protected:
     EZY_SYNTHESIZE_BOOL(HasNext) //bit 8
 public:
     EzyMessageHeader();
-    EzyMessageHeader(uint32_t dataSize);
+    EzyMessageHeader(uint32_t dataSize, bool encrypted);
     virtual ~EzyMessageHeader();
     
     virtual char getByte();
     virtual void parse(char headerByte);
     
     static EzyMessageHeader* create();
-    static EzyMessageHeader* create(uint32_t dataSize);
+    static EzyMessageHeader* create(uint32_t dataSize, bool encrypted);
 };
 
 EZY_NAMESPACE_END_WITH
