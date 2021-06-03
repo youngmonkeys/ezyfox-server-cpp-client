@@ -19,7 +19,6 @@ EzySocketWriter::~EzySocketWriter() {
 void EzySocketWriter::toBufferData(EzySocketData* data, bool encrypted) {
     mEncoder->clear();
     data->writeToBuffer(mEncoder);
-    data->release();
     
     if(encrypted && mEncryptionKey.size() > 0) {
         int actualDataSize = 0;
@@ -29,6 +28,7 @@ void EzySocketWriter::toBufferData(EzySocketData* data, bool encrypted) {
                                                                 mEncryptionKey,
                                                                 actualDataSize);
         mEncoder->replaceBuffer(encryption, actualDataSize);
+        EZY_SAFE_FREE(encryption);
     }
     
 #ifdef USE_MESSAGE_HEADER

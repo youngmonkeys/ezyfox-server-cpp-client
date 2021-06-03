@@ -28,7 +28,7 @@ public:
     virtual void clear();
     virtual void destroy();
 protected:
-    virtual void clear0();
+    virtual void doClear();
 };
 
 EZY_NAMESPACE_END_WITH

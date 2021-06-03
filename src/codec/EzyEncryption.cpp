@@ -25,17 +25,17 @@ static const std::string endPublicKey = "-----BEGIN PUBLIC KEY-----";
 EZY_NAMESPACE_START_WITH(codec)
 
 EzyKeyPair::EzyKeyPair(std::string publicKey,
-                       std::string encodedPrivateKey) {
+                       std::string privateKey) {
     this->mPublicKey = publicKey;
-    this->mEncodedPrivateKey = encodedPrivateKey;
+    this->mPrivateKey = privateKey;
 }
 
 EzyKeyPair::~EzyKeyPair() {
 }
 
 EzyKeyPair* EzyKeyPair::create(std::string publicKey,
-                               std::string encodedPrivateKey) {
-    auto pRet = new EzyKeyPair(publicKey, encodedPrivateKey);
+                               std::string privateKey) {
+    auto pRet = new EzyKeyPair(publicKey, privateKey);
     pRet->autorelease();
     return pRet;
 }
@@ -77,11 +77,12 @@ EzyKeyPair* EzyRSA::generateKeyPair() {
     BN_free(publicKeyExponent);
     BIO_free_all(publicKeyBIO);
     BIO_free_all(privateKeyBIO);
+    EZY_SAFE_FREE(encodedPrivateKey);
     EZY_SAFE_FREE(encodedPublicKey);
     return answer;
 }
 
-std::string EzyRSA::decrypt(const char* message, int size, std::string privateKey) {
+char* EzyRSA::decrypt(const char* message, int size, std::string privateKey, int& outputSize) {
     RSA* rsa = RSA_new();
     BIO* keybio = BIO_new_mem_buf((unsigned char*)privateKey.c_str(), -1);
     rsa = PEM_read_bio_RSAPrivateKey(keybio, &rsa, NULL, NULL);
@@ -98,8 +99,8 @@ std::string EzyRSA::decrypt(const char* message, int size, std::string privateKe
     int left = size;
     int flagLength = 0;
     int textSize = 0;
-    char *error = (char*)malloc(128);
-    std::string decryptText;
+    char* decryptText = (char*)malloc(size);
+    memset(decryptText, 0, size);
     while (position < size) {
         flagLength = left >= rsaSize ? rsaSize : left;
         left -= flagLength;
@@ -112,14 +113,16 @@ std::string EzyRSA::decrypt(const char* message, int size, std::string privateKe
                                   rsa,
                                   RSA_PKCS1_PADDING);
         if (decryptedSize >= 0) {
-            decryptText.append(decryption, decryptedSize);
+            memcpy(decryptText + textSize, decryption, decryptedSize);
             textSize += decryptedSize;
             position += rsaSize;
         }
         else {
+            char *error = (char*)malloc(128);
             ERR_load_crypto_strings();
             ERR_error_string(ERR_get_error(), error);
             fprintf(stderr, "error decrypting message: %s\n", error);
+            EZY_SAFE_FREE(error);
             hasError = true;
             break;
         }
@@ -127,9 +130,9 @@ std::string EzyRSA::decrypt(const char* message, int size, std::string privateKe
     
     EZY_SAFE_FREE(decryption);
     EZY_SAFE_FREE(encryption);
-    EZY_SAFE_FREE(error);
     BIO_free_all(keybio);
     RSA_free(rsa);
+    outputSize = textSize;
     return hasError ? 0 : decryptText;
 }
 

@@ -4,11 +4,11 @@ EZY_NAMESPACE_START_WITH(socket)
 
 EzySocketPool::EzySocketPool() {
     mDestroyed = false;
-    clear0();
+    doClear();
 }
 
 EzySocketPool::~EzySocketPool() {
-    clear0();
+    doClear();
 }
 
 void EzySocketPool::push(EzySocketData* data) {
@@ -24,17 +24,17 @@ void EzySocketPool::offer(EzySocketData* data, bool encrypted) {
 
 void EzySocketPool::clear() {
     std::unique_lock<std::mutex> lk(mPoolMutex);
-    clear0();
+    doClear();
 }
 
 void EzySocketPool::destroy() {
     std::unique_lock<std::mutex> lk(mPoolMutex);
-    clear0();
+    doClear();
     mDestroyed = true;
     mPoolCondition.notify_all();
 }
 
-void EzySocketPool::clear0() {
+void EzySocketPool::doClear() {
     while (!mDataQueue.empty()) {
         auto data = mDataQueue.front();
         data->getData()->release();
@@ -48,6 +48,8 @@ EzySocketPacket* EzySocketPool::take() {
     mPoolCondition.wait(lk, [=] { return mDestroyed || this->mDataQueue.size() > 0; });
     if(mDataQueue.empty()) return 0;
     auto packet = mDataQueue.front();
+    packet->autorelease();
+    packet->getData()->autorelease();
     mDataQueue.pop();
     return packet;
 }

@@ -38,7 +38,6 @@ void EzyTcpSocketWriter::update() {
         if(socketPacket) {
             sendData = socketPacket->getData();
             encrypted = socketPacket->isEncrypted();
-            socketPacket->release();
         }
 		if (sendData) {
 			sentData = 0;

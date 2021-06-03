@@ -17,14 +17,14 @@ EZY_NAMESPACE_START_WITH(codec)
 class EzyKeyPair : base::EzyRef {
 protected:
     EZY_SYNTHESIZE_READONLY(std::string, PublicKey)
-    EZY_SYNTHESIZE_READONLY(std::string, EncodedPrivateKey)
+    EZY_SYNTHESIZE_READONLY(std::string, PrivateKey)
 public:
     EzyKeyPair(std::string publicKey,
-               std::string encodedPrivateKey);
+               std::string privateKey);
     ~EzyKeyPair();
 public:
     static EzyKeyPair* create(std::string publicKey,
-                              std::string encodedPrivateKey);
+                              std::string privateKey);
 };
 
 class EzyRSA {
@@ -32,7 +32,7 @@ public:
     EZY_SINGLETON_GET_INSTANCE(EzyRSA)
 public:
     EzyKeyPair* generateKeyPair();
-    std::string decrypt(const char* message, int size, std::string privateKey);
+    char* decrypt(const char* message, int size, std::string privateKey, int& outputSize);
 private:
     std::string decodePublicKey(const char* publicKey, int size);
 };
