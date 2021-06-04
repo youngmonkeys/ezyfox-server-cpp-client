@@ -18,7 +18,7 @@
 
 #define RSA_SIZE 2048
 #define IV_SIZE 16
-#define MAX_BYTE_VALUE 128
+#define INTERNAL_EMPTY_STRING ""
 
 static const std::string beginPublicKey = "-----BEGIN PUBLIC KEY-----";
 static const std::string endPublicKey = "-----BEGIN PUBLIC KEY-----";
@@ -46,6 +46,7 @@ EzyRSA::EzyRSA() {
 }
 
 EzyKeyPair* EzyRSA::generateKeyPair() {
+#ifdef EZY_SSL_ENABLE
     RSA* keyPair = RSA_new();
     BIGNUM* publicKeyExponent = BN_new();
     BN_set_word(publicKeyExponent, RSA_F4);
@@ -81,9 +82,13 @@ EzyKeyPair* EzyRSA::generateKeyPair() {
     EZY_SAFE_FREE(encodedPrivateKey);
     EZY_SAFE_FREE(encodedPublicKey);
     return answer;
+#else
+    return EzyKeyPair::create(INTERNAL_EMPTY_STRING, std::string(INTERNAL_EMPTY_STRING, 0));
+#endif
 }
 
 char* EzyRSA::decrypt(const char* message, int size, std::string privateKey, int& outputSize) {
+#ifdef EZY_SSL_ENABLE
     RSA* rsa = RSA_new();
     BIO* keybio = BIO_new_mem_buf((unsigned char*)privateKey.c_str(), -1);
     rsa = PEM_read_bio_RSAPrivateKey(keybio, &rsa, NULL, NULL);
@@ -135,6 +140,9 @@ char* EzyRSA::decrypt(const char* message, int size, std::string privateKey, int
     RSA_free(rsa);
     outputSize = textSize;
     return hasError ? 0 : decryptText;
+#else
+    return new char[0];
+#endif
 }
 
 std::string EzyRSA::decodePublicKey(const char *publicKey, int size) {
@@ -150,6 +158,7 @@ EzyAES::EzyAES() {
 }
 
 char* EzyAES::decrypt(const char *message, int size, std::string key, int& outputSize) {
+#ifdef EZY_SSL_ENABLE
     AES_KEY aes;
     int setKeyResult = AES_set_decrypt_key((unsigned char*)key.c_str(),
                                                  (int)key.length() * 8,
@@ -173,9 +182,13 @@ char* EzyAES::decrypt(const char *message, int size, std::string key, int& outpu
     EZY_SAFE_FREE(iv);
     EZY_SAFE_FREE(content);
     return (char*)output;
+#else
+    return new char[0];
+#endif
 }
 
 char* EzyAES::encrypt(const char *message, int size, std::string key, int& outputSize) {
+#ifdef EZY_SSL_ENABLE
     unsigned char *iv = (unsigned char*)malloc(AES_BLOCK_SIZE);
     RAND_bytes(iv, AES_BLOCK_SIZE);
     AES_KEY aes;
@@ -203,9 +216,13 @@ char* EzyAES::encrypt(const char *message, int size, std::string key, int& outpu
     EZY_SAFE_FREE(messageWithPadding);
     outputSize = encryptedSize + AES_BLOCK_SIZE;
     return (char*)output;
+#else
+    return new char[0];
+#endif
 }
 
 int EzyAES::unpad(unsigned char* input, int offset, int size) {
+#ifdef EZY_SSL_ENABLE
     int idx = offset + size;
     char lastByte = input[idx - 1];
     int padValue = (int)lastByte & 0x0ff;
@@ -222,6 +239,9 @@ int EzyAES::unpad(unsigned char* input, int offset, int size) {
         }
     }
     return start;
+#else
+    return 0;
+#endif
 }
 
 
