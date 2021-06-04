@@ -168,7 +168,6 @@ char* EzyAES::decrypt(const char *message, int size, std::string key, int& outpu
     unsigned char* content = ((unsigned char*)malloc(contentSize));
     memcpy(content, message + IV_SIZE, contentSize);
     unsigned char* output = (unsigned char*)malloc(contentSize);
-    memset(output, 0, contentSize);
     AES_cbc_encrypt(content, output, contentSize, &aes, iv, AES_DECRYPT);
     outputSize = unpad(output, 0, contentSize);
     EZY_SAFE_FREE(iv);
@@ -194,7 +193,7 @@ char* EzyAES::encrypt(const char *message, int size, std::string key, int& outpu
     }
     int padding = AES_BLOCK_SIZE - size % AES_BLOCK_SIZE;
     unsigned char *messageWithPadding = (unsigned char*)malloc(encryptedSize);
-    memset(messageWithPadding, padding, encryptedSize);
+    memset(messageWithPadding + size, padding, padding);
     memcpy(messageWithPadding, message, size);
     unsigned char* output = (unsigned char*)malloc(AES_BLOCK_SIZE + encryptedSize);
     memcpy(output, iv, AES_BLOCK_SIZE);
