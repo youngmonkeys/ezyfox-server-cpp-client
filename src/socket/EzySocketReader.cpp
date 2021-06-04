@@ -104,12 +104,16 @@ void EzySocketReader::onUpdateData() {
         auto data = (char*)mByteBuffer.data();
         auto actualDataSize = mDataSize;
         if(mMessageHeader->isEncrypted() && mDecryptionKey.size() > 0) {
-            data = codec::EzyAES::getInstance()->decrypt(data,
-                                                         mDataSize,
-                                                         mDecryptionKey,
-                                                         actualDataSize);
+            auto decryption = codec::EzyAES::getInstance()->decrypt(data,
+                                                                    mDataSize,
+                                                                    mDecryptionKey,
+                                                                    actualDataSize);
+            mDecoder->addData(decryption, actualDataSize);
+            EZY_SAFE_DELETE(decryption);
         }
-        mDecoder->addData(data, actualDataSize);
+        else {
+            mDecoder->addData(data, actualDataSize);
+        }
         mByteBuffer.erase(mByteBuffer.begin(), mByteBuffer.begin() + mDataSize);
         mDecodeState = codec::prepareMessage;
         onDataReceived();

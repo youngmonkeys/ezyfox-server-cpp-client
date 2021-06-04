@@ -18,17 +18,17 @@ void EzyValue::writeToBuffer(codec::EzyDataEncoder* encoder) {
 	encoder->writeNil();
 }
 
+void EzyValue::refreshLogBuffer(std::ostringstream& stream) {
+    logger::console(stream.str().c_str());
+    stream.str("");
+    stream.clear();
+}
+
 #ifdef EZY_DEBUG
 void EzyValue::printDebug() {
 	std::ostringstream stream;
 	this->printToOutStream(stream, 0);
 	refreshLogBuffer(stream);
-}
-
-void EzyValue::refreshLogBuffer(std::ostringstream& stream) {
-	logger::console(stream.str().c_str());
-	stream.str("");
-	stream.clear();
 }
 
 void EzyValue::printToOutStream(std::ostringstream& stream, int padding) {

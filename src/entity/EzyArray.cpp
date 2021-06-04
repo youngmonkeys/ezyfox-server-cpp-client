@@ -3,6 +3,7 @@
 #include "EzyPrimitive.h"
 #include "EzyString.h"
 #include "EzyByteArray.h"
+#include "EzyNull.h"
 #include "../logger/EzyLogger.h"
 
 EZY_NAMESPACE_START_WITH(entity)
@@ -47,6 +48,10 @@ void EzyArray::printToOutStream(std::ostringstream& outStream, int padding) {
 	outStream << "}";
 }
 #endif
+
+void EzyArray::addNull() {
+    mData.push_back(new EzyNull());
+}
 
 void EzyArray::addItem(EzyValue* item) {
 	mData.push_back(item);

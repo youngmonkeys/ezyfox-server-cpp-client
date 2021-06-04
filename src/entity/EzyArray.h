@@ -25,6 +25,7 @@ public:
 	EzyValue* getItem(int index);
     EzyValue* getItem(int index, EzyValue* defValue);
 
+    void addNull();
 	void addBool(bool value);
 	void addFloat(float value);
 	void addDouble(double value);

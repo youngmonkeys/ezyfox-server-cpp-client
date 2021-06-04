@@ -4,6 +4,7 @@
 #include "EzyObject.h"
 #include "EzyString.h"
 #include "EzyByteArray.h"
+#include "EzyNull.h"
 
 EZY_NAMESPACE_START_WITH(codec)
 
@@ -462,7 +463,7 @@ void EzyDataDecoder::onReadValue(entity::EzyValue* object) {
 }
 
 void EzyDataDecoder::onReadNil() {
-    auto value = new entity::EzyArray();
+    auto value = new entity::EzyNull();
 	this->onReadValue(value);
 }
 

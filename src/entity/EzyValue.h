@@ -37,7 +37,6 @@ protected:
     int mValueType;
 protected:
 #ifdef EZY_DEBUG
-	virtual void refreshLogBuffer(std::ostringstream& stream);
 	virtual void printToOutStream(std::ostringstream& stream, int padding);
 	virtual void printPadding(std::ostringstream& stream, int padding);
 #endif
@@ -45,6 +44,7 @@ public:
 	EzyValue();
 	virtual ~EzyValue();
     virtual void writeToBuffer(codec::EzyDataEncoder* encoder);
+    virtual void refreshLogBuffer(std::ostringstream& stream);
 #ifdef EZY_DEBUG
 	virtual void printDebug();
 #endif
