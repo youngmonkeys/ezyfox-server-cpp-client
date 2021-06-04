@@ -202,7 +202,6 @@ char* EzyAES::encrypt(const char *message, int size, std::string key, int& outpu
     EZY_SAFE_FREE(iv);
     EZY_SAFE_FREE(messageWithPadding);
     outputSize = encryptedSize + AES_BLOCK_SIZE;
-    decrypt((char*)output, outputSize, key, padding);
     return (char*)output;
 }
 
