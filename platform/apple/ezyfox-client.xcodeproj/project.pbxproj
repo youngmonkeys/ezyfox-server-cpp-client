@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F18F950E266B536A004790E8 /* EzyEncryption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F18F950D266B536A004790E8 /* EzyEncryption.cpp */; };
+		F18F9511266B5384004790E8 /* EzyNull.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F18F950F266B5384004790E8 /* EzyNull.cpp */; };
+		F18F9512266B5384004790E8 /* EzyByteArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F18F9510266B5384004790E8 /* EzyByteArray.cpp */; };
 		F19551F326060C2800402511 /* EzyPluginDataHandlers.h in Headers */ = {isa = PBXBuildFile; fileRef = F195516F26060B9500402511 /* EzyPluginDataHandlers.h */; };
 		F19551F426060C2800402511 /* EzyEventHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = F195517026060B9500402511 /* EzyEventHandler.h */; };
 		F19551F526060C2800402511 /* EzyPluginDataHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = F195517326060B9500402511 /* EzyPluginDataHandler.h */; };
@@ -139,6 +142,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F18F950D266B536A004790E8 /* EzyEncryption.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = EzyEncryption.cpp; path = ../../src/codec/EzyEncryption.cpp; sourceTree = "<group>"; };
+		F18F950F266B5384004790E8 /* EzyNull.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = EzyNull.cpp; path = ../../src/entity/EzyNull.cpp; sourceTree = "<group>"; };
+		F18F9510266B5384004790E8 /* EzyByteArray.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = EzyByteArray.cpp; path = ../../src/entity/EzyByteArray.cpp; sourceTree = "<group>"; };
 		F1955055260608FD00402511 /* libezyfox-client.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libezyfox-client.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F195516C26060B9500402511 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		F195516F26060B9500402511 /* EzyPluginDataHandlers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EzyPluginDataHandlers.h; sourceTree = "<group>"; };
@@ -275,6 +281,9 @@
 		F195504C260608FD00402511 = {
 			isa = PBXGroup;
 			children = (
+				F18F9510266B5384004790E8 /* EzyByteArray.cpp */,
+				F18F950F266B5384004790E8 /* EzyNull.cpp */,
+				F18F950D266B536A004790E8 /* EzyEncryption.cpp */,
 				F19551F226060B9600402511 /* CODING_CONVENSION.md */,
 				F195516C26060B9500402511 /* README.md */,
 				F195516D26060B9500402511 /* src */,
@@ -665,6 +674,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F18F9511266B5384004790E8 /* EzyNull.cpp in Sources */,
+				F18F9512266B5384004790E8 /* EzyByteArray.cpp in Sources */,
+				F18F950E266B536A004790E8 /* EzyEncryption.cpp in Sources */,
 				F195523326060C4E00402511 /* EzyEventHandlers.cpp in Sources */,
 				F195523426060C4E00402511 /* EzyDataHandlers.cpp in Sources */,
 				F195523526060C4E00402511 /* EzyEventHandler.cpp in Sources */,
