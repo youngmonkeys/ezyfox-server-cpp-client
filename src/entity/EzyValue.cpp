@@ -3,6 +3,8 @@
 #include "EzyPrimitive.h"
 #include "EzyArray.h"
 #include "EzyObject.h"
+#include "EzyNull.h"
+#include "EzyByteArray.h"
 #include "../logger/EzyLogger.h"
 
 EZY_NAMESPACE_START_WITH(entity)

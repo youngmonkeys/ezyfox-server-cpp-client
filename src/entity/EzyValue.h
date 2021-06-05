@@ -27,12 +27,16 @@ class EzyPrimitive;
 class EzyObject;
 class EzyArray;
 class EzyString;
+class EzyNull;
+class EzyByteArray;
 
 class EzyValue : public base::EzyRef {
 	friend EzyPrimitive;
 	friend EzyObject;
 	friend EzyArray;
 	friend EzyString;
+    friend EzyNull;
+    friend EzyByteArray;
 protected:
     int mValueType;
 protected:

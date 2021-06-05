@@ -5,12 +5,14 @@
 //  Created by Dzung on 31/05/2021.
 //
 
+#ifdef EZY_SSL_ENABLE
 #include <openssl/rsa.h>
 #include <openssl/pem.h>
 #include <openssl/x509.h>
 #include <openssl/err.h>
 #include <openssl/aes.h>
 #include <openssl/rand.h>
+#endif
 #include <stdio.h>
 #include <string.h>
 #include <cstdlib>
