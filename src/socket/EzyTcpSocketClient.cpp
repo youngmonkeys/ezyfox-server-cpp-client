@@ -32,10 +32,17 @@ void EzyTcpSocketWriter::update() {
 			return;
 		}
 
-		EzySocketData* sendData = mSocketPool->take();
+        bool encrypted = false;
+        EzySocketData* sendData = 0;
+        EzySocketPacket* socketPacket = mSocketPool->take();
+        if(socketPacket) {
+            sendData = socketPacket->getData();
+            encrypted = socketPacket->isEncrypted();
+        }
 		if (sendData) {
 			sentData = 0;
-			toBufferData(sendData);
+			toBufferData(sendData, encrypted);
+            
 			const std::vector<char>& sendBuffer = mEncoder->getBuffer();
 
 			while (true) {

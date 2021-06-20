@@ -118,16 +118,16 @@ void EzyClient::processEvents() {
     mSocketClient->processEventMessages();
 }
 
-void EzyClient::send(request::EzyRequest *request) {
+void EzyClient::send(request::EzyRequest *request, bool encrypted) {
     auto cmd = request->getCommand();
     auto data = request->serialize();
-    send(cmd, data);
+    send(cmd, data, encrypted);
 }
 
-void EzyClient::send(constant::EzyCommand cmd, entity::EzyArray* data) {
+void EzyClient::send(constant::EzyCommand cmd, entity::EzyArray* data, bool encrypted) {
     auto array = mRequestSerializer->serialize(cmd, data);
     if(mSocketClient) {
-        mSocketClient->sendMessage(array);
+        mSocketClient->sendMessage(array, encrypted);
         printSentData(cmd, data);
     }
 }
@@ -194,6 +194,11 @@ void EzyClient::setSessionId(int64_t sessionId) {
 void EzyClient::setSessionToken(std::string token) {
     mSessionToken = token;
     mSocketClient->setSessionToken(mSessionToken);
+}
+
+void EzyClient::setSessionKey(std::string sessionKey) {
+    mSessionKey = sessionKey;
+    mSocketClient->setSessionKey(sessionKey);
 }
 
 bool EzyClient::isConnected() {

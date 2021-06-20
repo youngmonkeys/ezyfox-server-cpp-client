@@ -82,12 +82,13 @@ public:
     virtual void connectTo(const std::string& host, int port);
     virtual bool reconnect();
     virtual void closeSocket();
-    virtual void sendMessage(EzySocketData* message);
+    virtual void sendMessage(EzySocketData* message, bool encrypted);
     virtual void processEventMessages();
     virtual void disconnect(int reason);
     virtual void onDisconnected(int reason = 0);
     virtual void setPingSchedule(EzyPingSchedule* pingSchedule);
     virtual void setHandlerManager(manager::EzyHandlerManager* handlerManager);
+    virtual void setSessionKey(std::string sessionKey);
     virtual void destroy();
 };
 

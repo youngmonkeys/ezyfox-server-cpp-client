@@ -3,6 +3,8 @@
 #include "EzyArray.h"
 #include "EzyObject.h"
 #include "EzyString.h"
+#include "EzyByteArray.h"
+#include "EzyNull.h"
 
 EZY_NAMESPACE_START_WITH(codec)
 
@@ -48,7 +50,7 @@ entity::EzyValue* EzyArrayBuffer::toValue() {
     return 0;
 }
 
-/****/
+//=================================================
 
 EzyDataDecoder::EzyDataDecoder(int reserveSize) {
 	this->mDataBuffer.reserve(reserveSize);
@@ -461,7 +463,7 @@ void EzyDataDecoder::onReadValue(entity::EzyValue* object) {
 }
 
 void EzyDataDecoder::onReadNil() {
-    auto value = new entity::EzyArray();
+    auto value = new entity::EzyNull();
 	this->onReadValue(value);
 }
 
@@ -502,7 +504,7 @@ void EzyDataDecoder::onReadString(const char* str, uint32_t size) {
 }
 
 void EzyDataDecoder::onReadBin(const char* str, uint32_t size) {
-	auto value = new entity::EzyString();
+	auto value = new entity::EzyByteArray();
 	value->setData(str, size);
 	this->onReadValue(value);
 }

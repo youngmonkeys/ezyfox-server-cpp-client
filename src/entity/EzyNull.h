@@ -1,30 +1,31 @@
-#ifndef EzyString_h
-#define EzyString_h
+//
+//  EzyNull.h
+//  ezyfox-ssl
+//
+//  Created by Dzung on 04/06/2021.
+//
+
+#ifndef EzyNull_h
+#define EzyNull_h
 
 #include "EzyValue.h"
 #include "../EzyMacro.h"
 
 EZY_NAMESPACE_START_WITH(entity)
 
-class EzyString : public EzyValue {
-protected:
-    std::string mData;
+class EzyNull : public EzyValue {
 #ifdef EZY_DEBUG
     virtual void printToOutStream(std::ostringstream& stream, int padding) override;
 #endif
     
 public:
-    EzyString();
-    virtual ~EzyString();
+    EzyNull();
+    virtual ~EzyNull();
     virtual void writeToBuffer(codec::EzyDataEncoder* writer) override;
-    
-    void setString(const std::string& str);
-    void setData(const char* data, int size);
-    const std::string& getString();
 public:
     std::string toString() const override;
 };
 
 EZY_NAMESPACE_END_WITH
 
-#endif /* EzyString_h */
+#endif /* EzyNull_h */

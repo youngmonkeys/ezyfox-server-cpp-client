@@ -18,6 +18,11 @@ void EzyDataEncoder::clear() {
 	mBuffer.clear();
 }
 
+void EzyDataEncoder::replaceBuffer(const char *newContent, uint32_t size) {
+    mBuffer.clear();
+    mBuffer.assign(newContent, newContent + size);
+}
+
 inline void __swapBytes(char* bytes, int size) {
 	for (int i = 0, j = size - 1; i < j; ++i, --j) {
 		char c = bytes[i];

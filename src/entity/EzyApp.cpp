@@ -24,22 +24,22 @@ EzyApp::~EzyApp() {
     this->mDataHandlers = 0;
 }
 
-void EzyApp::send(entity::EzyValue *data) {
+void EzyApp::send(entity::EzyValue *data, bool encrypted) {
     auto request = request::EzyAppRequestRequest::create();
     request->setAppId(mId);
     request->setData(data);
-    mClient->send(request);
+    mClient->send(request, encrypted);
 }
 
-void EzyApp::send(std::string cmd) {
-    send(cmd, new entity::EzyObject());
+void EzyApp::send(std::string cmd, bool encrypted) {
+    send(cmd, new entity::EzyObject(), encrypted);
 }
 
-void EzyApp::send(std::string cmd, entity::EzyValue *data) {
+void EzyApp::send(std::string cmd, entity::EzyValue *data, bool encrypted) {
     auto array = new entity::EzyArray();
     array->addString(cmd);
     array->addItem(data);
-    send(array);
+    send(array, encrypted);
 }
 
 void EzyApp::udpSend(std::string cmd) {

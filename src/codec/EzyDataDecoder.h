@@ -73,9 +73,9 @@ protected:
 public:
 	EzyDataDecoder(int reserveSize);
 	virtual ~EzyDataDecoder();
-
-	virtual void setDelegate(EzyDataDecoderDelegate* mDelegate);
-
+    
+	void setDelegate(EzyDataDecoderDelegate* mDelegate);
+    
 	void addData(const char* data, int size);
 	void addData(const std::vector<char> data);
 };

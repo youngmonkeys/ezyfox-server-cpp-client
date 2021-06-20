@@ -2,11 +2,13 @@
 #include "EzySocketClient.h"
 #include "../logger/EzyLogger.h"
 #include "../config/EzyClientConfig.h"
+#include "../codec/EzyEncryption.h"
 
 EZY_NAMESPACE_START_WITH(socket)
 
 EzySocketReader::EzySocketReader(config::EzySocketConfig* config) {
     mByteBuffer.clear();
+    mDecryptionKey.clear();
     mBufferSize = config->getReadBufferSize();
     mReserveSize = config->getReadReserveSize();
     mDecoder = new codec::EzyDataDecoder(config->getDecodeReserveSize());
@@ -99,7 +101,19 @@ void EzySocketReader::onUpdateDataSize() {
 
 void EzySocketReader::onUpdateData() {
     if (mByteBuffer.size() >= mDataSize) {
-        mDecoder->addData(mByteBuffer.data(), mDataSize);
+        auto data = (char*)mByteBuffer.data();
+        auto actualDataSize = mDataSize;
+        if(mMessageHeader->isEncrypted() && mDecryptionKey.size() > 0) {
+            auto decryption = codec::EzyAES::getInstance()->decrypt(data,
+                                                                    mDataSize,
+                                                                    mDecryptionKey,
+                                                                    actualDataSize);
+            mDecoder->addData(decryption, actualDataSize);
+            EZY_SAFE_DELETE(decryption);
+        }
+        else {
+            mDecoder->addData(data, actualDataSize);
+        }
         mByteBuffer.erase(mByteBuffer.begin(), mByteBuffer.begin() + mDataSize);
         mDecodeState = codec::prepareMessage;
         onDataReceived();
@@ -120,6 +134,10 @@ void EzySocketReader::onReceivedMessage(entity::EzyValue* value) {
 
 void EzySocketReader::popMessages(std::vector<EzySocketData*>& buffer) {
     mSocketPool->popAll(buffer);
+}
+
+void EzySocketReader::setDecryptionKey(std::string decryptionKey) {
+    mDecryptionKey = decryptionKey;
 }
 
 EZY_NAMESPACE_END_WITH

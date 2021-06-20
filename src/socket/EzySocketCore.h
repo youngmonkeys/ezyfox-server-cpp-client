@@ -42,6 +42,21 @@ public:
 	void clear();
 };
 
+class EzySocketPacket : public base::EzyRef {
+protected:
+    EzySocketData* mData;
+    bool mEncrypted;
+public:
+    EzySocketPacket(EzySocketData* data, bool encrypted);
+    virtual ~EzySocketPacket();
+public:
+    static EzySocketPacket* create(EzySocketData* data, bool encrypted);
+public:
+    EzySocketData* getData();
+    bool isEncrypted();
+};
+
+
 EZY_NAMESPACE_END_WITH
 
 #endif /* EzySocketCore_h */

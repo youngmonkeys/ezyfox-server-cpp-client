@@ -196,8 +196,8 @@ void EzySocketClient::disconnect(int reason) {
     onDisconnected(mDisconnectReason = reason);
 }
 
-void EzySocketClient::sendMessage(EzySocketData* message) {
-    mSocketWriter->offerMessage(message);
+void EzySocketClient::sendMessage(EzySocketData* message, bool encrypted) {
+    mSocketWriter->offerMessage(message, encrypted);
 }
 
 void EzySocketClient::processEventMessages() {
@@ -284,6 +284,11 @@ void EzySocketClient::processReceivedMessage(EzySocketData* message) {
     else {
         mDataHandlers->handle(cmd, data);
     }
+}
+
+void EzySocketClient::setSessionKey(std::string sessionKey) {
+    mSocketReader->setDecryptionKey(sessionKey);
+    mSocketWriter->setEncryptionKey(sessionKey);
 }
 
 void EzySocketClient::printReceivedData(int cmd, entity::EzyArray* data) {

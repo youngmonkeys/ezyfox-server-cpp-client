@@ -12,9 +12,9 @@ EzyMessageHeader::EzyMessageHeader() {
     mHasNext = false;
 }
     
-EzyMessageHeader::EzyMessageHeader(uint32_t dataSize) {
+EzyMessageHeader::EzyMessageHeader(uint32_t dataSize, bool encrypted) {
     mText = false;
-    mEncrypted = false;
+    mEncrypted = encrypted;
     mCompressed = false;
     mBigSize = dataSize > MAX_SMALL_MESSAGE_SIZE;
     mRawBytes = false;
@@ -31,8 +31,8 @@ EzyMessageHeader* EzyMessageHeader::create() {
     return pret;
 }
     
-EzyMessageHeader* EzyMessageHeader::create(uint32_t dataSize) {
-    auto pret = new EzyMessageHeader(dataSize);
+EzyMessageHeader* EzyMessageHeader::create(uint32_t dataSize, bool encrypted) {
+    auto pret = new EzyMessageHeader(dataSize, encrypted);
     pret->autorelease();
     return pret;
 }
