@@ -1,3 +1,6 @@
+
+#include <cstring>
+
 #include "EzyDataDecoder.h"
 #include "EzyPrimitive.h"
 #include "EzyArray.h"
@@ -5,9 +8,6 @@
 #include "EzyString.h"
 #include "EzyByteArray.h"
 #include "EzyNull.h"
-
-// FIXME
-#include <cstring>
 
 EZY_NAMESPACE_START_WITH(codec)
 
