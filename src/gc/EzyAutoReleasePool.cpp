@@ -1,4 +1,6 @@
 #include <thread>
+#include <mutex>
+
 #include "EzyReleasePool.h"
 #include "EzyAutoReleasePool.h"
 

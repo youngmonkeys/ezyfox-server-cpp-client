@@ -6,6 +6,9 @@
 #include "EzyByteArray.h"
 #include "EzyNull.h"
 
+// FIXME
+#include <cstring>
+
 EZY_NAMESPACE_START_WITH(codec)
 
 EzyArrayBuffer::EzyArrayBuffer(int type, int size) {
