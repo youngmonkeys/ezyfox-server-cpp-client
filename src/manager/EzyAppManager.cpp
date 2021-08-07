@@ -7,20 +7,18 @@ EZY_NAMESPACE_START_WITH(manager)
 
 using namespace std;
 
-#if (cplusplus <= 201703L)
 namespace stdex {
-    template<class InputIt, class T>
-    constexpr InputIt find(InputIt first, InputIt last, const T& value)
-    {
-        for (; first != last; ++first) {
-            if (*first == value) {
+    template<class InputIterator, class T>
+    InputIterator find (InputIterator first, InputIterator last, const T& val) {
+        while (first != last) {
+            if (*first == val) {
                 return first;
             }
+            ++first;
         }
         return last;
     }
 }
-#endif
 
 EzyAppManager::EzyAppManager() {
     mAppList.clear();
@@ -38,7 +36,9 @@ entity::EzyApp* EzyAppManager::removeApp(int appId) {
         mAppByIds.erase(appId);
         mAppByNames.erase(app->getName());
         auto appIndex = stdex::find(begin(mAppList), end(mAppList), app);
-        mAppList.erase(appIndex);
+        
+        if (appIndex != mAppList.last())
+            mAppList.erase(appIndex);
     }
     return app;
 }
