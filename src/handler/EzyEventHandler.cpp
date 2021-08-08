@@ -79,10 +79,15 @@ void EzyDisconnectionHandler::process(event::EzyDisconnectionEvent* event) {
     auto reconnecting = false;
     mClient->setStatus(constant::Disconnected);
     mClient->setUdpStatus(constant::Disconnected);
-    if (mustReconnect)
+    if (mustReconnect) {
         reconnecting = mClient->reconnect();
-    if (!reconnecting)
-        control(event);
+    }
+    if (reconnecting) {
+        onReconnecting(event);
+    }
+    else {
+        onDisconnected(event);
+    }
     postHandle(event);
 }
 
@@ -96,7 +101,10 @@ bool EzyDisconnectionHandler::shouldReconnect(event::EzyDisconnectionEvent* even
     return true;
 }
 
-void EzyDisconnectionHandler::control(event::EzyDisconnectionEvent* event) {
+void EzyDisconnectionHandler::onReconnecting(event::EzyDisconnectionEvent* event) {
+}
+
+void EzyDisconnectionHandler::onDisconnected(event::EzyDisconnectionEvent* event) {
 }
 
 void EzyDisconnectionHandler::postHandle(event::EzyDisconnectionEvent* event) {
@@ -112,17 +120,29 @@ void EzyConnectionFailureHandler::process(event::EzyConnectionFailureEvent* even
     auto mustReconnect = reconnectConfig->isEnable() && should;
     auto reconnecting = false;
     mClient->setStatus(constant::Failure);
-    if (mustReconnect)
+    if (mustReconnect) {
         reconnecting = mClient->reconnect();
-    if (!reconnecting)
-        control(event);
+    }
+    if (reconnecting) {
+        onReconnecting(event);
+    }
+    else {
+        onDisconnected(event);
+    }
+    postHandle(event);
 }
 
 bool EzyConnectionFailureHandler::shouldReconnect(event::EzyConnectionFailureEvent* event) {
     return true;
 }
 
-void EzyConnectionFailureHandler::control(event::EzyConnectionFailureEvent* event) {
+void EzyConnectionFailureHandler::onReconnecting(event::EzyConnectionFailureEvent* event) {
+}
+
+void EzyConnectionFailureHandler::onDisconnected(event::EzyConnectionFailureEvent* event) {
+}
+
+void EzyConnectionFailureHandler::postHandle(event::EzyConnectionFailureEvent* event) {
 }
 //==========================================================
 EZY_NAMESPACE_END_WITH
