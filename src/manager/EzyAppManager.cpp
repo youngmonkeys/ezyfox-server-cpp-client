@@ -5,6 +5,20 @@
 
 EZY_NAMESPACE_START_WITH(manager)
 
+namespace stdex {
+    template<class InputIterator, class T>
+    InputIterator find (InputIterator first, InputIterator last, const T& val) {
+        InputIterator iter = first;
+        while (iter != last) {
+            if (*iter == val) {
+                return iter;
+            }
+            ++iter;
+        }
+        return last;
+    }
+}
+
 EzyAppManager::EzyAppManager() {
     mAppList.clear();
     mAppByIds.clear();
@@ -21,7 +35,9 @@ entity::EzyApp* EzyAppManager::removeApp(int appId) {
         mAppByIds.erase(appId);
         mAppByNames.erase(app->getName());
         auto appIndex = std::find(mAppList.begin(), mAppList.end(), app);
-        mAppList.erase(appIndex);
+        if(appIndex != mAppList.end()) {
+            mAppList.erase(appIndex);
+        }
     }
     return app;
 }

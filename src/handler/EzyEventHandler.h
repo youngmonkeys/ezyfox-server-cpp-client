@@ -60,7 +60,8 @@ protected:
 protected:
     virtual void preHandle(event::EzyDisconnectionEvent* event);
     virtual bool shouldReconnect(event::EzyDisconnectionEvent* event);
-    virtual void control(event::EzyDisconnectionEvent* event);
+    virtual void onReconnecting(event::EzyDisconnectionEvent* event);
+    virtual void onDisconnected(event::EzyDisconnectionEvent* event);
     virtual void postHandle(event::EzyDisconnectionEvent* event);
 };
 //==========================================================
@@ -71,7 +72,9 @@ protected:
     void process(event::EzyConnectionFailureEvent* event);
 protected:
     virtual bool shouldReconnect(event::EzyConnectionFailureEvent* event);
-    virtual void control(event::EzyConnectionFailureEvent* event);
+    virtual void onReconnecting(event::EzyConnectionFailureEvent* event);
+    virtual void onDisconnected(event::EzyConnectionFailureEvent* event);
+    virtual void postHandle(event::EzyConnectionFailureEvent* event);
 };
 //==========================================================
 EZY_NAMESPACE_END_WITH
