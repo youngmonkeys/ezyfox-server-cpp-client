@@ -1,4 +1,5 @@
 #include "EzyRequest.h"
+#include "../entity/EzyNull.h"
 
 #define EZY_IMPLEMENT_REQUEST_CLASS(className) \
 Ezy##className##Request::Ezy##className##Request() : EzyRequest() {\
@@ -67,14 +68,18 @@ EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(Login)
 
 //=======================================================
 
+EzyAppAccessRequest::EzyAppAccessRequest() {
+    this->mData = 0;
+}
+
 entity::EzyArray* EzyAppAccessRequest::serialize() {
     auto array = new entity::EzyArray();
     array->addString(mAppName);
-    array->addItem(mData);
+    array->addItem(mData ? mData : new entity::EzyNull());
     return array;
 }
 
-EZY_IMPLEMENT_REQUEST_CLASS(AppAccess)
+EZY_IMPLEMENT_REQUEST_CLASS_NO_CONSTRUCTOR(AppAccess)
 
 //=======================================================
 
