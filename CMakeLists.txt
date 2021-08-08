@@ -9,6 +9,8 @@ project(ezyfox-client)
 
 set(EZY_CLIENT_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
+# command: find src -type f -name '*h' -print 
+
 set(EZY_CLIENT_HEADER
 
     src/handler/EzyPluginDataHandlers.h
@@ -28,15 +30,18 @@ set(EZY_CLIENT_HEADER
     src/config/EzyClientConfig.h
     src/entity/EzyUser.h
     src/entity/EzyPlugin.h
+    src/entity/EzyByteArray.h
     src/entity/EzyPrimitive.h
     src/entity/EzyArray.h
     src/entity/EzyValue.h
     src/entity/EzyZone.h
     src/entity/EzyApp.h
     src/entity/EzyObject.h
+    src/entity/EzyNull.h
     src/entity/EzyString.h
     src/codec/EzyDataEncoder.h
     src/codec/EzyMessage.h
+    src/codec/EzyEncryption.h
     src/codec/EzyDataDecoder.h
     src/setup/EzySetup.h
     src/EzyHeaders.h
@@ -77,6 +82,8 @@ set(EZY_CLIENT_HEADER
 
     )
 
+# command: find src -type f -name '*cpp' -print 
+
 set(EZY_CLIENT_SRC
 
     src/handler/EzyEventHandlers.cpp
@@ -95,12 +102,15 @@ set(EZY_CLIENT_SRC
     src/entity/EzyZone.cpp
     src/entity/EzyPrimitive.cpp
     src/entity/EzyObject.cpp
+    src/entity/EzyNull.cpp
+    src/entity/EzyByteArray.cpp
     src/entity/EzyArray.cpp
     src/entity/EzyValue.cpp
     src/entity/EzyUser.cpp
     src/entity/EzyPlugin.cpp
     src/codec/EzyMessage.cpp
     src/codec/EzyDataDecoder.cpp
+    src/codec/EzyEncryption.cpp
     src/codec/EzyDataEncoder.cpp
     src/EzyClient.cpp
     src/setup/EzySetup.cpp
@@ -139,6 +149,8 @@ set(EZY_CLIENT_SRC
 list(APPEND EZY_CLIENT_SRC ${EZY_CLIENT_HEADER})
 
 add_library(ezyfox-client ${EZY_CLIENT_SRC})
+
+# command: find src -type d -print 
 
 target_include_directories( ezyfox-client
     PUBLIC src

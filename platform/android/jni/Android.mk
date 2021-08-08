@@ -23,12 +23,15 @@ LOCAL_SRC_FILES := \
     $(LOCAL_PATH)/../../../src/entity/EzyZone.cpp \
     $(LOCAL_PATH)/../../../src/entity/EzyPrimitive.cpp \
     $(LOCAL_PATH)/../../../src/entity/EzyObject.cpp \
+    $(LOCAL_PATH)/../../../src/entity/EzyNull.cpp \
+    $(LOCAL_PATH)/../../../src/entity/EzyByteArray.cpp \
     $(LOCAL_PATH)/../../../src/entity/EzyArray.cpp \
     $(LOCAL_PATH)/../../../src/entity/EzyValue.cpp \
     $(LOCAL_PATH)/../../../src/entity/EzyUser.cpp \
     $(LOCAL_PATH)/../../../src/entity/EzyPlugin.cpp \
     $(LOCAL_PATH)/../../../src/codec/EzyMessage.cpp \
     $(LOCAL_PATH)/../../../src/codec/EzyDataDecoder.cpp \
+    $(LOCAL_PATH)/../../../src/codec/EzyEncryption.cpp \
     $(LOCAL_PATH)/../../../src/codec/EzyDataEncoder.cpp \
     $(LOCAL_PATH)/../../../src/EzyClient.cpp \
     $(LOCAL_PATH)/../../../src/setup/EzySetup.cpp \
