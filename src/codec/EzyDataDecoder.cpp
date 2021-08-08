@@ -1,3 +1,6 @@
+
+#include <cstring>
+
 #include "EzyDataDecoder.h"
 #include "EzyPrimitive.h"
 #include "EzyArray.h"
