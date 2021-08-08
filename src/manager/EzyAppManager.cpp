@@ -10,11 +10,12 @@ using namespace std;
 namespace stdex {
     template<class InputIterator, class T>
     InputIterator find (InputIterator first, InputIterator last, const T& val) {
-        while (first != last) {
-            if (*first == val) {
-                return first;
+        InputIterator iter = first;
+        while (iter != last) {
+            if (*iter == val) {
+                return iter;
             }
-            ++first;
+            ++iter;
         }
         return last;
     }
