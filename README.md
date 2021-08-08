@@ -1,11 +1,13 @@
 # ezyfox-server-cpp-client <img src="https://github.com/youngmonkeys/ezyfox-server/blob/master/logo.png" width="64" />
 c++ client for ezyfox server
 
-# Synopsis
+# Official Documentation
 
-c++ client for ezyfox server
+[https://youngmonkeys.org/ezyfox-cpp-client-sdk/](https://youngmonkeys.org/ezyfox-cpp-client-sdk/)
 
 # Code Example
+
+For full example you can find out at [space game](https://github.com/tvd12/space-game)
 
 **1. Import**
 
