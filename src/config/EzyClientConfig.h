@@ -23,6 +23,7 @@ public:
     ~EzyClientConfig();
     std::string getClientName();
     void setSocket(EzySocketConfig* socket);
+    void setPing(EzyPingConfig* ping);
     void setReconnect(EzyReconnectConfig* reconnect);
 };
 

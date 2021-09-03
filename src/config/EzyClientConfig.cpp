@@ -9,6 +9,7 @@ EzyClientConfig* EzyClientConfig::create() {
 
 EzyClientConfig::EzyClientConfig() {
     this->mClientName = "";
+    this->mPing = new EzyPingConfig();
     this->mSocket = new EzySocketConfig();
     this->mReconnect = new EzyReconnectConfig();
 }
@@ -28,6 +29,11 @@ std::string EzyClientConfig::getClientName() {
 void EzyClientConfig::setSocket(EzySocketConfig *socket) {
     EZY_SAFE_DELETE(mSocket);
     this->mSocket = socket;
+}
+
+void EzyClientConfig::setPing(EzyPingConfig* ping) {
+    EZY_SAFE_DELETE(mPing);
+    this->mPing = ping;
 }
 
 void EzyClientConfig::setReconnect(EzyReconnectConfig* reconnect) {

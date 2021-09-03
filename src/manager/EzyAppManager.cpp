@@ -34,7 +34,7 @@ entity::EzyApp* EzyAppManager::removeApp(int appId) {
     if(app) {
         mAppByIds.erase(appId);
         mAppByNames.erase(app->getName());
-        auto appIndex = std::find(mAppList.begin(), mAppList.end(), app);
+        auto appIndex = stdex::find(mAppList.begin(), mAppList.end(), app);
         if(appIndex != mAppList.end()) {
             mAppList.erase(appIndex);
         }
