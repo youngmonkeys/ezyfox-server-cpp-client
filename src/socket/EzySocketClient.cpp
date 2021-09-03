@@ -258,8 +258,10 @@ void EzySocketClient::processReceivedMessages() {
 }
 
 void EzySocketClient::processReceivedMessages0() {
-    mPingManager->setLostPingCount(0);
     popReadMessages();
+    if(mLocalMessageQueue.size() > 0) {
+        mPingManager->setLostPingCount(0);
+    }
     for (int i = 0 ; i < mLocalMessageQueue.size() ; ++i) {
         processReceivedMessage(mLocalMessageQueue[i]);
     }

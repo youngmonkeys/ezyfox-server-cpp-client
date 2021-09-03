@@ -15,6 +15,7 @@ EzyClientConfig::EzyClientConfig() {
 
 EzyClientConfig::~EzyClientConfig() {
     EZY_SAFE_DELETE(mSocket);
+    EZY_SAFE_DELETE(mPing);
     EZY_SAFE_DELETE(mReconnect);
 }
 
@@ -42,6 +43,12 @@ EzySocketConfig::EzySocketConfig() {
     this->mEncodeReserveSize = 16 * 1024;
     this->mDecodeReserveSize = 16 * 1024;
     this->mUdpDecodeReserveSize = 8 * 1024;
+}
+
+//============================
+EzyPingConfig::EzyPingConfig() {
+    this->mPingPeriod = 3000;
+    this->mMaxLostPingCount = 5;
 }
 
 //============================

@@ -7,6 +7,7 @@
 EZY_NAMESPACE_START_WITH_ONLY(config)
 
 class EzySocketConfig;
+class EzyPingConfig;
 class EzyReconnectConfig;
 
 class EzyClientConfig {
@@ -14,6 +15,7 @@ protected:
     EZY_SYNTHESIZE(std::string, ZoneName);
     EZY_SYNTHESIZE_WRITEONLY(std::string, ClientName);
     EZY_SYNTHESIZE_READONLY(EzySocketConfig*, Socket);
+    EZY_SYNTHESIZE_READONLY(EzyPingConfig*, Ping);
     EZY_SYNTHESIZE_READONLY(EzyReconnectConfig*, Reconnect);
 public:
     static EzyClientConfig* create();
@@ -36,6 +38,17 @@ protected:
 public:
     EzySocketConfig();
 };
+
+//============================
+
+class EzyPingConfig {
+protected:
+    EZY_SYNTHESIZE(int, PingPeriod);
+    EZY_SYNTHESIZE(int, MaxLostPingCount);
+public:
+    EzyPingConfig();
+};
+
 
 //============================
 

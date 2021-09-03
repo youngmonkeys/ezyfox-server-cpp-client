@@ -83,7 +83,7 @@ protected:
     }
 };
 
-class ExAppAccessHandler : public handler::EzyAccessAppHandler {
+class ExAppAccessHandler : public handler::EzyAppAccessHandler {
 protected:
     void postHandle(entity::EzyApp* app, entity::EzyArray* data) {
         auto obj = new entity::EzyObject();
