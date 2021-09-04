@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cstdarg>
 #include <string>
+#include <cstring>
 
 #if defined(_WIN32) || defined(WINRT)
 #include "Windows.h"
