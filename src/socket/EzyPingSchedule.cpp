@@ -2,6 +2,7 @@
 #include "EzySender.h"
 #include "EzyPingSchedule.h"
 #include "EzySocketCore.h"
+#include "EzySocketClient.h"
 #include "../EzyClient.h"
 #include "../event/EzyEvent.h"
 #include "../logger/EzyLogger.h"
@@ -47,8 +48,7 @@ void EzyPingSchedule::sendPingRequest() {
     auto lostPingCount = mPingManager->increaseLostPingCount();
     auto maxLostPingCount = mPingManager->getMaxLostPingCount();
     if(lostPingCount >= maxLostPingCount) {
-        auto event = event::EzyDisconnectionEvent::create(constant::ServerNotResponding);
-        mSocketEventQueue->addEvent(event);
+        mClient->getSocket()->disconnect(constant::ServerNotResponding);
     }
     else {
         mClient->send(mPingRequest);

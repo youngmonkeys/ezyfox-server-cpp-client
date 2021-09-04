@@ -36,7 +36,7 @@ EzyClient* EzyClient::create(config::EzyClientConfig *config) {
 void EzyClient::init(config::EzyClientConfig *config) {
     mConfig = config;
     mName = config->getClientName();
-    mPingManager = new manager::EzyPingManager();
+    mPingManager = new manager::EzyPingManager(config->getPing());
     mPingSchedule = new socket::EzyPingSchedule(this);
     mHandlerManager = new manager::EzyHandlerManager(this);
     mRequestSerializer = new request::EzyRequestSerializer();

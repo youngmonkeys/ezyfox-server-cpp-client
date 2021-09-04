@@ -1,11 +1,12 @@
 #include "EzyPingManager.h"
+#include "../config/EzyClientConfig.h"
 
 EZY_NAMESPACE_START_WITH(manager)
 
-EzyPingManager::EzyPingManager() {
-    this->mPingPeriod = 5000;
+EzyPingManager::EzyPingManager(config::EzyPingConfig *config) {
     this->mLostPingCount = 0;
-    this->mMaxLostPingCount = 5;
+    this->mPingPeriod = config->getPingPeriod();
+    this->mMaxLostPingCount = config->getMaxLostPingCount();
 }
 
 int EzyPingManager::increaseLostPingCount() {

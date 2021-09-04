@@ -148,11 +148,22 @@ char* EzyRSA::decrypt(const char* message, int size, std::string privateKey, int
 }
 
 std::string EzyRSA::decodePublicKey(const char *publicKey, int size) {
-    std::string copy(publicKey);
-    copy.erase(copy.begin(), copy.begin() + beginPublicKey.size());
-    copy.erase(copy.end() - endPublicKey.size(), copy.end());
-    copy.erase(std::remove(copy.begin(), copy.end(), '\n'), copy.end());
-    return copy;
+    int unnecessarySize = (int)beginPublicKey.size() + (int)endPublicKey.size();
+    if(size < unnecessarySize) {
+        return "";
+    }
+    char* copy = (char*)malloc(size - unnecessarySize);
+    int start = (int)beginPublicKey.size();
+    int end = size - (int)beginPublicKey.size();
+    int actualSize = 0;
+    for(int i = start ; i < end ; ++i) {
+        if(publicKey[i] != '\n') {
+            copy[actualSize ++] = publicKey[i];
+        }
+    }
+    std::string answer = std::string(copy, actualSize);
+    EZY_SAFE_FREE(copy);
+    return answer;
 }
 
 //====================================================

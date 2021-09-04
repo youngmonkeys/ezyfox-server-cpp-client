@@ -9,12 +9,14 @@ EzyClientConfig* EzyClientConfig::create() {
 
 EzyClientConfig::EzyClientConfig() {
     this->mClientName = "";
+    this->mPing = new EzyPingConfig();
     this->mSocket = new EzySocketConfig();
     this->mReconnect = new EzyReconnectConfig();
 }
 
 EzyClientConfig::~EzyClientConfig() {
     EZY_SAFE_DELETE(mSocket);
+    EZY_SAFE_DELETE(mPing);
     EZY_SAFE_DELETE(mReconnect);
 }
 
@@ -27,6 +29,11 @@ std::string EzyClientConfig::getClientName() {
 void EzyClientConfig::setSocket(EzySocketConfig *socket) {
     EZY_SAFE_DELETE(mSocket);
     this->mSocket = socket;
+}
+
+void EzyClientConfig::setPing(EzyPingConfig* ping) {
+    EZY_SAFE_DELETE(mPing);
+    this->mPing = ping;
 }
 
 void EzyClientConfig::setReconnect(EzyReconnectConfig* reconnect) {
@@ -42,6 +49,12 @@ EzySocketConfig::EzySocketConfig() {
     this->mEncodeReserveSize = 16 * 1024;
     this->mDecodeReserveSize = 16 * 1024;
     this->mUdpDecodeReserveSize = 8 * 1024;
+}
+
+//============================
+EzyPingConfig::EzyPingConfig() {
+    this->mPingPeriod = 3000;
+    this->mMaxLostPingCount = 5;
 }
 
 //============================
