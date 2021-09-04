@@ -8,7 +8,6 @@ cmake_install.cmake
 example/.idea/
 example/CMakeCache.txt
 example/CMakeFiles/
-example/CMakeLists.txt
 example/Makefile
 example/Testing/
 example/cmake_install.cmake
