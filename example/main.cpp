@@ -1,6 +1,6 @@
 //
 //  main.cpp
-//  ezyfox-console
+//  ezyfox-example
 //
 //  Created by Dzung on 08/08/2021.
 //
@@ -31,12 +31,22 @@ protected:
     }
 };
 
+class UdpHandshakeHandler : public handler::EzyUdpHandshakeHandler {
+protected:
+    void onAuthenticated(entity::EzyArray *data) override {
+        auto requestData = new entity::EzyObject();
+        requestData->setString("who", "C/C++ Developer");
+        mClient->getApp()->send("udpGreet", requestData);
+    }
+};
+
 class AppAccessHandler : public handler::EzyAppAccessHandler {
 protected:
     void postHandle(entity::EzyApp* app, entity::EzyArray* data) {
         auto requestData = new entity::EzyObject();
         requestData->setString("who", "C/C++ Developer");
         app->send("greet", requestData);
+        mClient->udpConnect(2611);
     }
 };
 
@@ -55,6 +65,7 @@ int main(int argc, const char * argv[]) {
     auto setup = mSocketClient->setup();
     setup->addDataHandler(constant::Handshake, new HandshakeHandler());
     setup->addDataHandler(constant::Login, new LoginSuccessHandler());
+    setup->addDataHandler(constant::UdpHandshake, new UdpHandshakeHandler());
     setup->addDataHandler(constant::AppAccess, new AppAccessHandler());
     
     auto appSetup = setup->setupApp("hello-world");
@@ -66,4 +77,3 @@ int main(int argc, const char * argv[]) {
     eventsLoop->start();
     EZY_SAFE_DELETE(eventsLoop);
 }
-
