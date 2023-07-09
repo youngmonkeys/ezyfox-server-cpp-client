@@ -29,8 +29,8 @@ void EzyUTSocketClient::udpConnectTo(std::string host, int port) {
     mUdpClient->connectTo(host, port);
 }
 
-void EzyUTSocketClient::udpSendMessage(EzySocketData* message) {
-    mUdpClient->sendMessage(message);
+void EzyUTSocketClient::udpSendMessage(EzySocketData* message, bool encrypted) {
+    mUdpClient->sendMessage(message, encrypted);
 }
 
 void EzyUTSocketClient::udpSetStatus(EzySocketStatus status) {

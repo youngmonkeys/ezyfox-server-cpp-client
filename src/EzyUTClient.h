@@ -21,8 +21,8 @@ public:
     virtual ~EzyUTClient();
     virtual void udpConnect(int port);
     virtual void udpConnect(std::string host, int port);
-    virtual void udpSend(request::EzyRequest* request);
-    virtual void udpSend(constant::EzyCommand cmd, entity::EzyArray* data);
+    virtual void udpSend(request::EzyRequest* request, bool encrypted = false);
+    virtual void udpSend(constant::EzyCommand cmd, entity::EzyArray* data, bool encrypted = false);
 protected:
     virtual socket::EzySocketClient* newTcpSocketClient();
 };

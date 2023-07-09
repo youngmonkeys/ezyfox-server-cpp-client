@@ -39,14 +39,16 @@ void EzyUdpSocketWriter::update() {
             return;
         }
         
-        EzySocketPacket* socketPacket = mSocketPool->take();
+        bool encrypted = false;
         EzySocketData* sendData = 0;
+        EzySocketPacket* socketPacket = mSocketPool->take();
         if(socketPacket) {
             sendData = socketPacket->getData();
+            encrypted = socketPacket->isEncrypted();
         }
         if (sendData) {
             sentData = 0;
-            toBufferData(sendData, false);
+            toBufferData(sendData, encrypted);
             const std::vector<char>& sendBuffer = mEncoder->getBuffer();
             send(mSocket, sendBuffer.data() + sentData, sendBuffer.size() - sentData, 0);
         }
@@ -266,8 +268,8 @@ void EzyUdpSocketClient::disconnect(int reason) {
     mSocketStatuses->push(SocketDisconnected);
 }
 
-void EzyUdpSocketClient::sendMessage(EzySocketData* message) {
-    mSocketWriter->offerMessage(message, false);
+void EzyUdpSocketClient::sendMessage(EzySocketData* message, bool encrypted) {
+    mSocketWriter->offerMessage(message, encrypted);
 }
 
 void EzyUdpSocketClient::setStatus(EzySocketStatus status) {

@@ -60,7 +60,11 @@ void EzyHandshakeHandler::preHandle(entity::EzyArray *data) {
 
 void EzyHandshakeHandler::handleLogin(entity::EzyArray* data) {
     auto request = getLoginRequest();
-    mClient->send(request);
+    bool encrypted = false;
+#ifdef EZY_SSL_ENABLE
+    encrypted = true;
+#endif
+    mClient->send(request, encrypted);
 }
 
 void EzyHandshakeHandler::setClient(EzyClient* client) {

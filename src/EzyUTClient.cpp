@@ -34,16 +34,16 @@ void EzyUTClient::udpConnect(std::string host, int port) {
     ((socket::EzyUTSocketClient*)mSocketClient)->udpConnectTo(host, port);
 }
 
-void EzyUTClient::udpSend(request::EzyRequest *request) {
+void EzyUTClient::udpSend(request::EzyRequest *request, bool encrypted) {
     auto cmd = request->getCommand();
     auto data = request->serialize();
-    udpSend(cmd, data);
+    udpSend(cmd, data, encrypted);
 }
 
-void EzyUTClient::udpSend(constant::EzyCommand cmd, entity::EzyArray *data) {
+void EzyUTClient::udpSend(constant::EzyCommand cmd, entity::EzyArray *data, bool encrypted) {
     auto array = mRequestSerializer->serialize(cmd, data);
     if(mSocketClient) {
-        ((socket::EzyUTSocketClient*)mSocketClient)->udpSendMessage(array);
+        ((socket::EzyUTSocketClient*)mSocketClient)->udpSendMessage(array, encrypted);
         printSentData(cmd, data);
     }
 }

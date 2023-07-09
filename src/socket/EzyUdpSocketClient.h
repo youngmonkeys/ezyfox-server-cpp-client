@@ -80,7 +80,7 @@ public:
     virtual ~EzyUdpSocketClient();
     virtual void connectTo(std::string host, int port);
     virtual bool reconnect();
-    virtual void sendMessage(EzySocketData* message);
+    virtual void sendMessage(EzySocketData* message, bool encrypted);
     virtual void setStatus(EzySocketStatus status);
     virtual void closeSocket();
     virtual void disconnect(int reason);

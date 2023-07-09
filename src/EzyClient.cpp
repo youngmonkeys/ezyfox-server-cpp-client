@@ -217,11 +217,11 @@ void EzyClient::udpConnect(std::string host, int port) {
     logger::log("only support TCP, use EzyUTClient instead");
 }
 
-void EzyClient::udpSend(request::EzyRequest* request) {
+void EzyClient::udpSend(request::EzyRequest* request, bool encrypted) {
     logger::log("only support TCP, use EzyUTClient instead");
 }
 
-void EzyClient::udpSend(constant::EzyCommand cmd, entity::EzyArray* data) {
+void EzyClient::udpSend(constant::EzyCommand cmd, entity::EzyArray* data, bool encrypted) {
     logger::log("only support TCP, use EzyUTClient instead");
 }
 

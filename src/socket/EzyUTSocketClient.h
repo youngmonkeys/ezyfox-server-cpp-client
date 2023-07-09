@@ -23,7 +23,7 @@ public:
     virtual ~EzyUTSocketClient();
     virtual void udpConnectTo(int port);
     virtual void udpConnectTo(std::string host, int port);
-    virtual void udpSendMessage(EzySocketData* message);
+    virtual void udpSendMessage(EzySocketData* message, bool encrypted);
     virtual void udpSetStatus(EzySocketStatus status);
     virtual void setConfig(config::EzySocketConfig* config);
 protected:
