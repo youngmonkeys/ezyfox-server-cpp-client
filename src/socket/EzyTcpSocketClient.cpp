@@ -9,7 +9,7 @@
 #include "../constant/EzyConnectionFailedReason.h"
 #include "../constant/EzyDisconnectReason.h"
 
-#ifdef SSL_L4_ENABLE
+#ifdef SSL_ENABLE
 #include <openssl/ssl.h>
 #include <openssl/bio.h>
 #include <openssl/err.h>
@@ -17,7 +17,7 @@
 
 EZY_NAMESPACE_START_WITH(socket)
 
-#ifdef SSL_L4_ENABLE
+#ifdef SSL_ENABLE
 BIO* bio;
 SSL* ssl;
 SSL_CTX* sslContext;
@@ -71,7 +71,7 @@ void EzyTcpSocketWriter::update() {
             const std::vector<char>& sendBuffer = mEncoder->getBuffer();
 
             while (true) {
-#ifdef SSL_L4_ENABLE
+#ifdef SSL_ENABLE
                 if (bio) {
                     rs = BIO_write(bio,
                                    sendBuffer.data() + sentData,
@@ -139,7 +139,7 @@ void EzyTcpSocketReader::update() {
         if (!isActive()) {
             break;
         }
-#ifdef SSL_L4_ENABLE
+#ifdef SSL_ENABLE
         if (bio) {
             rs = BIO_read(bio, dataBuffer, mBufferSize);
         }
@@ -187,7 +187,7 @@ EzyTcpSocketClient::~EzyTcpSocketClient() {
 bool EzyTcpSocketClient::connectNow() {
     char portStr[12];
     std::snprintf(portStr, sizeof(portStr), "%d", mPort);
-#ifdef SSL_L4_ENABLE
+#ifdef SSL_ENABLE
     SSL_library_init();
     ERR_load_crypto_strings();
     SSL_load_error_strings();
@@ -204,7 +204,7 @@ bool EzyTcpSocketClient::connectNow() {
         freeSslComponents();
         return false;
     }
-#ifdef SSL_L4_VERIFICATION
+#ifdef SSL_VERIFICATION
     BIO_get_ssl(bio, &ssl);
     if (!ssl) {
         logger::log("failed to get SSL object from BIO");
@@ -290,7 +290,7 @@ void EzyTcpSocketClient::resetSocket() {
 
 void EzyTcpSocketClient::closeSocket() {
     std::unique_lock<std::mutex> lk(mSocketMutex);
-#ifdef SSL_L4_ENABLE
+#ifdef SSL_ENABLE
     freeSslComponents();
 #else
     if (mSocket != SYS_SOCKET_INVALID) {
