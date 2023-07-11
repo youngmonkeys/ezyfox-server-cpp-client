@@ -909,8 +909,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
-					"SSL_L4_ENABLE=1",
-					"SSL_L4_VERIFICATION=1",
+					"SSL_ENABLE=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../src",
@@ -943,6 +942,11 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 76JURWHY44;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"SSL_ENABLE=1",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../src",
 					"$(SRCROOT)/../../src/handler",

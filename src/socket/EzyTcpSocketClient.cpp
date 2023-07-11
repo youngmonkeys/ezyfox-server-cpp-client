@@ -23,13 +23,13 @@ SSL* ssl;
 SSL_CTX* sslContext;
 
 void freeSslComponents() {
-    BIO* currentBio = bio;
-    SSL_CTX* currentSslContext = sslContext;
-    if (currentBio) {
+    if (bio) {
         BIO_free_all(bio);
+        bio = 0;
     }
-    if (currentSslContext) {
+    if (sslContext) {
         SSL_CTX_free(sslContext);
+        sslContext = 0;
     }
     ERR_free_strings();
 }
