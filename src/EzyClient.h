@@ -51,6 +51,7 @@ protected:
     EZY_SYNTHESIZE(entity::EzyZone*, Zone)
     EZY_SYNTHESIZE(constant::EzyConnectionStatus, Status);
     EZY_SYNTHESIZE(constant::EzyConnectionStatus, UdpStatus);
+    EZY_SYNTHESIZE(std::string, PrivateKey);
     EZY_SYNTHESIZE_READONLY(std::string, Name);
     EZY_SYNTHESIZE_READONLY(int64_t, SessionId);
     EZY_SYNTHESIZE_READONLY(std::string, SessionToken);
@@ -74,6 +75,7 @@ public:
     setup::EzySetup* setup();
     void connect(std::string host, int port);
     bool reconnect();
+    void close();
     void disconnect(int reason = -1);
     void send(request::EzyRequest* request, bool encrypted = false);
     void send(constant::EzyCommand cmd, entity::EzyArray* data, bool encrypted = false);
@@ -88,7 +90,6 @@ public:
     void destroy();
     bool isConnected();
     bool isUdpConnected();
-    bool isEnableSSL();
 public:
     virtual void udpConnect(int port);
     virtual void udpConnect(std::string host, int port);
