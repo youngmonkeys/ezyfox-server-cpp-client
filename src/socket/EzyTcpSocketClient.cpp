@@ -23,6 +23,10 @@ SSL* ssl;
 SSL_CTX* sslContext;
 
 void freeSslComponents() {
+    if (ssl) {
+        SSL_free(ssl);
+        ssl = 0;
+    }
     if (bio) {
         BIO_free_all(bio);
         bio = 0;
@@ -132,16 +136,21 @@ void EzyTcpSocketReader::update() {
 #else
     auto releasePool = gc::EzyAutoReleasePool::getInstance()->getPool();
 #endif
+#ifdef SSL_ENABLE
+    SSL* currentSsl = ssl;
+    BIO* currentBio = bio;
+    SSL_CTX* currentSslContext = sslContext;
+#endif
     while (true) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(3));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
         releasePool->releaseAll();
 
         if (!isActive()) {
             break;
         }
 #ifdef SSL_ENABLE
-        if (bio) {
-            rs = BIO_read(bio, dataBuffer, mBufferSize);
+        if (currentBio) {
+            rs = BIO_read(currentBio, dataBuffer, mBufferSize);
         }
 #else
         rs = recv(mSocket, dataBuffer, mBufferSize, 0);
@@ -164,6 +173,13 @@ void EzyTcpSocketReader::update() {
             break;
         }
     }
+#ifdef SSL_ENABLE
+    if (currentSsl) {
+        SSL_free(currentSsl);
+    }
+    BIO_free_all(currentBio);
+    SSL_CTX_free(currentSslContext);
+#endif
 }
 
 /*****************************************/
@@ -291,7 +307,7 @@ void EzyTcpSocketClient::resetSocket() {
 void EzyTcpSocketClient::closeSocket() {
     std::unique_lock<std::mutex> lk(mSocketMutex);
 #ifdef SSL_ENABLE
-    freeSslComponents();
+    // do nothing
 #else
     if (mSocket != SYS_SOCKET_INVALID) {
 #ifdef USE_WINSOCK_2
