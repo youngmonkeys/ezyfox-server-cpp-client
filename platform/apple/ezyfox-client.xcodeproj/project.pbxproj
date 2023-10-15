@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		736BEADA5A555DAFD0BCD53D /* Pods_ezyfox_client.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2DC52FFA04E527CDBBE42F6 /* Pods_ezyfox_client.framework */; };
 		F18F950E266B536A004790E8 /* EzyEncryption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F18F950D266B536A004790E8 /* EzyEncryption.cpp */; };
 		F18F9511266B5384004790E8 /* EzyNull.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F18F950F266B5384004790E8 /* EzyNull.cpp */; };
 		F18F9512266B5384004790E8 /* EzyByteArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F18F9510266B5384004790E8 /* EzyByteArray.cpp */; };
@@ -142,6 +143,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		82976BB90FA64B0DB31EFF1C /* Pods-ezyfox-client.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ezyfox-client.release.xcconfig"; path = "Target Support Files/Pods-ezyfox-client/Pods-ezyfox-client.release.xcconfig"; sourceTree = "<group>"; };
+		AE7F4B06E14A7D65AC9DC3E0 /* Pods-ezyfox-client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ezyfox-client.debug.xcconfig"; path = "Target Support Files/Pods-ezyfox-client/Pods-ezyfox-client.debug.xcconfig"; sourceTree = "<group>"; };
+		E2DC52FFA04E527CDBBE42F6 /* Pods_ezyfox_client.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ezyfox_client.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F18F950D266B536A004790E8 /* EzyEncryption.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = EzyEncryption.cpp; path = ../../src/codec/EzyEncryption.cpp; sourceTree = "<group>"; };
 		F18F950F266B5384004790E8 /* EzyNull.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = EzyNull.cpp; path = ../../src/entity/EzyNull.cpp; sourceTree = "<group>"; };
 		F18F9510266B5384004790E8 /* EzyByteArray.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = EzyByteArray.cpp; path = ../../src/entity/EzyByteArray.cpp; sourceTree = "<group>"; };
@@ -272,12 +276,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				736BEADA5A555DAFD0BCD53D /* Pods_ezyfox_client.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0F85B5F77AD705EBA21C74D6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				AE7F4B06E14A7D65AC9DC3E0 /* Pods-ezyfox-client.debug.xcconfig */,
+				82976BB90FA64B0DB31EFF1C /* Pods-ezyfox-client.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		5C0BAAFCE54B1B12FDA22EE7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E2DC52FFA04E527CDBBE42F6 /* Pods_ezyfox_client.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		F195504C260608FD00402511 = {
 			isa = PBXGroup;
 			children = (
@@ -288,6 +310,8 @@
 				F195516C26060B9500402511 /* README.md */,
 				F195516D26060B9500402511 /* src */,
 				F1955056260608FD00402511 /* Products */,
+				0F85B5F77AD705EBA21C74D6 /* Pods */,
+				5C0BAAFCE54B1B12FDA22EE7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -624,6 +648,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F195505E260608FD00402511 /* Build configuration list for PBXNativeTarget "ezyfox-client" */;
 			buildPhases = (
+				05D09CB14E9BCE551512AA4F /* [CP] Check Pods Manifest.lock */,
 				F195512226060A9F00402511 /* Headers */,
 				F1955051260608FD00402511 /* Sources */,
 				F1955052260608FD00402511 /* Frameworks */,
@@ -668,6 +693,31 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		05D09CB14E9BCE551512AA4F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ezyfox-client-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		F1955051260608FD00402511 /* Sources */ = {
@@ -852,9 +902,14 @@
 		};
 		F195505F260608FD00402511 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AE7F4B06E14A7D65AC9DC3E0 /* Pods-ezyfox-client.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 76JURWHY44;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../src",
 					"$(SRCROOT)/../../src/handler",
@@ -882,9 +937,14 @@
 		};
 		F1955060260608FD00402511 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 82976BB90FA64B0DB31EFF1C /* Pods-ezyfox-client.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 76JURWHY44;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../src",
 					"$(SRCROOT)/../../src/handler",

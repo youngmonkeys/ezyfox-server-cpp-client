@@ -53,7 +53,9 @@ protected:
 protected:
     virtual void setClient(EzyClient* client);
     virtual void preHandle(entity::EzyArray* data);
+    virtual void doHandle(entity::EzyArray* data);
     virtual void postHandle(entity::EzyArray* data);
+    virtual std::string decrypteSessionKey(std::string encyptedSessionKey);
     virtual request::EzyRequest* getLoginRequest() = 0;
 public:
     EzyHandshakeHandler();

@@ -17,6 +17,7 @@
 #include "../handler/EzyAppDataHandlers.h"
 #include "../handler/EzyPluginDataHandlers.h"
 #include "../socket/EzyUTSocketClient.h"
+#include "../codec/EzyEncryption.h"
 
 EZY_NAMESPACE_START_WITH(handler)
 
@@ -49,13 +50,45 @@ EzyHandshakeHandler::~EzyHandshakeHandler() {
 void EzyHandshakeHandler::handle(entity::EzyArray* data) {
     mPingSchedule->start();
     preHandle(data);
+    doHandle(data);
     handleLogin(data);
     postHandle(data);
 }
 
 void EzyHandshakeHandler::preHandle(entity::EzyArray *data) {
+}
+
+void EzyHandshakeHandler::doHandle(entity::EzyArray *data) {
     mClient->setSessionId(data->getInt(2));
     mClient->setSessionToken(data->getString(1));
+    auto encyptedSessionKey = data->size() <= 3
+        ? ""
+        : data->getString(3);
+    mClient->setSessionKey(decrypteSessionKey(encyptedSessionKey));
+}
+
+std::string EzyHandshakeHandler::decrypteSessionKey(std::string encyptedSessionKey) {
+    std::string sessionKey = "";
+#ifdef EZY_SSL_ENABLE
+    if(encyptedSessionKey.empty()) {
+#ifdef EZY_DEBUG
+        return "";
+#else
+        logger::log("maybe server was not enable SSL, you must enable SSL on server or disable SSL on your client or enable debug mode");
+        mClient->close();
+        return "";
+#endif
+    }
+    auto sessionKeySize = 0;
+    auto privateKey = mClient->getPrivateKey();
+    auto rsa = codec::EzyRSA::getInstance();
+    auto sessionKeyData = rsa->decrypt(encyptedSessionKey.c_str(),
+                                       (int) encyptedSessionKey.size(),
+                                       privateKey,
+                                       sessionKeySize);
+    sessionKey = std::string(sessionKeyData, sessionKeySize);
+#endif
+    return sessionKey;
 }
 
 void EzyHandshakeHandler::handleLogin(entity::EzyArray* data) {

@@ -3,6 +3,7 @@
 #include "../constant/EzyDisconnectReason.h"
 #include "../request/EzyRequest.h"
 #include "../logger/EzyLogger.h"
+#include "../codec/EzyEncryption.h"
 #include "../config/EzyClientConfig.h"
 #include "../EzyClient.h"
 #include "EzyEventHandler.h"
@@ -52,6 +53,12 @@ std::string EzyConnectionSuccessHandler::getClientId() {
 }
 
 std::string EzyConnectionSuccessHandler::generateClientKey() {
+#ifdef EZY_SSL_ENABLE
+    auto keypair = codec::EzyRSA::getInstance()->generateKeyPair();
+    mClient->setPrivateKey(keypair->getPrivateKey());
+    auto publicKey = keypair->getPublicKey();
+    return publicKey;
+#endif
     return "";
 }
 

@@ -1,3 +1,5 @@
+platform/apple/Podfile.lock
+platform/apple/Pods
 example/example
 libezyfox-client.a
 .idea/

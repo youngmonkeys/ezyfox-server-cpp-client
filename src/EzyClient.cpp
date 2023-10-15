@@ -110,6 +110,10 @@ socket::EzySocketClient* EzyClient::newTcpSocketClient() {
     return new socket::EzyTcpSocketClient();
 }
 
+void EzyClient::close() {
+    disconnect();
+}
+
 void EzyClient::disconnect(int reason) {
     mSocketClient->disconnect(reason);
 }
